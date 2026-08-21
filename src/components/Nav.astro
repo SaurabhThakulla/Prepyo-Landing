@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
-import { appUrl, type ExamType } from '@/consts';
+import { appUrl, BASE_PATH, type ExamType } from '@/consts';
 
 /**
  * Public navigation for the Prepyo landing page.
@@ -34,7 +34,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
   >
     <div class="flex items-center justify-between px-4 sm:px-6 py-2.5">
       {/* Logo */}
-      <a href="/" class="flex items-center gap-2 group" data-logo>
+      <a href={BASE_PATH} class="flex items-center gap-2 group" data-logo>
         <div
           class="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-white font-black text-sm shadow-sm group-hover:scale-105 transition-transform"
         >
@@ -74,7 +74,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
             {
               EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
                 <a
-                  href="/#products"
+                  href="#products"
                   data-exam-option={exam}
                   class:list={[
                     'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer hover:bg-accent hover:text-accent-foreground',
@@ -91,7 +91,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
         {
           NAV_LINKS.map(({ id, label }) => (
-            <a href={`/#${id}`} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
+            <a href={`#${id}`} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
               {label}
             </a>
           ))
@@ -152,7 +152,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
       {
         EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
           <a
-            href="/#products"
+            href="#products"
             data-exam-option={exam}
             class:list={[
               'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors hover:bg-accent hover:text-accent-foreground',
@@ -172,7 +172,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         {
           NAV_LINKS.map(({ id, label }) => (
             <a
-              href={`/#${id}`}
+              href={`#${id}`}
               class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
             >
               {label}
@@ -274,13 +274,15 @@ const DEFAULT_EXAM: ExamType = 'PTE';
       setProductsOpen(false);
       setMobileOpen(false);
     },
-    'a[href^="/#"]:not([data-exam-option])',
+    'a[href^="#"]:not([data-exam-option])',
   );
 
-  nav.querySelector<HTMLAnchorElement>('[data-logo]')!.addEventListener('click', event => {
+  const logo = nav.querySelector<HTMLAnchorElement>('[data-logo]')!;
+  logo.addEventListener('click', event => {
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    window.history.pushState(null, '', '/');
+    // The logo's own href already accounts for a sub-path deploy.
+    window.history.pushState(null, '', logo.getAttribute('href'));
   });
 
   // --- Theme toggle ---------------------------------------------------------

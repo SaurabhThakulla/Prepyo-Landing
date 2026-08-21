@@ -39,9 +39,11 @@ Copy `.env.example` to `.env` and adjust:
 |---|---|---|
 | `PUBLIC_APP_URL` | `http://localhost:3000` | Where the Next.js app lives. Every sign-up / login / dashboard link is an absolute URL into it. |
 | `PUBLIC_API_BASE_URL` | `http://localhost:8080/api/v1` | The Go API. Used for the single public request this site makes. |
+| `PUBLIC_SITE_URL` | `https://saurabhthakulla.github.io` | Origin used for canonical and Open Graph URLs. |
+| `PUBLIC_BASE_PATH` | `/Prepyo-Online` | Sub-path the site is served from. Set to `/` for a custom domain. |
 
-Both are `PUBLIC_` prefixed because they are inlined into the built output.
-Nothing secret belongs in either.
+All are `PUBLIC_` prefixed because they are inlined into the built output.
+Nothing secret belongs in any of them.
 
 ### The pricing section needs CORS
 
@@ -100,6 +102,25 @@ The app used React context for these; here they are small scripts:
 ## Deploying
 
 `npm run build` emits a fully static `dist/`, deployable to any static host
-(Netlify, Vercel, Cloudflare Pages, S3, nginx). Set `PUBLIC_APP_URL` and
-`PUBLIC_API_BASE_URL` in the build environment first — they are read at build
-time, not at runtime.
+(Netlify, Vercel, Cloudflare Pages, S3, nginx). Every `PUBLIC_*` value is read
+at build time, not at runtime, so it has to be set in the build environment.
+
+### GitHub Pages
+
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`.
+For it to be the thing GitHub actually serves, the repo's
+**Settings → Pages → Source** must be set to **GitHub Actions** — with the
+default "Deploy from a branch" it serves the repo files directly and 404s,
+because the built `index.html` only exists in the ignored `dist/`.
+
+This repo is a project page, so it is served from `/Prepyo-Online/` rather than
+the domain root. That is why `base` is set: Astro rewrites the asset URLs it
+generates, and anything written by hand in markup goes through `asset()` in
+`src/consts.ts`. In-page links are bare `#section` fragments so they do not care
+about the base at all.
+
+To point the deployed site at a real app and API, set repository variables
+(Settings → Secrets and variables → Actions → Variables) named `PUBLIC_APP_URL`
+and `PUBLIC_API_BASE_URL`. Until `PUBLIC_API_BASE_URL` is a reachable HTTPS API
+that allows the Pages origin, the pricing section and its nav links remove
+themselves.

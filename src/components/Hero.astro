@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
-import { appUrl } from '@/consts';
+import { appUrl, asset } from '@/consts';
 
 // Statements about what the product does, not claims about how many people use
 // it. Usage numbers belong here only once they can be read from the database.
@@ -78,7 +78,7 @@ const HIGHLIGHTS = [
         </Button>
 
         <Button
-          href="/#pricing"
+          href="#pricing"
           variant="outline"
           size="lg"
           class="rounded-2xl font-bold text-sm px-7 h-12 border-border hover:bg-card hover:-translate-y-0.5 transition-all"
@@ -87,7 +87,7 @@ const HIGHLIGHTS = [
         </Button>
 
         <Button
-          href="/#how-it-works"
+          href="#how-it-works"
           variant="ghost"
           size="lg"
           class="rounded-2xl font-bold text-sm px-5 h-12 text-muted-foreground hover:text-foreground gap-2"
@@ -137,7 +137,7 @@ const HIGHLIGHTS = [
         <div class="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-purple-500/5 pointer-events-none">
         </div>
         <img
-          src="/images/hero-showcase.jpg"
+          src={asset('/images/hero-showcase.jpg')}
           alt="Prepyo AI Exam Prep Interface & Dashboard"
           width="1376"
           height="768"

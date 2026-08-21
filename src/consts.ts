@@ -19,6 +19,23 @@ export function appUrl(path: string): string {
   return `${APP_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+/**
+ * The path this site is served from — "/" on a custom domain, "/Prepyo-Online/"
+ * on GitHub Pages.
+ *
+ * Astro rewrites the asset URLs it generates itself, but a path written by hand
+ * in markup (`/images/hero.jpg`) is left alone and would resolve against the
+ * domain root, so those go through `asset()` instead.
+ */
+export const BASE_PATH = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+/** Resolves a file in `public/` against the deployed base path. */
+export function asset(path: string): string {
+  return `${BASE_PATH}${path.replace(/^\//, '')}`;
+}
+
 export type ExamType = 'PTE' | 'IELTS';
 
 /** Mirrors the SubscriptionPlan shape returned by GET /subscriptions/plans. */

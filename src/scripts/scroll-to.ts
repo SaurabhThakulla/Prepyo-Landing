@@ -13,8 +13,11 @@ export function scrollToSection(id: string): void {
 }
 
 /**
- * Wires every `<a href="/#some-id">` inside `root` to scroll instead of reload.
+ * Wires every `<a href="#some-id">` inside `root` to scroll instead of jumping.
  * `onNavigate` lets a caller close its menu or dropdown at the same time.
+ *
+ * The links are bare fragments rather than `/#some-id` so they keep working
+ * under a sub-path deploy like GitHub Pages, where "/" is not this site.
  *
  * `selector` narrows which anchors are claimed, so a caller that already
  * handles some of them itself can leave those alone.
@@ -22,13 +25,13 @@ export function scrollToSection(id: string): void {
 export function bindSectionLinks(
   root: ParentNode,
   onNavigate?: () => void,
-  selector = 'a[href^="/#"]',
+  selector = 'a[href^="#"]',
 ): void {
   root.querySelectorAll<HTMLAnchorElement>(selector).forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
       onNavigate?.();
-      scrollToSection(link.getAttribute('href')!.slice(2));
+      scrollToSection(link.getAttribute('href')!.slice(1));
     });
   });
 }

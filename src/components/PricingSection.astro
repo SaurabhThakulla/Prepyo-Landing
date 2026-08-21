@@ -179,7 +179,10 @@ const GATEWAYS = ['eSewa', 'Khalti', 'Fonepay'];
       grid.classList.remove('hidden');
     })
     .catch(() => {
-      // Better no prices than prices that might be wrong.
+      // Better no prices than prices that might be wrong. The nav and footer
+      // links go with it, so nothing is left pointing at a section that is no
+      // longer on the page.
       section.remove();
+      document.querySelectorAll('a[href="#pricing"]').forEach(link => link.closest('li')?.remove() ?? link.remove());
     });
 </script>

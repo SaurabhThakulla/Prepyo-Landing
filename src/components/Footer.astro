@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { appUrl } from '@/consts';
+import { appUrl, BASE_PATH } from '@/consts';
 
 const EXPLORE_LINKS = [
   { id: 'products', label: 'PTE & IELTS Exams' },
@@ -23,7 +23,7 @@ const year = new Date().getFullYear();
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       {/* Brand info */}
       <div class="md:col-span-1 space-y-3">
-        <a href="/" class="flex items-center gap-2">
+        <a href={BASE_PATH} class="flex items-center gap-2">
           <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-white text-xs font-bold shadow-sm">
             P
           </div>
@@ -47,7 +47,7 @@ const year = new Date().getFullYear();
           {
             EXPLORE_LINKS.map(({ id, label }) => (
               <li>
-                <a href={`/#${id}`} class="hover:text-primary transition-colors">
+                <a href={`#${id}`} class="hover:text-primary transition-colors">
                   {label}
                 </a>
               </li>
@@ -63,7 +63,7 @@ const year = new Date().getFullYear();
           {
             PLATFORM_LINKS.map(({ id, label }) => (
               <li>
-                <a href={`/#${id}`} class="hover:text-primary transition-colors">
+                <a href={`#${id}`} class="hover:text-primary transition-colors">
                   {label}
                 </a>
               </li>
