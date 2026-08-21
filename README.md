@@ -39,8 +39,8 @@ Copy `.env.example` to `.env` and adjust:
 |---|---|---|
 | `PUBLIC_APP_URL` | `http://localhost:3000` | Where the Next.js app lives. Every sign-up / login / dashboard link is an absolute URL into it. |
 | `PUBLIC_API_BASE_URL` | `http://localhost:8080/api/v1` | The Go API. Used for the single public request this site makes. |
-| `PUBLIC_SITE_URL` | `https://saurabhthakulla.github.io` | Origin used for canonical and Open Graph URLs. |
-| `PUBLIC_BASE_PATH` | `/Prepyo-Online` | Sub-path the site is served from. Set to `/` for a custom domain. |
+| `PUBLIC_SITE_URL` | Vercel's deploy URL, else `https://prepyo.np` | Origin used for canonical and Open Graph URLs. |
+| `PUBLIC_BASE_PATH` | `/` | Sub-path the site is served from. Only GitHub Pages needs this changed. |
 
 All are `PUBLIC_` prefixed because they are inlined into the built output.
 Nothing secret belongs in any of them.
@@ -105,6 +105,19 @@ The app used React context for these; here they are small scripts:
 (Netlify, Vercel, Cloudflare Pages, S3, nginx). Every `PUBLIC_*` value is read
 at build time, not at runtime, so it has to be set in the build environment.
 
+Watch `PUBLIC_BASE_PATH` in particular. Every asset URL is built from it, so a
+mismatch does not fail gracefully — the stylesheet 404s and the page renders as
+bare unstyled HTML.
+
+### Vercel / Netlify / a custom domain
+
+Nothing to configure. These serve from the domain root, which is the default.
+Vercel auto-detects Astro, runs `npm run build` and serves `dist/`.
+
+Set `PUBLIC_APP_URL` and `PUBLIC_API_BASE_URL` in the project's environment
+variables, or the sign-up and login buttons will point at `localhost:3000` and
+the pricing section will hide itself.
+
 ### GitHub Pages
 
 `.github/workflows/deploy.yml` builds and publishes on every push to `main`.
@@ -114,10 +127,11 @@ default "Deploy from a branch" it serves the repo files directly and 404s,
 because the built `index.html` only exists in the ignored `dist/`.
 
 This repo is a project page, so it is served from `/Prepyo-Online/` rather than
-the domain root. That is why `base` is set: Astro rewrites the asset URLs it
-generates, and anything written by hand in markup goes through `asset()` in
-`src/consts.ts`. In-page links are bare `#section` fragments so they do not care
-about the base at all.
+the domain root — which is why the workflow sets `PUBLIC_BASE_PATH`. Astro
+rewrites the asset URLs it generates, and anything written by hand in markup
+goes through `asset()` in `src/consts.ts`. In-page links are bare `#section`
+fragments so they do not care about the base at all, which is what lets the same
+source deploy to both a sub-path and a root domain.
 
 To point the deployed site at a real app and API, set repository variables
 (Settings → Secrets and variables → Actions → Variables) named `PUBLIC_APP_URL`
