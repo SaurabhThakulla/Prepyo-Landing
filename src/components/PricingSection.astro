@@ -1,0 +1,185 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHeading from '@/components/SectionHeading.astro';
+
+const GATEWAYS = ['eSewa', 'Khalti', 'Fonepay'];
+---
+
+{/*
+  The "Subscription" entry in the nav, as a section on the page.
+
+  Plans are fetched rather than hardcoded so the prices a visitor sees here are
+  the same ones checkout charges. If the request fails the section hides itself
+  instead of showing a price that might be wrong.
+*/}
+<section id="pricing" class="py-20 border-t border-border" data-pricing>
+  <SectionHeading
+    eyebrow="Nepal pricing"
+    eyebrowIcon="lucide:wallet"
+    title="Plans priced for Nepali students"
+    description="Pay in rupees through eSewa, Khalti or Fonepay. No international credit card, no subscription traps — every plan can be cancelled from your profile."
+  />
+
+  {/* Placeholder cards, replaced once the API answers. */}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-pricing-skeleton>
+    {[0, 1, 2, 3].map(() => <div class="rounded-2xl border border-border bg-card p-6 h-[420px] animate-pulse" />)}
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start hidden" data-pricing-grid></div>
+
+  <div class="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-muted-foreground">
+    <Icon name="lucide:credit-card" class="w-3.5 h-3.5 text-primary" />
+    <span>Accepted here:</span>
+    {
+      GATEWAYS.map(gateway => (
+        <span class="rounded-full border border-border bg-card px-3 py-1 text-foreground">{gateway}</span>
+      ))
+    }
+  </div>
+
+  {/*
+    The card and feature-row markup lives here rather than in a JavaScript
+    string so Tailwind can see every class it needs to generate.
+  */}
+  <template data-plan-template>
+    <div class="relative rounded-2xl border border-border bg-card p-6 space-y-5 transition-all hover:-translate-y-1 duration-200">
+      <span
+        class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-md hidden"
+        data-popular
+      >
+        Most popular
+      </span>
+
+      <div class="space-y-1">
+        <h3 class="font-display text-base font-bold text-foreground" data-name></h3>
+        <p class="text-[11px] text-muted-foreground" data-duration></p>
+      </div>
+
+      <div class="flex items-baseline gap-1.5">
+        <span class="font-display text-2xl lg:text-3xl font-black text-foreground" data-price></span>
+        <span class="text-xs font-semibold text-muted-foreground hidden" data-period></span>
+      </div>
+
+      <div
+        class="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-md hidden"
+        data-bonus
+      >
+      </div>
+
+      <div class="flex items-center gap-3 rounded-xl bg-muted/50 border border-border p-3 text-center">
+        <div class="flex-1">
+          <div class="font-display text-sm font-black text-foreground" data-evals></div>
+          <div class="text-[10px] text-muted-foreground font-semibold">AI evals / day</div>
+        </div>
+        <div class="w-px self-stretch bg-border"></div>
+        <div class="flex-1">
+          <div class="font-display text-sm font-black text-foreground" data-mocks></div>
+          <div class="text-[10px] text-muted-foreground font-semibold">Full mock exams</div>
+        </div>
+      </div>
+
+      <ul class="space-y-2 pt-1 border-t border-border" data-features></ul>
+
+      {/* Free tier starts straight away; paid plans go to checkout. */}
+      <a
+        class="inline-flex items-center justify-center whitespace-nowrap text-xs font-semibold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] border border-border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground w-full rounded-xl font-bold h-10"
+        data-cta
+      ></a>
+    </div>
+  </template>
+
+  <template data-feature-template>
+    <li class="flex items-start gap-2 text-xs text-foreground font-medium">
+      <Icon name="lucide:check-circle-2" class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+      <span class="leading-relaxed" data-feature-label></span>
+    </li>
+  </template>
+</section>
+
+<script>
+  import { API_BASE_URL, appUrl, type SubscriptionPlan } from '@/consts';
+
+  const section = document.querySelector<HTMLElement>('[data-pricing]')!;
+  const skeleton = section.querySelector<HTMLElement>('[data-pricing-skeleton]')!;
+  const grid = section.querySelector<HTMLElement>('[data-pricing-grid]')!;
+  const planTemplate = section.querySelector<HTMLTemplateElement>('[data-plan-template]')!;
+  const featureTemplate = section.querySelector<HTMLTemplateElement>('[data-feature-template]')!;
+
+  // The popular plan is the same outline card with an emphasised border, so the
+  // difference is expressed as a class swap rather than a second template.
+  const POPULAR_CARD = ['border-primary/60', 'shadow-card', 'lg:-mt-3', 'lg:pb-8'];
+  const POPULAR_CTA = ['bg-primary', 'text-primary-foreground', 'hover:bg-primary/90'];
+  const PLAIN_CTA = ['border', 'border-border', 'bg-background', 'hover:bg-accent', 'hover:text-accent-foreground'];
+
+  function buildCard(plan: SubscriptionPlan): HTMLElement {
+    const card = planTemplate.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    const pick = <T extends HTMLElement>(name: string) => card.querySelector<T>(`[data-${name}]`)!;
+
+    const isFree = plan.priceNPR === 0;
+    const bonusDays = plan.bonusDays || 0;
+    const totalDays = (plan.durationDays || plan.durationMonths * 30) + bonusDays;
+
+    if (plan.isPopular) {
+      card.classList.remove('border-border');
+      card.classList.add(...POPULAR_CARD);
+      pick('popular').classList.remove('hidden');
+    }
+
+    pick('name').textContent = plan.name;
+    pick('duration').textContent = isFree
+      ? 'Free starter'
+      : plan.id === 'weekly'
+        ? '7 days intensive sprint'
+        : `${totalDays} Days (${totalDays - bonusDays} + ${bonusDays} bonus)`;
+
+    pick('price').textContent = isFree ? 'Free' : `NPR ${plan.priceNPR.toLocaleString()}`;
+
+    if (!isFree) {
+      const period = pick('period');
+      period.textContent = `/ ${plan.id === 'weekly' ? '7d' : plan.durationMonths === 1 ? 'mo' : '3mo'}`;
+      period.classList.remove('hidden');
+    }
+
+    if (bonusDays > 0) {
+      const bonus = pick('bonus');
+      bonus.textContent = `+${bonusDays} Bonus Days Included`;
+      bonus.classList.remove('hidden');
+    }
+
+    pick('evals').textContent = String(plan.aiEvaluationsPerDay);
+    pick('mocks').textContent = String(plan.mockTestsIncluded);
+
+    const features = pick('features');
+    for (const feature of plan.features) {
+      const row = featureTemplate.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      row.querySelector<HTMLElement>('[data-feature-label]')!.textContent = feature;
+      features.append(row);
+    }
+
+    const cta = pick<HTMLAnchorElement>('cta');
+    cta.href = appUrl(isFree ? '/dashboard' : '/subscription');
+    cta.textContent = isFree ? 'Start free' : `Choose ${plan.name.split(' ')[0]}`;
+    if (plan.isPopular) {
+      cta.classList.remove(...PLAIN_CTA);
+      cta.classList.add(...POPULAR_CTA);
+    }
+
+    return card;
+  }
+
+  // The public plans endpoint — /subscriptions on its own is the signed-in
+  // learner's own subscription state.
+  fetch(`${API_BASE_URL}/subscriptions/plans`)
+    .then(response => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
+    .then((data: { plans: SubscriptionPlan[] }) => {
+      if (!data?.plans?.length) throw new Error('no plans');
+
+      grid.append(...data.plans.map(buildCard));
+      skeleton.remove();
+      grid.classList.remove('hidden');
+    })
+    .catch(() => {
+      // Better no prices than prices that might be wrong.
+      section.remove();
+    });
+</script>

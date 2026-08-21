@@ -1,0 +1,37 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/Hero.astro';
+import ExamsSection from '@/components/ExamsSection.astro';
+import FeaturesSection from '@/components/FeaturesSection.astro';
+import HowItWorksSection from '@/components/HowItWorksSection.astro';
+import PricingSection from '@/components/PricingSection.astro';
+import TrustBadges from '@/components/TrustBadges.astro';
+import InstitutionsSection from '@/components/InstitutionsSection.astro';
+import FAQSection from '@/components/FAQSection.astro';
+import FinalCTA from '@/components/FinalCTA.astro';
+
+/**
+ * The public landing page for Prepyo.
+ *
+ * Top navigation links smoothly scroll directly to each respective section
+ * on this page (#products, #features, #how-it-works, #pricing, #institutions, #faq).
+ */
+---
+
+<Layout
+  title="Prepyo — Nepal’s Premier PTE & IELTS AI Prep Platform"
+  description="Master PTE 79+ and IELTS Band 8.0+ with realistic practice, full mock exam simulations, instant AI writing & speaking evaluations, and Nepal leaderboards."
+>
+  <div class="w-full space-y-4">
+    <Hero />
+    <ExamsSection />
+    <FeaturesSection />
+    <HowItWorksSection />
+    <PricingSection />
+    <TrustBadges />
+    <InstitutionsSection />
+    <FAQSection />
+    <FinalCTA />
+    <div class="pb-8"></div>
+  </div>
+</Layout>

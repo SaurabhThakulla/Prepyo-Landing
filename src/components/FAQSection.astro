@@ -1,0 +1,145 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const FAQS = [
+  {
+    question: 'How accurate is the Prepyo AI evaluation compared to the actual PTE / IELTS examiners?',
+    answer:
+      'Prepyo AI models are trained and calibrated on thousands of validated test samples against official Pearson PTE and IELTS rubrics. The scoring engine evaluates fluency, pronunciation, grammar, lexical resource, and task achievement with a 99.4% correlation to official exam scores.',
+  },
+  {
+    question: 'How can I pay from Nepal? Are eSewa, Khalti, and Fonepay accepted?',
+    answer:
+      'Yes! We are built specifically for Nepal. You can pay instantly in Nepali Rupees (NPR) using eSewa, Khalti, Fonepay QR, or local mobile banking. No dollar cards or international payment gateways needed.',
+  },
+  {
+    question: 'Can I switch between PTE Academic and IELTS practice on the same account?',
+    answer:
+      'Yes! You can toggle between PTE Academic and IELTS at any time with one click from the top bar. Your progress, diagnostic benchmarks, and mistake banks for each exam are stored separately and accurately.',
+  },
+  {
+    question: 'What is included in the Free tier?',
+    answer:
+      'The Free Forever plan includes 1 full diagnostic mock test, 3 AI writing and speaking evaluations per day, complete access to the Mistake Bank, and daily practice missions. You can upgrade anytime to Pro or Elite for unlimited mock tests and high-frequency AI evaluations.',
+  },
+  {
+    question: 'Do you offer bulk accounts for education consultancies and language institutes?',
+    answer:
+      'Yes! Over 40+ consultancies across Kathmandu, Pokhara, Chitwan, and Butwal use Prepyo to manage student cohorts, monitor attendance and mock performance, and provide AI test preparation under their institution.',
+  },
+];
+
+// The first answer is open on arrival so the section never reads as a wall of
+// closed rows.
+const DEFAULT_OPEN = 0;
+---
+
+<section id="faq" class="py-24 sm:py-32 border-t border-border" data-faq>
+  <div class="text-center space-y-4 mb-16 max-w-3xl mx-auto px-4">
+    <span
+      class="inline-flex items-center gap-2.5 rounded-full border border-border bg-card px-5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground shadow-sm"
+    >
+      <Icon name="lucide:help-circle" class="w-4 h-4 text-primary" />
+      Got Questions?
+    </span>
+
+    <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight">
+      Frequently asked questions
+    </h2>
+
+    <p class="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+      Everything you need to know about the Prepyo AI platform, scoring accuracy, and local Nepal payment options.
+    </p>
+  </div>
+
+  <div class="max-w-4xl lg:max-w-5xl mx-auto space-y-4 px-4 sm:px-6">
+    {
+      FAQS.map((faq, idx) => {
+        const isOpen = idx === DEFAULT_OPEN;
+
+        return (
+          <div
+            data-faq-item
+            class:list={[
+              'rounded-2xl sm:rounded-3xl border transition-all duration-300 overflow-hidden',
+              isOpen
+                ? 'border-primary/50 bg-card shadow-xl shadow-primary/5 ring-1 ring-primary/20'
+                : 'border-border bg-card/70 hover:bg-card hover:border-border/80 hover:shadow-md',
+            ]}
+          >
+            <button
+              type="button"
+              aria-expanded={String(isOpen)}
+              aria-controls={`faq-answer-${idx}`}
+              class="w-full p-6 sm:p-7 text-left flex items-center justify-between gap-6 cursor-pointer"
+              data-faq-trigger
+            >
+              <span class="font-display text-base sm:text-lg lg:text-xl font-bold text-foreground leading-snug">
+                {faq.question}
+              </span>
+              <div
+                data-faq-chevron
+                class:list={[
+                  'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300',
+                  isOpen
+                    ? 'bg-primary text-white border-primary rotate-180 shadow-md shadow-primary/30'
+                    : 'bg-muted text-muted-foreground border-border hover:text-foreground',
+                ]}
+              >
+                <Icon name="lucide:chevron-down" class="w-5 h-5" />
+              </div>
+            </button>
+
+            <div
+              id={`faq-answer-${idx}`}
+              data-faq-answer
+              class:list={[
+                'px-6 sm:px-7 pb-7 pt-2 text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed border-t border-border/40 animate-in fade-in slide-in-from-top-1 duration-200',
+                !isOpen && 'hidden',
+              ]}
+            >
+              {faq.answer}
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script>
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-faq-item]'));
+
+  // Only the classes that differ between the two states, so the shared ones
+  // stay declared once in the markup.
+  const OPEN_CARD = ['border-primary/50', 'bg-card', 'shadow-xl', 'shadow-primary/5', 'ring-1', 'ring-primary/20'];
+  const CLOSED_CARD = ['border-border', 'bg-card/70', 'hover:bg-card', 'hover:border-border/80', 'hover:shadow-md'];
+  const OPEN_CHEVRON = ['bg-primary', 'text-white', 'border-primary', 'rotate-180', 'shadow-md', 'shadow-primary/30'];
+  const CLOSED_CHEVRON = ['bg-muted', 'text-muted-foreground', 'border-border', 'hover:text-foreground'];
+
+  function paint(item: HTMLElement, open: boolean) {
+    const trigger = item.querySelector<HTMLButtonElement>('[data-faq-trigger]')!;
+    const chevron = item.querySelector<HTMLElement>('[data-faq-chevron]')!;
+    const answer = item.querySelector<HTMLElement>('[data-faq-answer]')!;
+
+    item.classList.toggle('open', open);
+    trigger.setAttribute('aria-expanded', String(open));
+    answer.classList.toggle('hidden', !open);
+
+    OPEN_CARD.forEach(cls => item.classList.toggle(cls, open));
+    CLOSED_CARD.forEach(cls => item.classList.toggle(cls, !open));
+    OPEN_CHEVRON.forEach(cls => chevron.classList.toggle(cls, open));
+    CLOSED_CHEVRON.forEach(cls => chevron.classList.toggle(cls, !open));
+  }
+
+  items.forEach(item => {
+    item.querySelector<HTMLButtonElement>('[data-faq-trigger]')!.addEventListener('click', () => {
+      const willOpen = !item.classList.contains('open');
+      // One answer at a time, matching the accordion the app shipped.
+      items.forEach(other => paint(other, other === item && willOpen));
+    });
+  });
+
+  // Reflect the server-rendered open row in the class the click handler reads.
+  items.forEach(item => item.classList.toggle('open', !item.querySelector('[data-faq-answer]')!.classList.contains('hidden')));
+</script>

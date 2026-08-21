@@ -1,0 +1,33 @@
+---
+import { Icon } from 'astro-icon/components';
+
+/**
+ * The eyebrow + title + description block every landing section opens with.
+ *
+ * It exists so the sections stay visually identical: before this, the same
+ * markup was pasted into each one and had already drifted apart.
+ */
+interface Props {
+  /** Small pill above the title, e.g. "Everything you need". */
+  eyebrow: string;
+  /** An icon name from the lucide set, e.g. "lucide:sparkles". */
+  eyebrowIcon: string;
+  /** Tailwind text colour for the eyebrow icon. */
+  eyebrowIconClass?: string;
+  title: string;
+  description?: string;
+}
+
+const { eyebrow, eyebrowIcon, eyebrowIconClass = 'text-primary', title, description } = Astro.props;
+---
+
+<div class="text-center space-y-3 mb-14">
+  <span class="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
+    <Icon name={eyebrowIcon} class={`w-3.5 h-3.5 ${eyebrowIconClass}`} />
+    {eyebrow}
+  </span>
+
+  <h2 class="font-display text-3xl sm:text-4xl font-black text-foreground">{title}</h2>
+
+  {description && <p class="text-muted-foreground text-sm max-w-lg mx-auto leading-relaxed">{description}</p>}
+</div>
