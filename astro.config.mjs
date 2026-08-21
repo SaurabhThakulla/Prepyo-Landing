@@ -14,7 +14,7 @@ const base = process.env.PUBLIC_BASE_PATH || '/';
 // Vercel exposes the deployment's own hostname at build time, so canonical and
 // Open Graph URLs stay correct on preview deploys as well as production.
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
-const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://prepyo.np');
+const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://prepyo.online');
 
 // The marketing site is fully static — every section renders at build time and
 // the only runtime JavaScript is the handful of inline scripts that drive the

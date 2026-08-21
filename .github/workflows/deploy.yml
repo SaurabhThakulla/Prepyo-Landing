@@ -39,13 +39,14 @@ jobs:
           # rather than at the domain root. Both are read at build time.
           PUBLIC_SITE_URL: https://saurabhthakulla.github.io
           PUBLIC_BASE_PATH: /Prepyo-Online
-          # Where the "Sign up" / "Login" links point. Set this to the deployed
-          # Next.js app once it has a public URL.
-          PUBLIC_APP_URL: ${{ vars.PUBLIC_APP_URL || 'http://localhost:3000' }}
-          # The pricing section fetches plans from here. Until this points at a
-          # reachable HTTPS API whose ALLOWED_ORIGINS includes the Pages origin,
-          # that section will hide itself rather than show a stale price.
-          PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1' }}
+          # Where the "Sign up" / "Login" links point. Overridable with a repo
+          # variable; otherwise src/consts.ts falls back to the same production
+          # URL, so there is only one place to change it.
+          PUBLIC_APP_URL: ${{ vars.PUBLIC_APP_URL || 'https://dashboard.prepyo.online' }}
+          # The pricing section fetches plans from here. It stays hidden until
+          # the app's BACKEND_URL points at the deployed Go service and that
+          # service lists this site's origin in ALLOWED_ORIGINS.
+          PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL || 'https://dashboard.prepyo.online/api/v1' }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

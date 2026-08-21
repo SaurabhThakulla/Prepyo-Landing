@@ -1,6 +1,6 @@
 # Prepyo Landing
 
-The public marketing site for [Prepyo](https://prepyo.np) — Nepal's AI-powered PTE Academic and IELTS preparation platform.
+The public marketing site for [Prepyo](https://prepyo.online) — Nepal's AI-powered PTE Academic and IELTS preparation platform.
 
 It was split out of the Next.js app (`prepyo-app`) so the pages a first-time
 visitor sees are plain static HTML, with no React bundle, no auth context and no
@@ -37,9 +37,9 @@ Copy `.env.example` to `.env` and adjust:
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `PUBLIC_APP_URL` | `http://localhost:3000` | Where the Next.js app lives. Every sign-up / login / dashboard link is an absolute URL into it. |
-| `PUBLIC_API_BASE_URL` | `http://localhost:8080/api/v1` | The Go API. Used for the single public request this site makes. |
-| `PUBLIC_SITE_URL` | Vercel's deploy URL, else `https://prepyo.np` | Origin used for canonical and Open Graph URLs. |
+| `PUBLIC_APP_URL` | `https://dashboard.prepyo.online` | Where the Next.js app lives. Every sign-up / login / dashboard link is an absolute URL into it. |
+| `PUBLIC_API_BASE_URL` | `https://dashboard.prepyo.online/api/v1` | The API, via the app's proxy. Used for the single public request this site makes. |
+| `PUBLIC_SITE_URL` | Vercel's deploy URL, else `https://prepyo.online` | Origin used for canonical and Open Graph URLs. |
 | `PUBLIC_BASE_PATH` | `/` | Sub-path the site is served from. Only GitHub Pages needs this changed. |
 
 All are `PUBLIC_` prefixed because they are inlined into the built output.
@@ -53,11 +53,16 @@ request is cross-origin, so this site's origin has to be in the backend's
 `ALLOWED_ORIGINS` list:
 
 ```bash
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4321
+ALLOWED_ORIGINS=https://dashboard.prepyo.online,https://prepyo.online,http://localhost:3000,http://localhost:4321
 ```
 
-If the request fails, the pricing section removes itself rather than showing a
-stale number.
+If the request fails, the pricing section and the nav links pointing at it
+remove themselves rather than showing a stale number.
+
+**This is not live yet.** `https://dashboard.prepyo.online/api/v1/*` currently
+returns 404 (`DNS_HOSTNAME_RESOLVED_PRIVATE`) because the app's `BACKEND_URL`
+still points at `localhost:8080`, which Vercel will not proxy to. Pointing that
+at the deployed Go service turns the pricing section on with no change here.
 
 ## Structure
 
@@ -111,12 +116,9 @@ bare unstyled HTML.
 
 ### Vercel / Netlify / a custom domain
 
-Nothing to configure. These serve from the domain root, which is the default.
-Vercel auto-detects Astro, runs `npm run build` and serves `dist/`.
-
-Set `PUBLIC_APP_URL` and `PUBLIC_API_BASE_URL` in the project's environment
-variables, or the sign-up and login buttons will point at `localhost:3000` and
-the pricing section will hide itself.
+Nothing to configure. These serve from the domain root, which is the default,
+and the app and API URLs already default to production. Vercel auto-detects
+Astro, runs `npm run build` and serves `dist/`.
 
 ### GitHub Pages
 
