@@ -3,16 +3,15 @@ import { Icon } from 'astro-icon/components';
 import { appUrl, BASE_PATH } from '@/consts';
 
 const EXPLORE_LINKS = [
-  { id: 'products', label: 'PTE & IELTS Exams' },
-  { id: 'features', label: 'AI Evaluation Features' },
-  { id: 'how-it-works', label: 'How It Works' },
-  { id: 'pricing', label: 'Pricing Plans (NPR)' },
+  { id: 'products', label: 'PTE & IELTS' },
+  { id: 'features', label: 'Features' },
+  { id: 'how-it-works', label: 'How it works' },
+  { id: 'pricing', label: 'Pricing' },
 ];
 
 const PLATFORM_LINKS = [
-  { id: 'how-it-works', label: 'How It Works' },
-  { id: 'institutions', label: 'Consultancies & Institutes' },
-  { id: 'faq', label: 'FAQ & Support' },
+  { id: 'institutions', label: 'For institutes' },
+  { id: 'faq', label: 'FAQ' },
 ];
 
 const year = new Date().getFullYear();
@@ -35,7 +34,7 @@ const year = new Date().getFullYear();
           </span>
         </a>
         <p class="text-xs text-muted-foreground leading-relaxed">
-          AI-powered PTE Academic & IELTS preparation platform crafted specifically for Nepali test takers.
+          AI-powered PTE and IELTS practice, built for Nepali students.
         </p>
         <div class="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1">
           <span>Made with pride for Nepal</span>
@@ -83,18 +82,15 @@ const year = new Date().getFullYear();
         <h4 class="text-xs font-bold uppercase tracking-wider text-foreground">Account</h4>
         <ul class="space-y-1.5 text-xs text-muted-foreground">
           <li>
-            <a href={appUrl('/login')} class="hover:text-primary transition-colors font-medium">Learner Login</a>
+            <a href={appUrl('/login')} class="hover:text-primary transition-colors font-medium">Login</a>
           </li>
           <li>
             <a href={appUrl('/signup')} class="hover:text-primary transition-colors font-medium text-primary">
-              Create Free Account
+              Create free account
             </a>
           </li>
           <li>
-            <a href={appUrl('/dashboard')} class="hover:text-primary transition-colors">Student Dashboard</a>
-          </li>
-          <li>
-            <a href={appUrl('/diagnostic')} class="hover:text-primary transition-colors">Free Diagnostic Mock</a>
+            <a href={appUrl('/diagnostic')} class="hover:text-primary transition-colors">Free test</a>
           </li>
         </ul>
       </div>
@@ -104,10 +100,8 @@ const year = new Date().getFullYear();
       class="pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted-foreground"
     >
       <div>© {year} Prepyo Nepal. All rights reserved.</div>
-      <div class="flex items-center gap-4">
-        <span>Payment via eSewa / Khalti / Fonepay</span>
-        <span>·</span>
-        <span>Pearson PTE & IELTS Aligned</span>
+      <div class="flex items-center gap-3">
+        <span>eSewa · Khalti · Fonepay</span>
       </div>
     </div>
   </div>

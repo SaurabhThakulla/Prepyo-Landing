@@ -32,19 +32,14 @@ interface FeatureSlide {
 const FEATURES: FeatureSlide[] = [
   {
     id: 'mock-simulations',
-    tabLabel: 'Mock Simulations',
+    tabLabel: 'Mock Tests',
     tabIcon: 'lucide:monitor-play',
-    tag: 'EXAM SIMULATION ENGINE',
-    title: 'Full-Length PTE & IELTS Mock Simulations',
+    tag: 'MOCK TESTS',
+    title: 'Full-length PTE & IELTS mocks',
     description:
-      'Experience the real test environment before test day. Exact question timing, audio prompt sequencing, and instantaneous scoring calibrated to Pearson and British Council standards.',
-    bullets: [
-      'Full-length PTE Academic, PTE Core & IELTS Academic mocks',
-      'Realistic test center countdowns, mic checks & audio waveforms',
-      'Instant sub-skill score breakdown across Speaking, Writing, Reading & Listening',
-      'Predicted score mapped to the official PTE and IELTS scales',
-    ],
-    ctaText: 'Start Free Mock Simulation',
+      'Same timing, same question order, same scoring as the real test. Your score comes back the moment you finish.',
+    bullets: ['Real exam timing and question order', 'A score for all four skills', 'See your likely band before test day'],
+    ctaText: 'Try a free mock',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-emerald-500',
     themeBg: 'bg-emerald-500/10',
@@ -52,8 +47,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'mock-sim',
     floatingBadges: [
       {
-        title: 'Predicted Score: PTE 82 / Band 8.5',
-        subtitle: 'Scored on official band descriptors',
+        title: 'Your score: PTE 82 / Band 8.5',
+        subtitle: 'Ready the moment you finish',
         icon: 'lucide:award',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -61,8 +56,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: 'AI Scored in 2.8s',
-        subtitle: 'Full 4-skill diagnostic report',
+        title: 'Marked in 3 seconds',
+        subtitle: 'All four skills',
         icon: 'lucide:sparkles',
         iconColor: 'text-primary',
         iconBg: 'bg-primary/15',
@@ -73,19 +68,18 @@ const FEATURES: FeatureSlide[] = [
   },
   {
     id: 'ai-rubrics',
-    tabLabel: 'Sentence Rubrics',
+    tabLabel: 'Writing Feedback',
     tabIcon: 'lucide:file-edit',
-    tag: 'AI ESSAY & WRITING RUBRIC',
-    title: 'Sentence-by-Sentence AI Rewrites & Diagnostics',
+    tag: 'WRITING FEEDBACK',
+    title: 'See exactly why you lost marks',
     description:
-      'Never wonder why you lost marks on your essays. Prepyo AI dissects your writing line-by-line, detecting grammatical slips, lexical gaps, and generating Band 8.0 / PTE 79+ rewrites.',
+      'Prepyo reads your writing one sentence at a time, shows what went wrong, and rewrites it the way an examiner wants to read it.',
     bullets: [
-      'Granular grammatical & lexical error detection with instant corrections',
-      'One-click vocabulary upgrades with high-scoring academic collocations',
-      'Coherence, cohesion, and task achievement rubric breakdown',
-      'Aligned to official Pearson PTE & IELTS Band 9 marking descriptors',
+      'Grammar and word choice fixed in place',
+      'Stronger words suggested as you write',
+      'Marked on the official band descriptors',
     ],
-    ctaText: 'Analyze Your Essay',
+    ctaText: 'Check my writing',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-amber-500',
     themeBg: 'bg-amber-500/10',
@@ -93,8 +87,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'ai-rubrics',
     floatingBadges: [
       {
-        title: '+1.5 Band Rewrite Generated',
-        subtitle: 'Upgraded to Academic Lexicon',
+        title: 'Rewritten to Band 8.5',
+        subtitle: 'With the words examiners look for',
         icon: 'lucide:sparkles',
         iconColor: 'text-amber-500',
         iconBg: 'bg-amber-500/15',
@@ -102,8 +96,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: 'Grammar & Accuracy: 94/100',
-        subtitle: 'Zero run-on sentence errors',
+        title: 'Grammar: 94 / 100',
+        subtitle: 'No run-on sentences left',
         icon: 'lucide:check-circle-2',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -114,19 +108,18 @@ const FEATURES: FeatureSlide[] = [
   },
   {
     id: 'ai-coach',
-    tabLabel: '24/7 AI Coach',
+    tabLabel: 'AI Coach',
     tabIcon: 'lucide:sparkles',
-    tag: '24/7 PERSONAL TUTOR',
-    title: 'Your 24/7 AI Exam Mentor & Strategy Specialist',
+    tag: 'AI TUTOR',
+    title: 'A tutor you can ask at 2am',
     description:
-      'Stuck on Describe Image templates, Summarize Spoken Text, or IELTS Reading True/False/Not Given? Ask your AI tutor anytime for custom drill advice, sample templates, and strategy.',
+      'Stuck on Describe Image or True / False / Not Given? Ask for a template, a tip, or a quick explanation any time.',
     bullets: [
-      'Context-aware question hints, structures, and timing strategies',
-      'Personalized drill recommendations targeting your specific weak areas',
-      'Specific remediation for common Nepali test-taker pronunciation & grammar quirks',
-      'Unlimited real-time explanations and practice rounds around the clock',
+      'Templates and timing for every task type',
+      'Practice picked for your weak areas',
+      'Fixes for sounds Nepali speakers often miss',
     ],
-    ctaText: 'Chat with AI Coach',
+    ctaText: 'Ask the AI coach',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-purple-400',
     themeBg: 'bg-purple-500/10',
@@ -134,8 +127,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'ai-coach',
     floatingBadges: [
       {
-        title: 'Instant Tutor Reply · 0.9s',
-        subtitle: 'PTE & IELTS certified guidance',
+        title: 'Answers in a second',
+        subtitle: 'Any hour, any question',
         icon: 'lucide:bot',
         iconColor: 'text-purple-400',
         iconBg: 'bg-purple-500/15',
@@ -143,8 +136,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: 'Nepali L1 Transfer Tips',
-        subtitle: 'Consonant cluster & vowel fix',
+        title: 'Tips for Nepali speakers',
+        subtitle: 'The sounds we usually miss',
         icon: 'lucide:lightbulb',
         iconColor: 'text-amber-500',
         iconBg: 'bg-amber-500/15',
@@ -155,19 +148,18 @@ const FEATURES: FeatureSlide[] = [
   },
   {
     id: 'mistake-bank',
-    tabLabel: 'Mistake Bank & Streaks',
+    tabLabel: 'Mistake Bank',
     tabIcon: 'lucide:flame',
-    tag: 'SPACED REPETITION ENGINE',
-    title: 'Automatic Mistake Bank & Spaced Repetition',
+    tag: 'MISTAKE BANK',
+    title: 'Your mistakes, saved and brought back',
     description:
-      'Every missed question across mocks and drills is automatically logged, categorized by root cause, and scheduled for spaced repetition review until you clear the flaw.',
+      'Every wrong answer is saved and sorted, then handed back to you later — until you get it right.',
     bullets: [
-      'Categorized automatically into Grammar, Spelling, Collocations & Fluency',
-      'Scientifically timed spaced repetition reminders right before memory decay',
-      'Daily practice streaks with XP multipliers to lock in consistency',
-      'Clear tracking showing items moving from "Needs Review" to "Mastered"',
+      'Sorted by grammar, spelling and vocabulary',
+      'Comes back just before you forget it',
+      'Daily streaks to keep the habit going',
     ],
-    ctaText: 'Explore Mistake Bank',
+    ctaText: 'See the mistake bank',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-rose-500',
     themeBg: 'bg-rose-500/10',
@@ -175,8 +167,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'mistake-bank',
     floatingBadges: [
       {
-        title: '🔥 14-Day Streak · 2.0x XP',
-        subtitle: 'Longest streak yet — keep it going',
+        title: '14-day streak',
+        subtitle: 'Your longest yet',
         icon: 'lucide:flame',
         iconColor: 'text-rose-500',
         iconBg: 'bg-rose-500/15',
@@ -184,8 +176,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: '4 Weak Spots Cleared Today',
-        subtitle: 'Moved out of your review queue',
+        title: '4 weak spots cleared today',
+        subtitle: 'Off your review list',
         icon: 'lucide:check',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -196,19 +188,17 @@ const FEATURES: FeatureSlide[] = [
   },
   {
     id: 'speaking-analyzer',
-    tabLabel: 'Speaking Analyzer',
+    tabLabel: 'Speaking',
     tabIcon: 'lucide:mic',
-    tag: 'ACOUSTIC SPEECH ANALYSIS',
-    title: 'Real-Time Acoustic & Phoneme Speech Analysis',
-    description:
-      'Get acoustic wave analysis with phoneme-level color coding. Detect unnatural pauses, hesitations, intonation shifts, and vowel lengthening that impact your PTE & IELTS speaking scores.',
+    tag: 'SPEAKING',
+    title: 'Hear what the examiner hears',
+    description: 'Record yourself and see which words let you down, how fast you spoke, and where you paused.',
     bullets: [
-      'Phoneme-by-phoneme pronunciation accuracy scoring with color heatmaps',
-      'Oral fluency detection: speech rate (wpm), hesitation pauses, and fillers',
-      'Live audio recording playback with native speaker benchmark comparisons',
-      'Targets official PTE 90 and IELTS Band 9 pronunciation standards',
+      'A pronunciation score for every word',
+      'Speaking speed and pauses measured',
+      'Compare yourself to a native recording',
     ],
-    ctaText: 'Test Your Pronunciation',
+    ctaText: 'Test my speaking',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-cyan-500',
     themeBg: 'bg-cyan-500/10',
@@ -216,8 +206,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'speaking-analyzer',
     floatingBadges: [
       {
-        title: 'Oral Fluency: 89/90 (Optimal)',
-        subtitle: 'Pace: 138 wpm · Zero Fillers',
+        title: 'Fluency: 89 / 90',
+        subtitle: 'Good pace, no filler words',
         icon: 'lucide:activity',
         iconColor: 'text-cyan-500',
         iconBg: 'bg-cyan-500/15',
@@ -225,8 +215,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: 'Phoneme Match: 98.2%',
-        subtitle: 'Standard Academic Intonation',
+        title: 'Pronunciation: 98%',
+        subtitle: 'Close to a native speaker',
         icon: 'lucide:volume-2',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -237,19 +227,17 @@ const FEATURES: FeatureSlide[] = [
   },
   {
     id: 'leaderboards',
-    tabLabel: 'Nepal Leaderboard',
+    tabLabel: 'Leaderboard',
     tabIcon: 'lucide:trophy',
-    tag: 'NEPAL COMMUNITY & XP',
-    title: 'Nepal Regional Leaderboards & Cohort Milestones',
-    description:
-      'Compete with fellow aspirants across Kathmandu, Pokhara, Chitwan, Butwal, and beyond. Earn XP points, climb regional ranks, unlock milestone badges, and stay inspired every day.',
+    tag: 'LEADERBOARD',
+    title: 'Practise alongside students across Nepal',
+    description: 'Earn XP for real practice, climb your city ranking, and keep the momentum going.',
     bullets: [
-      'City and regional leaderboards for Kathmandu, Pokhara, Lalitpur, and more',
-      'Daily and weekly study challenges with streak bonuses and XP multipliers',
-      'Exam target badges: PTE 79+ Ready, IELTS Band 8.0 Achiever',
-      'Real-time peer progress benchmarks and consultancy cohort tracking',
+      'City rankings for Kathmandu, Pokhara and more',
+      'Daily and weekly challenges',
+      'Badges for hitting PTE 79+ or Band 8.0',
     ],
-    ctaText: 'Join Nepal Leaderboards',
+    ctaText: 'See the leaderboard',
     ctaHref: appUrl('/signup'),
     themeColor: 'text-yellow-500',
     themeBg: 'bg-yellow-500/10',
@@ -257,8 +245,8 @@ const FEATURES: FeatureSlide[] = [
     mockupType: 'leaderboards',
     floatingBadges: [
       {
-        title: 'Rank #4 Kathmandu Valley',
-        subtitle: '+450 XP Earned Today ⚡',
+        title: 'Rank #4 in Kathmandu',
+        subtitle: '+450 XP today',
         icon: 'lucide:trophy',
         iconColor: 'text-yellow-500',
         iconBg: 'bg-yellow-500/15',
@@ -266,8 +254,8 @@ const FEATURES: FeatureSlide[] = [
         animClass: 'animate-float',
       },
       {
-        title: 'PTE 79+ Milestone Unlocked',
-        subtitle: 'Top 3% diagnostic rank',
+        title: 'PTE 79+ badge unlocked',
+        subtitle: 'Target reached',
         icon: 'lucide:shield-check',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -303,8 +291,8 @@ const PRE_CLONES = 2;
     <SectionHeading
       eyebrow="AI Capabilities"
       eyebrowIcon="lucide:sparkles"
-      title="Everything you need to hit your target score"
-      description="Built specifically for Nepali students preparing for Australian, UK, Canadian, and USA study and migration visas."
+      title="Everything you need to hit your score"
+      description="Built for Nepali students applying to Australia, the UK, Canada and the USA."
     />
   </div>
 
@@ -463,7 +451,7 @@ const PRE_CLONES = 2;
                             <div class="flex items-center justify-between pb-3 border-b border-border/60">
                               <div class="flex items-center gap-2">
                                 <span class="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold font-mono">PTE ACADEMIC</span>
-                                <span class="text-xs text-muted-foreground">Speaking & Writing · Item 4 of 7</span>
+                                <span class="text-xs text-muted-foreground">Speaking · Question 4 of 7</span>
                               </div>
                               <div class="flex items-center gap-2 font-mono text-xs font-bold text-rose-500 bg-rose-500/10 px-3 py-1 rounded-lg border border-rose-500/20">
                                 <Icon name="lucide:timer" class="w-3.5 h-3.5 animate-pulse" />
@@ -473,7 +461,7 @@ const PRE_CLONES = 2;
 
                             {/* Question Card */}
                             <div class="p-4 rounded-xl bg-card border border-border/60 space-y-2">
-                              <div class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Read Aloud Task</div>
+                              <div class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Read aloud</div>
                               <p class="text-xs sm:text-sm text-foreground font-medium leading-relaxed">
                                 "The rapid acceleration of renewable solar and hydroelectric power generation in Nepal has attracted substantial foreign direct investment, bolstering the regional power grid and reducing dependence on fossil fuel imports."
                               </p>
@@ -483,9 +471,9 @@ const PRE_CLONES = 2;
                             <div class="p-3 rounded-xl bg-muted/40 border border-border/60 space-y-2">
                               <div class="flex items-center justify-between text-[11px] text-muted-foreground">
                                 <span class="flex items-center gap-1.5 text-primary font-bold">
-                                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Recording Audio...
+                                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Recording...
                                 </span>
-                                <span class="font-mono">Mic Input: 98% Normal</span>
+                                <span class="font-mono">Mic: 98%</span>
                               </div>
                               <div class="flex items-center justify-between gap-1 h-8 px-2 py-1 bg-card rounded-lg border border-border/40 overflow-hidden">
                                 {[40, 65, 85, 30, 95, 75, 45, 60, 90, 100, 70, 85, 40, 60, 80, 95, 60, 75, 90, 50, 65, 80, 45, 30, 70, 90, 100, 85, 60, 40, 75, 90, 65, 80, 50, 40].map((h, i) => (
@@ -525,7 +513,7 @@ const PRE_CLONES = 2;
 
                             {/* Sentence Dissection Box */}
                             <div class="p-3.5 rounded-xl bg-card border border-border/60 space-y-2.5 text-xs leading-relaxed">
-                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Submitted Sentence Analysis</div>
+                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Your sentence</div>
                               <div class="p-2.5 rounded-lg bg-rose-500/5 border border-rose-500/20 text-foreground">
                                 <span class="text-rose-500 line-through mr-1 font-semibold">There is many reasons why</span>
                                 <span>urbanization creates problems in modern cities today.</span>
@@ -533,7 +521,7 @@ const PRE_CLONES = 2;
                               <div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-foreground space-y-1">
                                 <div class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">
                                   <Icon name="lucide:sparkles" class="w-3.5 h-3.5" />
-                                  Band 8.5 AI Recommended Rewrite:
+                                  Suggested rewrite (Band 8.5):
                                 </div>
                                 <div class="font-medium text-foreground">
                                   "There <span class="text-primary font-bold underline">are numerous compelling reasons</span> why rapid urbanization poses substantial infrastructural dilemmas."
@@ -544,14 +532,14 @@ const PRE_CLONES = 2;
                             {/* Rubric Metric Breakdown Bars */}
                             <div class="space-y-2 pt-1">
                               <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-muted-foreground font-medium">Lexical Resource & Academic Collocations</span>
+                                <span class="text-muted-foreground font-medium">Vocabulary</span>
                                 <span class="font-mono font-bold text-foreground">Band 8.5 (92%)</span>
                               </div>
                               <div class="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
                                 <div class="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full w-[92%]"></div>
                               </div>
                               <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-muted-foreground font-medium">Grammatical Range & Accuracy</span>
+                                <span class="text-muted-foreground font-medium">Grammar</span>
                                 <span class="font-mono font-bold text-foreground">Band 9.0 (96%)</span>
                               </div>
                               <div class="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
@@ -569,7 +557,7 @@ const PRE_CLONES = 2;
                                 <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
                                   <Icon name="lucide:bot" class="w-3.5 h-3.5" />
                                 </div>
-                                <span class="text-xs font-bold text-foreground">Prepyo AI Personal Tutor</span>
+                                <span class="text-xs font-bold text-foreground">Prepyo AI coach</span>
                               </div>
                               <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online
@@ -579,7 +567,7 @@ const PRE_CLONES = 2;
                             {/* Student Message */}
                             <div class="flex gap-2.5 justify-end">
                               <div class="p-3 rounded-2xl rounded-tr-sm bg-primary text-white text-xs max-w-md leading-relaxed shadow-sm">
-                                "How do I maintain full fluency in PTE Describe Image when the graph has complex trends?"
+                                "How do I keep talking for the full 40 seconds in Describe Image?"
                               </div>
                             </div>
 
@@ -590,15 +578,15 @@ const PRE_CLONES = 2;
                               </div>
                               <div class="p-3 rounded-2xl rounded-tl-sm bg-card border border-border/80 text-xs text-foreground max-w-[88%] space-y-2 shadow-sm leading-relaxed">
                                 <p class="font-medium">
-                                  Use the <strong class="text-primary font-bold">3-Phase Fluency Anchor</strong>:
+                                  Use the <strong class="text-primary font-bold">3-step method</strong>:
                                 </p>
                                 <ul class="list-disc list-inside space-y-1 text-muted-foreground text-[11px]">
-                                  <li><span class="text-foreground font-semibold">0-6s:</span> State title & axis overview clearly.</li>
-                                  <li><span class="text-foreground font-semibold">6-18s:</span> Pick the highest & lowest data points.</li>
-                                  <li><span class="text-foreground font-semibold">18-25s:</span> Conclude overall trend without pausing.</li>
+                                  <li><span class="text-foreground font-semibold">0-6s:</span> Say what the graph shows.</li>
+                                  <li><span class="text-foreground font-semibold">6-18s:</span> Point out the highest and lowest.</li>
+                                  <li><span class="text-foreground font-semibold">18-25s:</span> Finish with the overall trend.</li>
                                 </ul>
                                 <div class="pt-1 flex items-center gap-2">
-                                  <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 text-[10px] font-bold font-mono">Template Drills Ready</span>
+                                  <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 text-[10px] font-bold font-mono">Practice this now</span>
                                 </div>
                               </div>
                             </div>
@@ -610,9 +598,9 @@ const PRE_CLONES = 2;
                             {/* Mistake Bank Header */}
                             <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
                               <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 text-xs font-bold font-mono">PERSONAL MISTAKE VAULT</span>
+                                <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 text-xs font-bold font-mono">MISTAKE BANK</span>
                               </div>
-                              <span class="text-xs text-muted-foreground font-mono">18 Logged · 14 Cleared</span>
+                              <span class="text-xs text-muted-foreground font-mono">18 saved · 14 cleared</span>
                             </div>
 
                             {/* Mistake Items List */}
@@ -623,7 +611,7 @@ const PRE_CLONES = 2;
                                     <span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold">Spelling</span>
                                     <span class="font-bold text-foreground">"Accommodate" vs "Acommodate"</span>
                                   </div>
-                                  <div class="text-[10px] text-muted-foreground">PTE Write From Dictation · Double 'c' and double 'm'</div>
+                                  <div class="text-[10px] text-muted-foreground">Write From Dictation · double c, double m</div>
                                 </div>
                                 <span class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] shrink-0 flex items-center gap-1">
                                   <Icon name="lucide:check" class="w-3 h-3" /> Mastered
@@ -634,9 +622,9 @@ const PRE_CLONES = 2;
                                 <div class="space-y-0.5">
                                   <div class="flex items-center gap-2">
                                     <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-500 text-[10px] font-bold">Grammar</span>
-                                    <span class="font-bold text-foreground">Subject-Verb Agreement in Relative Clauses</span>
+                                    <span class="font-bold text-foreground">Subject-verb agreement</span>
                                   </div>
-                                  <div class="text-[10px] text-rose-500 font-semibold">Scheduled Spaced Review: Due Today</div>
+                                  <div class="text-[10px] text-rose-500 font-semibold">Due for review today</div>
                                 </div>
                                 <span class="px-2.5 py-1 rounded-lg bg-rose-500 text-white font-bold text-[10px] shrink-0">
                                   Drill Now
@@ -649,7 +637,7 @@ const PRE_CLONES = 2;
                                     <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 text-[10px] font-bold">Collocation</span>
                                     <span class="font-bold text-foreground">"Heavy Traffic" vs "Strong Traffic"</span>
                                   </div>
-                                  <div class="text-[10px] text-muted-foreground">IELTS Academic Speaking Part 3</div>
+                                  <div class="text-[10px] text-muted-foreground">IELTS Speaking Part 3</div>
                                 </div>
                                 <span class="px-2 py-1 rounded-lg bg-muted text-muted-foreground font-bold text-[10px] shrink-0 font-mono">
                                   Review in 2d
@@ -663,13 +651,13 @@ const PRE_CLONES = 2;
                           <div class="space-y-3.5">
                             {/* Header */}
                             <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
-                              <span class="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 text-xs font-bold font-mono">PHONEME ACOUSTIC ENGINE</span>
+                              <span class="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 text-xs font-bold font-mono">SPEAKING ANALYSIS</span>
                               <span class="text-xs font-mono text-primary font-bold">PTE Speaking: 89 / 90</span>
                             </div>
 
                             {/* Phoneme Wave Breakdown */}
                             <div class="p-3.5 rounded-xl bg-card border border-border/60 space-y-2.5">
-                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Acoustic Phoneme Segmentation</div>
+                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Pronunciation, word by word</div>
                               <div class="flex flex-wrap items-center gap-1.5">
                                 {[
                                   { word: 'The', color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30', score: '99%' },
@@ -691,7 +679,7 @@ const PRE_CLONES = 2;
                             <div class="grid grid-cols-2 gap-2.5 pt-1">
                               <div class="p-2.5 rounded-lg bg-card border border-border/60 space-y-1">
                                 <div class="flex justify-between text-[11px] text-muted-foreground">
-                                  <span>Speech Pace (WPM)</span>
+                                  <span>Speaking speed</span>
                                   <span class="text-foreground font-mono font-bold">138 wpm</span>
                                 </div>
                                 <div class="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden">
@@ -700,7 +688,7 @@ const PRE_CLONES = 2;
                               </div>
                               <div class="p-2.5 rounded-lg bg-card border border-border/60 space-y-1">
                                 <div class="flex justify-between text-[11px] text-muted-foreground">
-                                  <span>Hesitation Pauses</span>
+                                  <span>Pauses</span>
                                   <span class="text-emerald-500 font-mono font-bold">0.0s (None)</span>
                                 </div>
                                 <div class="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden">
@@ -716,7 +704,7 @@ const PRE_CLONES = 2;
                             {/* Leaderboard Header */}
                             <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
                               <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-500 text-xs font-bold font-mono">NEPAL REGIONAL XP BOARD</span>
+                                <span class="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-500 text-xs font-bold font-mono">NEPAL LEADERBOARD</span>
                               </div>
                               <span class="text-xs font-bold text-primary font-mono">Kathmandu Valley</span>
                             </div>
@@ -724,10 +712,10 @@ const PRE_CLONES = 2;
                             {/* Leaderboard Rows */}
                             <div class="space-y-1.5">
                               {[
-                                { rank: '1', name: 'Aayush S.', city: 'Kathmandu', badge: '👑', target: 'PTE 86 (Achieved)', xp: '4,820 XP', highlight: false },
-                                { rank: '2', name: 'Prerana K.', city: 'Pokhara', badge: '🥈', target: 'IELTS 8.5 (Achieved)', xp: '4,450 XP', highlight: false },
-                                { rank: '3', name: 'Bikash T.', city: 'Lalitpur', badge: '🥉', target: 'PTE 82 (Achieved)', xp: '4,190 XP', highlight: false },
-                                { rank: '4', name: 'You (Target: PTE 79+)', city: 'Kathmandu', badge: '⚡', target: 'PTE 79 Predicted', xp: '3,950 XP', highlight: true },
+                                { rank: '1', name: 'Aayush S.', city: 'Kathmandu', badge: '👑', target: 'PTE 86', xp: '4,820 XP', highlight: false },
+                                { rank: '2', name: 'Prerana K.', city: 'Pokhara', badge: '🥈', target: 'IELTS 8.5', xp: '4,450 XP', highlight: false },
+                                { rank: '3', name: 'Bikash T.', city: 'Lalitpur', badge: '🥉', target: 'PTE 82', xp: '4,190 XP', highlight: false },
+                                { rank: '4', name: 'You', city: 'Kathmandu', badge: '⚡', target: 'PTE 79 predicted', xp: '3,950 XP', highlight: true },
                               ].map(user => (
                                 <div
                                   class:list={[
