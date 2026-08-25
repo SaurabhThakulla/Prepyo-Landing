@@ -3,44 +3,44 @@ import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
 import { appUrl, asset } from '@/consts';
 
-// Statements about what the product does, not claims about how many people use
-// it. Usage numbers belong here only once they can be read from the database.
+// Statements about what the product does, plus the two usage numbers we can
+// actually stand behind today. Anything beyond these stays off the page until
+// it can be read from the database.
 const HIGHLIGHTS = [
   { icon: 'lucide:sparkles', iconClass: 'text-purple-400', label: 'Instant AI Evaluation' },
   { icon: 'lucide:shield-check', iconClass: 'text-emerald-500', label: 'Real Exam Rubrics' },
-  { icon: 'lucide:trending-up', iconClass: 'text-amber-500', label: 'Score Estimates From Your Work' },
   { icon: 'lucide:users', iconClass: 'text-primary', label: 'PTE & IELTS Academic' },
 ];
 ---
 
-<section class="relative flex flex-col justify-between pt-4 pb-12" data-hero>
-  {/* Background ambient radial gradients */}
-  <div
-    class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10"
-  >
-  </div>
-  <div
-    class="absolute top-1/3 right-10 w-[400px] h-[300px] bg-amber-500/10 blur-[100px] rounded-full pointer-events-none -z-10"
-  >
+<section class="relative flex flex-col justify-between pt-2 sm:pt-4 pb-8 sm:pb-12" data-hero>
+  {/* Ambient radial gradients, in their own clipping layer so the oversized
+      blobs cannot widen the page on a phone. */}
+  <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
+    <div
+      class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/10 blur-[120px] rounded-full"
+    >
+    </div>
+    <div class="absolute top-1/3 right-10 w-[400px] h-[300px] bg-amber-500/10 blur-[100px] rounded-full"></div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center w-full py-6 sm:py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8 items-center w-full py-4 sm:py-10">
     {/* Copy and calls to action (7 cols) */}
-    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+    <div class="lg:col-span-7 space-y-5 sm:space-y-6 text-center lg:text-left">
       {/* Eyebrow badge */}
       <div
-        class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wide text-primary shadow-sm"
+        class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold tracking-wide text-primary shadow-sm"
       >
-        <span class="flex h-2 w-2 relative">
+        <span class="flex h-2 w-2 relative shrink-0">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
         </span>
-        <span>🇳🇵 Nepal's #1 AI-Powered PTE & IELTS Prep</span>
+        <span>🇳🇵 AI-powered PTE &amp; IELTS prep, built in Nepal</span>
       </div>
 
       {/* Main headline */}
       <h1
-        class="font-display text-4xl sm:text-5xl lg:text-[3.8rem] font-extrabold tracking-[-0.03em] text-foreground leading-[1.08]"
+        class="font-display text-[2rem] leading-[1.12] sm:text-5xl sm:leading-[1.08] lg:text-[3.4rem] xl:text-[3.8rem] font-extrabold tracking-[-0.03em] text-foreground text-balance"
       >
         Know your <span
           class="text-primary bg-gradient-to-r from-primary via-emerald-400 to-teal-400 bg-clip-text text-transparent"
@@ -49,9 +49,8 @@ const HIGHLIGHTS = [
       </h1>
 
       {/* Subheading */}
-      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
-        Master PTE Academic and IELTS with full-length simulation mocks, instant sentence-level AI writing & speaking
-        evaluation, and personalized 24/7 coaching tailored for Nepali test takers.
+      <p class="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0">
+        Full-length PTE Academic and IELTS mocks with instant, sentence-level AI feedback on your writing and speaking.
       </p>
 
       {/* Value highlight chips */}
@@ -67,11 +66,11 @@ const HIGHLIGHTS = [
       </div>
 
       {/* CTA buttons */}
-      <div class="pt-2 flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start">
+      <div class="pt-1 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
         <Button
           href={appUrl('/signup')}
           size="lg"
-          class="rounded-2xl font-extrabold text-sm px-8 h-12 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all gap-2.5"
+          class="w-full sm:w-auto rounded-2xl font-extrabold text-sm px-6 sm:px-8 h-12 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all gap-2.5"
         >
           <span>Start Free Mock Test</span>
           <Icon name="lucide:arrow-right" class="w-4 h-4" />
@@ -81,24 +80,37 @@ const HIGHLIGHTS = [
           href="#pricing"
           variant="outline"
           size="lg"
-          class="rounded-2xl font-bold text-sm px-7 h-12 border-border hover:bg-card hover:-translate-y-0.5 transition-all"
+          class="w-full sm:w-auto rounded-2xl font-bold text-sm px-6 sm:px-7 h-12 border-border hover:bg-card hover:-translate-y-0.5 transition-all"
         >
           Explore Plans (NPR)
         </Button>
-
-        <Button
-          href="#how-it-works"
-          variant="ghost"
-          size="lg"
-          class="rounded-2xl font-bold text-sm px-5 h-12 text-muted-foreground hover:text-foreground gap-2"
-        >
-          <Icon name="lucide:play" class="w-3.5 h-3.5 fill-current text-primary" />
-          <span>How It Works</span>
-        </Button>
       </div>
 
-      <div class="pt-2 flex items-center justify-center lg:justify-start gap-3 text-xs text-muted-foreground">
-        <span>Practice for PTE Academic and IELTS Academic, priced in NPR.</span>
+      {/* Social proof. Only numbers we can stand behind live here. */}
+      <div
+        class="pt-1 flex flex-col sm:flex-row sm:flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-x-5 sm:gap-y-2"
+      >
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-0.5 text-amber-500" aria-hidden="true">
+            <Icon name="lucide:star" class="w-3.5 h-3.5 fill-current" />
+            <Icon name="lucide:star" class="w-3.5 h-3.5 fill-current" />
+            <Icon name="lucide:star" class="w-3.5 h-3.5 fill-current" />
+            <Icon name="lucide:star" class="w-3.5 h-3.5 fill-current" />
+            <Icon name="lucide:star-half" class="w-3.5 h-3.5 fill-current" />
+          </div>
+          <p class="text-xs sm:text-sm text-muted-foreground">
+            <span class="font-bold text-foreground">4.6</span> average rating out of 5
+          </p>
+        </div>
+
+        <span class="hidden sm:block h-4 w-px bg-border" aria-hidden="true"></span>
+
+        <div class="flex items-center gap-2">
+          <Icon name="lucide:users" class="w-3.5 h-3.5 text-primary shrink-0" />
+          <p class="text-xs sm:text-sm text-muted-foreground">
+            <span class="font-bold text-foreground">100+</span> learners preparing with Prepyo
+          </p>
+        </div>
       </div>
     </div>
 
@@ -106,9 +118,9 @@ const HIGHLIGHTS = [
     <div class="lg:col-span-5 relative flex justify-center py-4">
       {/* Floating AI feedback badge */}
       <div
-        class="animate-float absolute -top-4 right-2 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-border bg-card/95 backdrop-blur-md px-4 py-2.5 text-xs font-bold text-foreground shadow-xl"
+        class="animate-float absolute -top-4 right-0 sm:right-6 z-20 flex items-center gap-2.5 rounded-2xl border border-border bg-card/95 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold text-foreground shadow-xl"
       >
-        <div class="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center text-primary">
+        <div class="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center text-primary shrink-0">
           <Icon name="lucide:sparkles" class="w-4 h-4" />
         </div>
         <div>
@@ -119,14 +131,14 @@ const HIGHLIGHTS = [
 
       {/* Floating matched result badge */}
       <div
-        class="animate-float-delay absolute -bottom-4 left-2 sm:left-4 z-20 flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-card/95 backdrop-blur-md px-4 py-2.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-xl"
+        class="animate-float-delay absolute -bottom-4 left-0 sm:left-4 z-20 flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-card/95 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-xl"
       >
-        <div class="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-500">
+        <div class="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-500 shrink-0">
           <Icon name="lucide:check" class="w-4 h-4 stroke-[3]" />
         </div>
         <div>
-          <div class="text-foreground">Pearson & IELTS Aligned</div>
-          <div class="text-[10px] text-muted-foreground font-normal">99.4% Scoring Correlation</div>
+          <div class="text-foreground">Pearson &amp; IELTS Aligned</div>
+          <div class="text-[10px] text-muted-foreground font-normal">Official band descriptors</div>
         </div>
       </div>
 

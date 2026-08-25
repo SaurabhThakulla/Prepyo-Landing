@@ -5,7 +5,7 @@ const FAQS = [
   {
     question: 'How accurate is the Prepyo AI evaluation compared to the actual PTE / IELTS examiners?',
     answer:
-      'Prepyo AI models are trained and calibrated on thousands of validated test samples against official Pearson PTE and IELTS rubrics. The scoring engine evaluates fluency, pronunciation, grammar, lexical resource, and task achievement with a 99.4% correlation to official exam scores.',
+      'Prepyo scores against the official Pearson PTE and IELTS band descriptors, marking fluency, pronunciation, grammar, lexical resource and task achievement the same way an examiner does. Treat the result as a close estimate to study against, not a guaranteed exam score.',
   },
   {
     question: 'How can I pay from Nepal? Are eSewa, Khalti, and Fonepay accepted?',
@@ -25,7 +25,7 @@ const FAQS = [
   {
     question: 'Do you offer bulk accounts for education consultancies and language institutes?',
     answer:
-      'Yes! Over 40+ consultancies across Kathmandu, Pokhara, Chitwan, and Butwal use Prepyo to manage student cohorts, monitor attendance and mock performance, and provide AI test preparation under their institution.',
+      'Yes. Consultancies and language institutes can run student cohorts on Prepyo, track mock performance across a batch, and give every student AI feedback under their own institution. Email institutes@prepyo.np to set one up.',
   },
 ];
 
@@ -34,25 +34,27 @@ const FAQS = [
 const DEFAULT_OPEN = 0;
 ---
 
-<section id="faq" class="py-24 sm:py-32 border-t border-border" data-faq>
-  <div class="text-center space-y-4 mb-16 max-w-3xl mx-auto px-4">
+<section id="faq" class="py-14 sm:py-24 border-t border-border" data-faq>
+  {/* Matches SectionHeading's scale so the FAQ does not tower over every other
+      section on the page. */}
+  <div class="text-center space-y-3 mb-10 sm:mb-14 max-w-3xl mx-auto">
     <span
-      class="inline-flex items-center gap-2.5 rounded-full border border-border bg-card px-5 py-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground shadow-sm"
+      class="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 sm:px-4 py-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-foreground"
     >
-      <Icon name="lucide:help-circle" class="w-4 h-4 text-primary" />
+      <Icon name="lucide:help-circle" class="w-3.5 h-3.5 text-primary" />
       Got Questions?
     </span>
 
-    <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight">
+    <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-black text-foreground tracking-tight text-balance px-2">
       Frequently asked questions
     </h2>
 
-    <p class="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-      Everything you need to know about the Prepyo AI platform, scoring accuracy, and local Nepal payment options.
+    <p class="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed px-2">
+      Scoring accuracy, Nepal payment options, and what the free tier covers.
     </p>
   </div>
 
-  <div class="max-w-4xl lg:max-w-5xl mx-auto space-y-4 px-4 sm:px-6">
+  <div class="max-w-4xl lg:max-w-5xl mx-auto space-y-3 sm:space-y-4">
     {
       FAQS.map((faq, idx) => {
         const isOpen = idx === DEFAULT_OPEN;
@@ -71,16 +73,16 @@ const DEFAULT_OPEN = 0;
               type="button"
               aria-expanded={String(isOpen)}
               aria-controls={`faq-answer-${idx}`}
-              class="w-full p-6 sm:p-7 text-left flex items-center justify-between gap-6 cursor-pointer"
+              class="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-4 sm:gap-6 cursor-pointer"
               data-faq-trigger
             >
-              <span class="font-display text-base sm:text-lg lg:text-xl font-bold text-foreground leading-snug">
+              <span class="font-display text-sm sm:text-base lg:text-lg font-bold text-foreground leading-snug">
                 {faq.question}
               </span>
               <div
                 data-faq-chevron
                 class:list={[
-                  'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300',
+                  'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300',
                   isOpen
                     ? 'bg-primary text-white border-primary rotate-180 shadow-md shadow-primary/30'
                     : 'bg-muted text-muted-foreground border-border hover:text-foreground',
@@ -94,7 +96,7 @@ const DEFAULT_OPEN = 0;
               id={`faq-answer-${idx}`}
               data-faq-answer
               class:list={[
-                'px-6 sm:px-7 pb-7 pt-2 text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed border-t border-border/40 animate-in fade-in slide-in-from-top-1 duration-200',
+                'px-4 sm:px-6 pb-5 sm:pb-6 pt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed border-t border-border/40 animate-in fade-in slide-in-from-top-1 duration-200',
                 !isOpen && 'hidden',
               ]}
             >

@@ -52,8 +52,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <div class="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-200">
       <Nav />
       {/* 80vw is a comfortable reading width on a laptop but wastes a third
-          of a phone screen, so it only kicks in from lg up. */}
-      <main class="flex-1 w-full lg:max-w-[80vw] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          of a phone screen, so it only kicks in from lg up — and it is capped
+          again on ultra-wide displays where 80vw stops being readable. */}
+      <main class="flex-1 w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <slot />
       </main>
       <Footer />

@@ -42,7 +42,7 @@ const FEATURES: FeatureSlide[] = [
       'Full-length PTE Academic, PTE Core & IELTS Academic mocks',
       'Realistic test center countdowns, mic checks & audio waveforms',
       'Instant sub-skill score breakdown across Speaking, Writing, Reading & Listening',
-      'High-precision score prediction with official Pearson & IELTS correlation',
+      'Predicted score mapped to the official PTE and IELTS scales',
     ],
     ctaText: 'Start Free Mock Simulation',
     ctaHref: appUrl('/signup'),
@@ -53,7 +53,7 @@ const FEATURES: FeatureSlide[] = [
     floatingBadges: [
       {
         title: 'Predicted Score: PTE 82 / Band 8.5',
-        subtitle: '99.4% Pearson AI Correlation',
+        subtitle: 'Scored on official band descriptors',
         icon: 'lucide:award',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -176,7 +176,7 @@ const FEATURES: FeatureSlide[] = [
     floatingBadges: [
       {
         title: '🔥 14-Day Streak · 2.0x XP',
-        subtitle: 'Top 5% consistency in Nepal',
+        subtitle: 'Longest streak yet — keep it going',
         icon: 'lucide:flame',
         iconColor: 'text-rose-500',
         iconBg: 'bg-rose-500/15',
@@ -185,7 +185,7 @@ const FEATURES: FeatureSlide[] = [
       },
       {
         title: '4 Weak Spots Cleared Today',
-        subtitle: '100% mastery score locked in',
+        subtitle: 'Moved out of your review queue',
         icon: 'lucide:check',
         iconColor: 'text-emerald-500',
         iconBg: 'bg-emerald-500/15',
@@ -287,7 +287,7 @@ const TRACK_SLIDES = [
 const PRE_CLONES = 2;
 ---
 
-<section id="features" class="py-20 sm:py-28 border-t border-border relative overflow-hidden" data-features-showcase>
+<section id="features" class="py-14 sm:py-20 lg:py-28 border-t border-border relative overflow-hidden" data-features-showcase>
   {/*
     Ambient background glows. Kept in their own clipping layer: as direct children of the
     section they widen its scrollable overflow, which lets a stray scrollIntoView()/focus()
@@ -359,7 +359,7 @@ const PRE_CLONES = 2;
             >
               <div
                 class:list={[
-                  'h-full rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card/95 to-card/60 p-6 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden backdrop-blur-sm flex flex-col justify-between transition-all duration-500 ease-out',
+                  'h-full rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card/95 to-card/60 p-4 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden backdrop-blur-sm flex flex-col justify-between transition-all duration-500 ease-out',
                   isInitialActive ? 'opacity-100 scale-100' : 'opacity-25 scale-[0.96] hover:opacity-60 cursor-pointer',
                 ]}
                 data-card-inner
@@ -367,17 +367,17 @@ const PRE_CLONES = 2;
                 {/* Ambient Card Corner Glow */}
                 <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center my-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center my-auto">
                   {/* Left Column: Feature Info & Details (5 cols) */}
-                  <div class="lg:col-span-5 space-y-5 text-left">
+                  <div class="lg:col-span-5 space-y-4 sm:space-y-5 text-left">
                     {/* Tag / Category Badge */}
-                    <div class="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase text-foreground shadow-sm">
-                      <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 sm:px-3.5 py-1 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-foreground shadow-sm">
+                      <span class="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0"></span>
                       <span>{feature.tag}</span>
                     </div>
 
                     {/* Headline */}
-                    <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-foreground leading-tight">
+                    <h3 class="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-foreground leading-tight text-balance">
                       {feature.title}
                     </h3>
 
@@ -414,7 +414,7 @@ const PRE_CLONES = 2;
                   {/* Right Column: High-Fidelity UI Mockup Canvas (7 cols) */}
                   <div class="lg:col-span-7 relative flex justify-center items-center py-4 lg:py-6">
                     <div
-                      class={`absolute ${badge1.position} ${badge1.animClass} z-20 flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-xs sm:max-w-none`}
+                      class={`absolute ${badge1.position} ${badge1.animClass} z-20 hidden sm:flex items-center gap-2.5 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-[15rem] lg:max-w-none`}
                     >
                       <div class={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${badge1.iconBg}`}>
                         <Icon name={badge1.icon} class={`w-4 h-4 ${badge1.iconColor}`} />
@@ -426,7 +426,7 @@ const PRE_CLONES = 2;
                     </div>
 
                     <div
-                      class={`absolute ${badge2.position} ${badge2.animClass} z-20 flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-xs sm:max-w-none`}
+                      class={`absolute ${badge2.position} ${badge2.animClass} z-20 hidden sm:flex items-center gap-2.5 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-[15rem] lg:max-w-none`}
                     >
                       <div class={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${badge2.iconBg}`}>
                         <Icon name={badge2.icon} class={`w-4 h-4 ${badge2.iconColor}`} />
@@ -439,13 +439,13 @@ const PRE_CLONES = 2;
 
                     <div class="w-full rounded-2xl border border-border/80 bg-background/95 shadow-xl overflow-hidden">
                       {/* Browser / App Header */}
-                      <div class="flex items-center justify-between px-4 py-2.5 border-b border-border/60 bg-muted/40 text-xs">
+                      <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-border/60 bg-muted/40 text-xs">
                         <div class="flex items-center gap-1.5">
                           <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
                           <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
                           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
                         </div>
-                        <div class="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground bg-card/80 px-3 py-0.5 rounded-md border border-border/50">
+                        <div class="hidden sm:flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground bg-card/80 px-3 py-0.5 rounded-md border border-border/50 truncate">
                           <Icon name="lucide:lock" class="w-3 h-3 text-emerald-500" />
                           <span>prepyo.online/mock/{feature.id}</span>
                         </div>
@@ -456,7 +456,7 @@ const PRE_CLONES = 2;
                       </div>
 
                       {/* Mockup Interactive Canvas Content */}
-                      <div class="p-4 sm:p-6 space-y-4">
+                      <div class="p-3 sm:p-6 space-y-4">
                         {feature.mockupType === 'mock-sim' && (
                           <div class="space-y-4">
                             {/* Exam Header */}
@@ -764,7 +764,7 @@ const PRE_CLONES = 2;
                   type="button"
                   data-card-next
                   aria-label="Next feature slide"
-                  class="absolute bottom-6 right-6 z-20 w-10 h-10 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-lg hover:bg-foreground hover:text-background hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                  class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-lg hover:bg-foreground hover:text-background hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   <Icon name="lucide:arrow-right" class="w-4 h-4" />
                 </button>

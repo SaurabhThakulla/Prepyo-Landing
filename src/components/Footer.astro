@@ -18,11 +18,14 @@ const PLATFORM_LINKS = [
 const year = new Date().getFullYear();
 ---
 
-<footer class="w-full border-t border-border bg-card/80 backdrop-blur-md py-10 mt-16 transition-colors" data-footer>
-  <div class="w-full lg:max-w-[80vw] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer
+  class="w-full border-t border-border bg-card/80 backdrop-blur-md py-10 mt-12 sm:mt-16 transition-colors"
+  data-footer
+>
+  <div class="w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
       {/* Brand info */}
-      <div class="md:col-span-1 space-y-3">
+      <div class="col-span-2 md:col-span-1 space-y-3">
         <a href={BASE_PATH} class="flex items-center gap-2">
           <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-white text-xs font-bold shadow-sm">
             P
@@ -84,7 +87,7 @@ const year = new Date().getFullYear();
           </li>
           <li>
             <a href={appUrl('/signup')} class="hover:text-primary transition-colors font-medium text-primary">
-              Create Free Account (+100 XP)
+              Create Free Account
             </a>
           </li>
           <li>
