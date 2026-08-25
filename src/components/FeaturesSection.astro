@@ -1,106 +1,1063 @@
 ---
 import { Icon } from 'astro-icon/components';
 import SectionHeading from '@/components/SectionHeading.astro';
+import Button from '@/components/Button.astro';
+import { appUrl } from '@/consts';
 
-const FEATURES = [
+interface FeatureSlide {
+  id: string;
+  tabLabel: string;
+  tabIcon: string;
+  tag: string;
+  title: string;
+  description: string;
+  bullets: string[];
+  ctaText: string;
+  ctaHref: string;
+  themeColor: string;
+  themeBg: string;
+  themeBorder: string;
+  mockupType: 'mock-sim' | 'ai-rubrics' | 'ai-coach' | 'mistake-bank' | 'speaking-analyzer' | 'leaderboards';
+  floatingBadges: {
+    title: string;
+    subtitle: string;
+    icon: string;
+    iconColor: string;
+    iconBg: string;
+    position: string;
+    animClass: string;
+  }[];
+}
+
+const FEATURES: FeatureSlide[] = [
   {
-    icon: 'lucide:bar-chart-3',
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    border: 'border-primary/20',
-    title: 'Full Mock Simulations',
+    id: 'mock-simulations',
+    tabLabel: 'Mock Simulations',
+    tabIcon: 'lucide:monitor-play',
+    tag: 'EXAM SIMULATION ENGINE',
+    title: 'Full-Length PTE & IELTS Mock Simulations',
     description:
-      'The exact timing, question sequencing, and UI as the real Pearson PTE and British Council / IDP IELTS test centers.',
+      'Experience the real test environment before test day. Exact question timing, audio prompt sequencing, and instantaneous scoring calibrated to Pearson and British Council standards.',
     bullets: [
-      'Full-length PTE Academic & Core mocks',
-      'IELTS Academic & General sections',
-      'Instant AI sub-skill score breakdown',
-      'Precise score prediction with confidence band',
+      'Full-length PTE Academic, PTE Core & IELTS Academic mocks',
+      'Realistic test center countdowns, mic checks & audio waveforms',
+      'Instant sub-skill score breakdown across Speaking, Writing, Reading & Listening',
+      'High-precision score prediction with official Pearson & IELTS correlation',
+    ],
+    ctaText: 'Start Free Mock Simulation',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-emerald-500',
+    themeBg: 'bg-emerald-500/10',
+    themeBorder: 'border-emerald-500/30',
+    mockupType: 'mock-sim',
+    floatingBadges: [
+      {
+        title: 'Predicted Score: PTE 82 / Band 8.5',
+        subtitle: '99.4% Pearson AI Correlation',
+        icon: 'lucide:award',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: 'AI Scored in 2.8s',
+        subtitle: 'Full 4-skill diagnostic report',
+        icon: 'lucide:sparkles',
+        iconColor: 'text-primary',
+        iconBg: 'bg-primary/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
     ],
   },
   {
-    icon: 'lucide:bot',
-    color: 'text-amber-500',
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/20',
-    title: 'AI Sentence-Level Rubrics',
+    id: 'ai-rubrics',
+    tabLabel: 'Sentence Rubrics',
+    tabIcon: 'lucide:file-edit',
+    tag: 'AI ESSAY & WRITING RUBRIC',
+    title: 'Sentence-by-Sentence AI Rewrites & Diagnostics',
     description:
-      'Submit essay or spoken responses and get instant, sentence-by-sentence rewrites, grammar analysis, and vocabulary upgrades.',
+      'Never wonder why you lost marks on your essays. Prepyo AI dissects your writing line-by-line, detecting grammatical slips, lexical gaps, and generating Band 8.0 / PTE 79+ rewrites.',
     bullets: [
-      'Detailed grammar & lexical error detection',
-      'Band 8.0 / PTE 79+ rewrite suggestions',
-      'Speaking pronunciation and fluency feedback',
-      'Aligned to official Pearson & IELTS marking scales',
+      'Granular grammatical & lexical error detection with instant corrections',
+      'One-click vocabulary upgrades with high-scoring academic collocations',
+      'Coherence, cohesion, and task achievement rubric breakdown',
+      'Aligned to official Pearson PTE & IELTS Band 9 marking descriptors',
+    ],
+    ctaText: 'Analyze Your Essay',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-amber-500',
+    themeBg: 'bg-amber-500/10',
+    themeBorder: 'border-amber-500/30',
+    mockupType: 'ai-rubrics',
+    floatingBadges: [
+      {
+        title: '+1.5 Band Rewrite Generated',
+        subtitle: 'Upgraded to Academic Lexicon',
+        icon: 'lucide:sparkles',
+        iconColor: 'text-amber-500',
+        iconBg: 'bg-amber-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: 'Grammar & Accuracy: 94/100',
+        subtitle: 'Zero run-on sentence errors',
+        icon: 'lucide:check-circle-2',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-500/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
     ],
   },
   {
-    icon: 'lucide:sparkles',
-    color: 'text-purple-400',
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/20',
-    title: '24/7 AI Personal Coach',
+    id: 'ai-coach',
+    tabLabel: '24/7 AI Coach',
+    tabIcon: 'lucide:sparkles',
+    tag: '24/7 PERSONAL TUTOR',
+    title: 'Your 24/7 AI Exam Mentor & Strategy Specialist',
     description:
-      'Stuck on Summarize Spoken Text or True/False/Not Given? Ask your AI tutor anytime for custom drill advice and strategy.',
+      'Stuck on Describe Image templates, Summarize Spoken Text, or IELTS Reading True/False/Not Given? Ask your AI tutor anytime for custom drill advice, sample templates, and strategy.',
     bullets: [
-      'Context-aware question hints & strategies',
-      'Mistake bank remediation drills',
-      'Exam-specific templates and tips',
-      'Unlimited instant answers round the clock',
+      'Context-aware question hints, structures, and timing strategies',
+      'Personalized drill recommendations targeting your specific weak areas',
+      'Specific remediation for common Nepali test-taker pronunciation & grammar quirks',
+      'Unlimited real-time explanations and practice rounds around the clock',
+    ],
+    ctaText: 'Chat with AI Coach',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-purple-400',
+    themeBg: 'bg-purple-500/10',
+    themeBorder: 'border-purple-500/30',
+    mockupType: 'ai-coach',
+    floatingBadges: [
+      {
+        title: 'Instant Tutor Reply · 0.9s',
+        subtitle: 'PTE & IELTS certified guidance',
+        icon: 'lucide:bot',
+        iconColor: 'text-purple-400',
+        iconBg: 'bg-purple-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: 'Nepali L1 Transfer Tips',
+        subtitle: 'Consonant cluster & vowel fix',
+        icon: 'lucide:lightbulb',
+        iconColor: 'text-amber-500',
+        iconBg: 'bg-amber-500/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
     ],
   },
   {
-    icon: 'lucide:flame',
-    color: 'text-rose-500',
-    bg: 'bg-rose-500/10',
-    border: 'border-rose-500/20',
-    title: 'Mistake Bank & Habit Streaks',
+    id: 'mistake-bank',
+    tabLabel: 'Mistake Bank & Streaks',
+    tabIcon: 'lucide:flame',
+    tag: 'SPACED REPETITION ENGINE',
+    title: 'Automatic Mistake Bank & Spaced Repetition',
     description:
-      'Every question you miss is automatically filed into your personal Mistake Bank until you master it and clear the flaw.',
+      'Every missed question across mocks and drills is automatically logged, categorized by root cause, and scheduled for spaced repetition review until you clear the flaw.',
     bullets: [
-      'Categorized by Grammar, Spelling, Collocations',
-      'Spaced repetition retry schedule',
-      'Daily study streak multipliers',
-      'Nepal regional XP leaderboards',
+      'Categorized automatically into Grammar, Spelling, Collocations & Fluency',
+      'Scientifically timed spaced repetition reminders right before memory decay',
+      'Daily practice streaks with XP multipliers to lock in consistency',
+      'Clear tracking showing items moving from "Needs Review" to "Mastered"',
+    ],
+    ctaText: 'Explore Mistake Bank',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-rose-500',
+    themeBg: 'bg-rose-500/10',
+    themeBorder: 'border-rose-500/30',
+    mockupType: 'mistake-bank',
+    floatingBadges: [
+      {
+        title: '🔥 14-Day Streak · 2.0x XP',
+        subtitle: 'Top 5% consistency in Nepal',
+        icon: 'lucide:flame',
+        iconColor: 'text-rose-500',
+        iconBg: 'bg-rose-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: '4 Weak Spots Cleared Today',
+        subtitle: '100% mastery score locked in',
+        icon: 'lucide:check',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-500/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
+    ],
+  },
+  {
+    id: 'speaking-analyzer',
+    tabLabel: 'Speaking Analyzer',
+    tabIcon: 'lucide:mic',
+    tag: 'ACOUSTIC SPEECH ANALYSIS',
+    title: 'Real-Time Acoustic & Phoneme Speech Analysis',
+    description:
+      'Get acoustic wave analysis with phoneme-level color coding. Detect unnatural pauses, hesitations, intonation shifts, and vowel lengthening that impact your PTE & IELTS speaking scores.',
+    bullets: [
+      'Phoneme-by-phoneme pronunciation accuracy scoring with color heatmaps',
+      'Oral fluency detection: speech rate (wpm), hesitation pauses, and fillers',
+      'Live audio recording playback with native speaker benchmark comparisons',
+      'Targets official PTE 90 and IELTS Band 9 pronunciation standards',
+    ],
+    ctaText: 'Test Your Pronunciation',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-cyan-500',
+    themeBg: 'bg-cyan-500/10',
+    themeBorder: 'border-cyan-500/30',
+    mockupType: 'speaking-analyzer',
+    floatingBadges: [
+      {
+        title: 'Oral Fluency: 89/90 (Optimal)',
+        subtitle: 'Pace: 138 wpm · Zero Fillers',
+        icon: 'lucide:activity',
+        iconColor: 'text-cyan-500',
+        iconBg: 'bg-cyan-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: 'Phoneme Match: 98.2%',
+        subtitle: 'Standard Academic Intonation',
+        icon: 'lucide:volume-2',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-500/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
+    ],
+  },
+  {
+    id: 'leaderboards',
+    tabLabel: 'Nepal Leaderboard',
+    tabIcon: 'lucide:trophy',
+    tag: 'NEPAL COMMUNITY & XP',
+    title: 'Nepal Regional Leaderboards & Cohort Milestones',
+    description:
+      'Compete with fellow aspirants across Kathmandu, Pokhara, Chitwan, Butwal, and beyond. Earn XP points, climb regional ranks, unlock milestone badges, and stay inspired every day.',
+    bullets: [
+      'City and regional leaderboards for Kathmandu, Pokhara, Lalitpur, and more',
+      'Daily and weekly study challenges with streak bonuses and XP multipliers',
+      'Exam target badges: PTE 79+ Ready, IELTS Band 8.0 Achiever',
+      'Real-time peer progress benchmarks and consultancy cohort tracking',
+    ],
+    ctaText: 'Join Nepal Leaderboards',
+    ctaHref: appUrl('/signup'),
+    themeColor: 'text-yellow-500',
+    themeBg: 'bg-yellow-500/10',
+    themeBorder: 'border-yellow-500/30',
+    mockupType: 'leaderboards',
+    floatingBadges: [
+      {
+        title: 'Rank #4 Kathmandu Valley',
+        subtitle: '+450 XP Earned Today ⚡',
+        icon: 'lucide:trophy',
+        iconColor: 'text-yellow-500',
+        iconBg: 'bg-yellow-500/15',
+        position: '-top-3 sm:-top-5 right-2 sm:right-6',
+        animClass: 'animate-float',
+      },
+      {
+        title: 'PTE 79+ Milestone Unlocked',
+        subtitle: 'Top 3% diagnostic rank',
+        icon: 'lucide:shield-check',
+        iconColor: 'text-emerald-500',
+        iconBg: 'bg-emerald-500/15',
+        position: '-bottom-3 sm:-bottom-5 left-2 sm:left-6',
+        animClass: 'animate-float-delay',
+      },
     ],
   },
 ];
+
+// Pre-clone last 2 slides and post-clone first 2 slides for infinite loop carousel
+const TRACK_SLIDES = [
+  ...FEATURES.slice(-2).map((f, i) => ({ ...f, isClone: true, originalIndex: FEATURES.length - 2 + i })),
+  ...FEATURES.map((f, i) => ({ ...f, isClone: false, originalIndex: i })),
+  ...FEATURES.slice(0, 2).map((f, i) => ({ ...f, isClone: true, originalIndex: i })),
+];
+const PRE_CLONES = 2;
 ---
 
-<section id="features" class="py-20 border-t border-border">
-  <SectionHeading
-    eyebrow="AI Capabilities"
-    eyebrowIcon="lucide:sparkles"
-    title="Everything you need to hit your target score"
-    description="Built specifically for Nepali students preparing for Australian, UK, Canadian, and USA study and migration visas."
-  />
+<section id="features" class="py-20 sm:py-28 border-t border-border relative overflow-hidden" data-features-showcase>
+  {/*
+    Ambient background glows. Kept in their own clipping layer: as direct children of the
+    section they widen its scrollable overflow, which lets a stray scrollIntoView()/focus()
+    drag the whole section sideways even though it is overflow-hidden.
+  */}
+  <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary/5 blur-[140px] rounded-full"></div>
+    <div class="absolute bottom-10 right-10 w-[500px] h-[300px] bg-purple-500/5 blur-[120px] rounded-full"></div>
+  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    {
-      FEATURES.map(({ icon, color, bg, border, title, description, bullets }) => (
-        <div
-          class={`rounded-2xl border ${border} bg-card/80 backdrop-blur-sm p-6 space-y-4 hover:border-primary/40 hover:shadow-lg transition-all hover:-translate-y-1 duration-200 flex flex-col justify-between`}
-        >
-          <div class="space-y-4">
-            <div class={`w-12 h-12 rounded-xl ${bg} flex items-center justify-center`}>
-              <Icon name={icon} class={`w-6 h-6 ${color}`} />
+  {/* Header */}
+  <div class="max-w-4xl mx-auto px-4">
+    <SectionHeading
+      eyebrow="AI Capabilities"
+      eyebrowIcon="lucide:sparkles"
+      title="Everything you need to hit your target score"
+      description="Built specifically for Nepali students preparing for Australian, UK, Canadian, and USA study and migration visas."
+    />
+  </div>
+
+  {/* Category Pills Navigation Bar (Centered Single Line, Smooth Scrolling on Mobile) */}
+  <div class="w-full max-w-7xl mx-auto px-4 mb-8 sm:mb-12">
+    {/*
+      The scroller and the pill row are separate elements on purpose: `w-max mx-auto` centers
+      the row when it fits and falls back to left-aligned when it overflows. `justify-center`
+      would make the overflowing left edge unreachable and visually clipped.
+    */}
+    <div class="overflow-x-auto no-scrollbar" data-feature-tabs-scroller>
+      <div class="flex items-center gap-1.5 sm:gap-2.5 w-max mx-auto whitespace-nowrap py-1.5 px-1" data-feature-tabs>
+      {
+        FEATURES.map((feature, idx) => (
+          <button
+            type="button"
+            data-tab-index={idx}
+            class:list={[
+              'group inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 shrink-0 cursor-pointer select-none border whitespace-nowrap',
+              idx === 0
+                ? 'bg-foreground text-background border-foreground shadow-md'
+                : 'bg-card/90 text-muted-foreground border-border/80 hover:text-foreground hover:bg-card hover:border-border',
+            ]}
+          >
+            <Icon name={feature.tabIcon} class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform group-hover:scale-110" />
+            <span>{feature.tabLabel}</span>
+          </button>
+        ))
+      }
+      </div>
+    </div>
+  </div>
+
+  {/*
+    Infinite Loop Showcase Carousel Container.
+    Stays at the section's own width: this section renders inside <main class="lg:max-w-[80vw]">,
+    so a 100vw child with `margin-left: calc(50% - 50vw)` overhangs the section's left edge,
+    which both clips the peek cards asymmetrically and makes the overflow-hidden section
+    horizontally scrollable (dragging the whole section sideways).
+  */}
+  <div class="relative overflow-hidden py-4 w-full" data-carousel-viewport>
+    <div class="relative flex items-stretch w-max gap-6 sm:gap-8 transition-transform duration-500 ease-out will-change-transform" data-carousel-track>
+      {
+        TRACK_SLIDES.map((feature, trackIdx) => {
+          const [badge1, badge2] = feature.floatingBadges;
+          const isInitialActive = trackIdx === PRE_CLONES;
+          return (
+            <div
+              class="w-[86vw] sm:w-[78vw] lg:w-[72vw] xl:w-[68vw] 2xl:w-[64vw] max-w-5xl shrink-0 select-none"
+              data-track-index={trackIdx}
+              data-original-index={feature.originalIndex}
+            >
+              <div
+                class:list={[
+                  'h-full rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card/95 to-card/60 p-6 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden backdrop-blur-sm flex flex-col justify-between transition-all duration-500 ease-out',
+                  isInitialActive ? 'opacity-100 scale-100' : 'opacity-25 scale-[0.96] hover:opacity-60 cursor-pointer',
+                ]}
+                data-card-inner
+              >
+                {/* Ambient Card Corner Glow */}
+                <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center my-auto">
+                  {/* Left Column: Feature Info & Details (5 cols) */}
+                  <div class="lg:col-span-5 space-y-5 text-left">
+                    {/* Tag / Category Badge */}
+                    <div class="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase text-foreground shadow-sm">
+                      <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                      <span>{feature.tag}</span>
+                    </div>
+
+                    {/* Headline */}
+                    <h3 class="font-display text-2xl sm:text-3xl font-extrabold text-foreground leading-tight">
+                      {feature.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+
+                    {/* Bullet Highlights */}
+                    <ul class="space-y-2.5 pt-2">
+                      {feature.bullets.map(bullet => (
+                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-foreground font-medium">
+                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
+                          </div>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* CTA Button */}
+                    <div class="pt-3 flex items-center gap-3">
+                      <Button
+                        href={feature.ctaHref}
+                        size="md"
+                        class="rounded-xl font-bold text-xs sm:text-sm px-6 h-11 shadow-md shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all gap-2"
+                      >
+                        <span>{feature.ctaText}</span>
+                        <Icon name="lucide:arrow-right" class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Right Column: High-Fidelity UI Mockup Canvas (7 cols) */}
+                  <div class="lg:col-span-7 relative flex justify-center items-center py-4 lg:py-6">
+                    <div
+                      class={`absolute ${badge1.position} ${badge1.animClass} z-20 flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-xs sm:max-w-none`}
+                    >
+                      <div class={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${badge1.iconBg}`}>
+                        <Icon name={badge1.icon} class={`w-4 h-4 ${badge1.iconColor}`} />
+                      </div>
+                      <div>
+                        <div class="text-foreground text-xs font-bold leading-tight">{badge1.title}</div>
+                        <div class="text-muted-foreground font-normal leading-tight text-[11px]">{badge1.subtitle}</div>
+                      </div>
+                    </div>
+
+                    <div
+                      class={`absolute ${badge2.position} ${badge2.animClass} z-20 flex items-center gap-3 rounded-2xl border border-border/80 bg-card/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs font-bold text-foreground shadow-xl select-none pointer-events-none max-w-xs sm:max-w-none`}
+                    >
+                      <div class={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${badge2.iconBg}`}>
+                        <Icon name={badge2.icon} class={`w-4 h-4 ${badge2.iconColor}`} />
+                      </div>
+                      <div>
+                        <div class="text-foreground text-xs font-bold leading-tight">{badge2.title}</div>
+                        <div class="text-muted-foreground font-normal leading-tight text-[11px]">{badge2.subtitle}</div>
+                      </div>
+                    </div>
+
+                    <div class="w-full rounded-2xl border border-border/80 bg-background/95 shadow-xl overflow-hidden">
+                      {/* Browser / App Header */}
+                      <div class="flex items-center justify-between px-4 py-2.5 border-b border-border/60 bg-muted/40 text-xs">
+                        <div class="flex items-center gap-1.5">
+                          <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <div class="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground bg-card/80 px-3 py-0.5 rounded-md border border-border/50">
+                          <Icon name="lucide:lock" class="w-3 h-3 text-emerald-500" />
+                          <span>prepyo.online/mock/{feature.id}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-muted-foreground text-[11px]">
+                          <span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                          <span class="font-semibold text-primary">LIVE AI</span>
+                        </div>
+                      </div>
+
+                      {/* Mockup Interactive Canvas Content */}
+                      <div class="p-4 sm:p-6 space-y-4">
+                        {feature.mockupType === 'mock-sim' && (
+                          <div class="space-y-4">
+                            {/* Exam Header */}
+                            <div class="flex items-center justify-between pb-3 border-b border-border/60">
+                              <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold font-mono">PTE ACADEMIC</span>
+                                <span class="text-xs text-muted-foreground">Speaking & Writing · Item 4 of 7</span>
+                              </div>
+                              <div class="flex items-center gap-2 font-mono text-xs font-bold text-rose-500 bg-rose-500/10 px-3 py-1 rounded-lg border border-rose-500/20">
+                                <Icon name="lucide:timer" class="w-3.5 h-3.5 animate-pulse" />
+                                <span>00:35 / 00:40</span>
+                              </div>
+                            </div>
+
+                            {/* Question Card */}
+                            <div class="p-4 rounded-xl bg-card border border-border/60 space-y-2">
+                              <div class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Read Aloud Task</div>
+                              <p class="text-xs sm:text-sm text-foreground font-medium leading-relaxed">
+                                "The rapid acceleration of renewable solar and hydroelectric power generation in Nepal has attracted substantial foreign direct investment, bolstering the regional power grid and reducing dependence on fossil fuel imports."
+                              </p>
+                            </div>
+
+                            {/* Audio Visualizer Waveform Bar */}
+                            <div class="p-3 rounded-xl bg-muted/40 border border-border/60 space-y-2">
+                              <div class="flex items-center justify-between text-[11px] text-muted-foreground">
+                                <span class="flex items-center gap-1.5 text-primary font-bold">
+                                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Recording Audio...
+                                </span>
+                                <span class="font-mono">Mic Input: 98% Normal</span>
+                              </div>
+                              <div class="flex items-center justify-between gap-1 h-8 px-2 py-1 bg-card rounded-lg border border-border/40 overflow-hidden">
+                                {[40, 65, 85, 30, 95, 75, 45, 60, 90, 100, 70, 85, 40, 60, 80, 95, 60, 75, 90, 50, 65, 80, 45, 30, 70, 90, 100, 85, 60, 40, 75, 90, 65, 80, 50, 40].map((h, i) => (
+                                  <div
+                                    class="w-1 rounded-full bg-primary/80 transition-all duration-300"
+                                    style={`height: ${h}%; opacity: ${0.4 + (i % 3) * 0.3}`}
+                                  ></div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Sub-Score Pills */}
+                            <div class="grid grid-cols-3 gap-2 pt-1">
+                              <div class="p-2 rounded-lg bg-card border border-border/60 text-center">
+                                <div class="text-[10px] text-muted-foreground font-medium">Content</div>
+                                <div class="text-xs sm:text-sm font-bold text-foreground font-mono">90 / 90</div>
+                              </div>
+                              <div class="p-2 rounded-lg bg-card border border-border/60 text-center">
+                                <div class="text-[10px] text-muted-foreground font-medium">Fluency</div>
+                                <div class="text-xs sm:text-sm font-bold text-primary font-mono">88 / 90</div>
+                              </div>
+                              <div class="p-2 rounded-lg bg-card border border-border/60 text-center">
+                                <div class="text-[10px] text-muted-foreground font-medium">Pronunciation</div>
+                                <div class="text-xs sm:text-sm font-bold text-foreground font-mono">86 / 90</div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {feature.mockupType === 'ai-rubrics' && (
+                          <div class="space-y-3.5">
+                            {/* Rubric Header */}
+                            <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
+                              <span class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-500 text-xs font-bold font-mono">IELTS WRITING TASK 2</span>
+                              <span class="text-xs font-mono text-emerald-500 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-md">Predicted: Band 8.5</span>
+                            </div>
+
+                            {/* Sentence Dissection Box */}
+                            <div class="p-3.5 rounded-xl bg-card border border-border/60 space-y-2.5 text-xs leading-relaxed">
+                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Submitted Sentence Analysis</div>
+                              <div class="p-2.5 rounded-lg bg-rose-500/5 border border-rose-500/20 text-foreground">
+                                <span class="text-rose-500 line-through mr-1 font-semibold">There is many reasons why</span>
+                                <span>urbanization creates problems in modern cities today.</span>
+                              </div>
+                              <div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-foreground space-y-1">
+                                <div class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">
+                                  <Icon name="lucide:sparkles" class="w-3.5 h-3.5" />
+                                  Band 8.5 AI Recommended Rewrite:
+                                </div>
+                                <div class="font-medium text-foreground">
+                                  "There <span class="text-primary font-bold underline">are numerous compelling reasons</span> why rapid urbanization poses substantial infrastructural dilemmas."
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Rubric Metric Breakdown Bars */}
+                            <div class="space-y-2 pt-1">
+                              <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-muted-foreground font-medium">Lexical Resource & Academic Collocations</span>
+                                <span class="font-mono font-bold text-foreground">Band 8.5 (92%)</span>
+                              </div>
+                              <div class="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full w-[92%]"></div>
+                              </div>
+                              <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-muted-foreground font-medium">Grammatical Range & Accuracy</span>
+                                <span class="font-mono font-bold text-foreground">Band 9.0 (96%)</span>
+                              </div>
+                              <div class="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full w-[96%]"></div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {feature.mockupType === 'ai-coach' && (
+                          <div class="space-y-3">
+                            {/* Chat Header */}
+                            <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
+                              <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+                                  <Icon name="lucide:bot" class="w-3.5 h-3.5" />
+                                </div>
+                                <span class="text-xs font-bold text-foreground">Prepyo AI Personal Tutor</span>
+                              </div>
+                              <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online
+                              </span>
+                            </div>
+
+                            {/* Student Message */}
+                            <div class="flex gap-2.5 justify-end">
+                              <div class="p-3 rounded-2xl rounded-tr-sm bg-primary text-white text-xs max-w-md leading-relaxed shadow-sm">
+                                "How do I maintain full fluency in PTE Describe Image when the graph has complex trends?"
+                              </div>
+                            </div>
+
+                            {/* AI Coach Reply */}
+                            <div class="flex gap-2.5 items-start">
+                              <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0 mt-0.5">
+                                <Icon name="lucide:sparkles" class="w-3.5 h-3.5" />
+                              </div>
+                              <div class="p-3 rounded-2xl rounded-tl-sm bg-card border border-border/80 text-xs text-foreground max-w-[88%] space-y-2 shadow-sm leading-relaxed">
+                                <p class="font-medium">
+                                  Use the <strong class="text-primary font-bold">3-Phase Fluency Anchor</strong>:
+                                </p>
+                                <ul class="list-disc list-inside space-y-1 text-muted-foreground text-[11px]">
+                                  <li><span class="text-foreground font-semibold">0-6s:</span> State title & axis overview clearly.</li>
+                                  <li><span class="text-foreground font-semibold">6-18s:</span> Pick the highest & lowest data points.</li>
+                                  <li><span class="text-foreground font-semibold">18-25s:</span> Conclude overall trend without pausing.</li>
+                                </ul>
+                                <div class="pt-1 flex items-center gap-2">
+                                  <span class="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 text-[10px] font-bold font-mono">Template Drills Ready</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {feature.mockupType === 'mistake-bank' && (
+                          <div class="space-y-3">
+                            {/* Mistake Bank Header */}
+                            <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
+                              <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 text-xs font-bold font-mono">PERSONAL MISTAKE VAULT</span>
+                              </div>
+                              <span class="text-xs text-muted-foreground font-mono">18 Logged · 14 Cleared</span>
+                            </div>
+
+                            {/* Mistake Items List */}
+                            <div class="space-y-2">
+                              <div class="p-2.5 rounded-xl bg-card border border-border/60 flex items-center justify-between gap-3 text-xs">
+                                <div class="space-y-0.5">
+                                  <div class="flex items-center gap-2">
+                                    <span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold">Spelling</span>
+                                    <span class="font-bold text-foreground">"Accommodate" vs "Acommodate"</span>
+                                  </div>
+                                  <div class="text-[10px] text-muted-foreground">PTE Write From Dictation · Double 'c' and double 'm'</div>
+                                </div>
+                                <span class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] shrink-0 flex items-center gap-1">
+                                  <Icon name="lucide:check" class="w-3 h-3" /> Mastered
+                                </span>
+                              </div>
+
+                              <div class="p-2.5 rounded-xl bg-card border border-rose-500/30 flex items-center justify-between gap-3 text-xs">
+                                <div class="space-y-0.5">
+                                  <div class="flex items-center gap-2">
+                                    <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-500 text-[10px] font-bold">Grammar</span>
+                                    <span class="font-bold text-foreground">Subject-Verb Agreement in Relative Clauses</span>
+                                  </div>
+                                  <div class="text-[10px] text-rose-500 font-semibold">Scheduled Spaced Review: Due Today</div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-lg bg-rose-500 text-white font-bold text-[10px] shrink-0">
+                                  Drill Now
+                                </span>
+                              </div>
+
+                              <div class="p-2.5 rounded-xl bg-card border border-border/60 flex items-center justify-between gap-3 text-xs">
+                                <div class="space-y-0.5">
+                                  <div class="flex items-center gap-2">
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 text-[10px] font-bold">Collocation</span>
+                                    <span class="font-bold text-foreground">"Heavy Traffic" vs "Strong Traffic"</span>
+                                  </div>
+                                  <div class="text-[10px] text-muted-foreground">IELTS Academic Speaking Part 3</div>
+                                </div>
+                                <span class="px-2 py-1 rounded-lg bg-muted text-muted-foreground font-bold text-[10px] shrink-0 font-mono">
+                                  Review in 2d
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {feature.mockupType === 'speaking-analyzer' && (
+                          <div class="space-y-3.5">
+                            {/* Header */}
+                            <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
+                              <span class="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 text-xs font-bold font-mono">PHONEME ACOUSTIC ENGINE</span>
+                              <span class="text-xs font-mono text-primary font-bold">PTE Speaking: 89 / 90</span>
+                            </div>
+
+                            {/* Phoneme Wave Breakdown */}
+                            <div class="p-3.5 rounded-xl bg-card border border-border/60 space-y-2.5">
+                              <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Acoustic Phoneme Segmentation</div>
+                              <div class="flex flex-wrap items-center gap-1.5">
+                                {[
+                                  { word: 'The', color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30', score: '99%' },
+                                  { word: 'development', color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30', score: '97%' },
+                                  { word: 'of', color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30', score: '99%' },
+                                  { word: 'renewable', color: 'bg-cyan-500/15 text-cyan-500 border-cyan-500/30', score: '94%' },
+                                  { word: 'energy', color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30', score: '98%' },
+                                  { word: 'technologies', color: 'bg-amber-500/15 text-amber-500 border-amber-500/30', score: '88%' },
+                                ].map(item => (
+                                  <div class={`px-2.5 py-1 rounded-lg border text-xs font-mono font-bold flex flex-col items-center ${item.color}`}>
+                                    <span>{item.word}</span>
+                                    <span class="text-[9px] opacity-75 font-sans">{item.score}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Speech Metric Progress */}
+                            <div class="grid grid-cols-2 gap-2.5 pt-1">
+                              <div class="p-2.5 rounded-lg bg-card border border-border/60 space-y-1">
+                                <div class="flex justify-between text-[11px] text-muted-foreground">
+                                  <span>Speech Pace (WPM)</span>
+                                  <span class="text-foreground font-mono font-bold">138 wpm</span>
+                                </div>
+                                <div class="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden">
+                                  <div class="bg-cyan-500 h-full rounded-full w-11/12"></div>
+                                </div>
+                              </div>
+                              <div class="p-2.5 rounded-lg bg-card border border-border/60 space-y-1">
+                                <div class="flex justify-between text-[11px] text-muted-foreground">
+                                  <span>Hesitation Pauses</span>
+                                  <span class="text-emerald-500 font-mono font-bold">0.0s (None)</span>
+                                </div>
+                                <div class="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden">
+                                  <div class="bg-emerald-500 h-full rounded-full w-full"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {feature.mockupType === 'leaderboards' && (
+                          <div class="space-y-3">
+                            {/* Leaderboard Header */}
+                            <div class="flex items-center justify-between pb-2.5 border-b border-border/60">
+                              <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-500 text-xs font-bold font-mono">NEPAL REGIONAL XP BOARD</span>
+                              </div>
+                              <span class="text-xs font-bold text-primary font-mono">Kathmandu Valley</span>
+                            </div>
+
+                            {/* Leaderboard Rows */}
+                            <div class="space-y-1.5">
+                              {[
+                                { rank: '1', name: 'Aayush S.', city: 'Kathmandu', badge: '👑', target: 'PTE 86 (Achieved)', xp: '4,820 XP', highlight: false },
+                                { rank: '2', name: 'Prerana K.', city: 'Pokhara', badge: '🥈', target: 'IELTS 8.5 (Achieved)', xp: '4,450 XP', highlight: false },
+                                { rank: '3', name: 'Bikash T.', city: 'Lalitpur', badge: '🥉', target: 'PTE 82 (Achieved)', xp: '4,190 XP', highlight: false },
+                                { rank: '4', name: 'You (Target: PTE 79+)', city: 'Kathmandu', badge: '⚡', target: 'PTE 79 Predicted', xp: '3,950 XP', highlight: true },
+                              ].map(user => (
+                                <div
+                                  class:list={[
+                                    'p-2 sm:p-2.5 rounded-xl border flex items-center justify-between text-xs transition-colors',
+                                    user.highlight
+                                      ? 'bg-primary/10 border-primary/40 font-bold'
+                                      : 'bg-card border-border/60',
+                                  ]}
+                                >
+                                  <div class="flex items-center gap-2.5">
+                                    <span class="font-mono font-bold text-muted-foreground w-4 text-center">{user.rank}</span>
+                                    <span class="text-base leading-none">{user.badge}</span>
+                                    <div>
+                                      <div class="text-foreground font-semibold flex items-center gap-1.5">
+                                        <span>{user.name}</span>
+                                        <span class="text-[10px] text-muted-foreground font-normal">({user.city})</span>
+                                      </div>
+                                      <div class="text-[10px] text-primary font-medium">{user.target}</div>
+                                    </div>
+                                  </div>
+                                  <div class="font-mono font-bold text-foreground text-xs">{user.xp}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Next Arrow Button (Squarespace Style Corner Navigation) */}
+                <button
+                  type="button"
+                  data-card-next
+                  aria-label="Next feature slide"
+                  class="absolute bottom-6 right-6 z-20 w-10 h-10 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-lg hover:bg-foreground hover:text-background hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                >
+                  <Icon name="lucide:arrow-right" class="w-4 h-4" />
+                </button>
+              </div>
             </div>
+          );
+        })
+      }
+    </div>
+  </div>
 
-            <div>
-              <h3 class="font-display text-lg font-bold text-foreground">{title}</h3>
-              <p class="text-xs text-muted-foreground mt-2 leading-relaxed">{description}</p>
-            </div>
-          </div>
-
-          <ul class="space-y-2 pt-4 border-t border-border/60">
-            {bullets.map(bullet => (
-              <li class="flex items-start gap-2 text-xs text-foreground font-medium">
-                <Icon name="lucide:check-circle-2" class="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+  {/* Carousel Bottom Centered Dots Indicator (Squarespace Style) */}
+  <div class="flex items-center justify-center mt-8 mb-4 px-4" data-carousel-controls>
+    <div class="flex items-center gap-2 py-1 px-3 rounded-full bg-card/60 border border-border/50 backdrop-blur-sm shadow-sm" data-carousel-dots>
+      {
+        FEATURES.map((_, idx) => (
+          <button
+            type="button"
+            data-dot-index={idx}
+            aria-label={`Go to slide ${idx + 1}`}
+            class:list={[
+              'h-2 rounded-full transition-all duration-300 cursor-pointer',
+              idx === 0 ? 'w-8 bg-primary' : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60',
+            ]}
+          ></button>
+        ))
+      }
+    </div>
   </div>
 </section>
+
+<script>
+  // Infinite Loop Carousel Interactive Script with Centered Multi-Card Peek Slider
+  const section = document.querySelector<HTMLElement>('[data-features-showcase]');
+  if (section) {
+    const viewport = section.querySelector<HTMLElement>('[data-carousel-viewport]')!;
+    const track = section.querySelector<HTMLElement>('[data-carousel-track]')!;
+    const tabsScroller = section.querySelector<HTMLElement>('[data-feature-tabs-scroller]');
+    const slides = Array.from(section.querySelectorAll<HTMLElement>('[data-track-index]'));
+    const tabButtons = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-tab-index]'));
+    const dotButtons = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-dot-index]'));
+
+    const PRE_CLONES = 2;
+    const REAL_SLIDE_COUNT = 6;
+    let activeLogicalIndex = 0; // 0 to 5
+    let currentTrackIndex = activeLogicalIndex + PRE_CLONES; // 2 to 7
+    let isPlaying = true;
+    let isTransitioning = false;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+    let wrapTimer: ReturnType<typeof setTimeout> | null = null;
+    const AUTOPLAY_INTERVAL = 6000;
+
+    const TAB_ACTIVE_CLASSES = ['bg-foreground', 'text-background', 'border-foreground', 'shadow-md'];
+    const TAB_INACTIVE_CLASSES = ['bg-card/90', 'text-muted-foreground', 'border-border/80', 'hover:text-foreground', 'hover:bg-card', 'hover:border-border'];
+
+    function updateCarouselPosition(animate = true) {
+      if (!viewport || !track || slides.length === 0) return;
+      const activeSlide = slides[currentTrackIndex];
+      if (!activeSlide) return;
+
+      const viewportWidth = viewport.clientWidth;
+      const slideWidth = activeSlide.offsetWidth;
+      const slideOffsetLeft = activeSlide.offsetLeft;
+
+      // Exact mathematical center: center activeSlide inside viewport
+      const targetOffset = ((viewportWidth - slideWidth) / 2) - slideOffsetLeft;
+      
+      if (!animate) {
+        track.style.transition = 'none';
+      } else {
+        track.style.transition = 'transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1)';
+      }
+      
+      track.style.transform = `translateX(${targetOffset}px)`;
+
+      // Update inner card visual active states (separated from layout)
+      slides.forEach((slide, i) => {
+        const isActive = i === currentTrackIndex;
+        const innerCard = slide.querySelector<HTMLElement>('[data-card-inner]');
+        if (innerCard) {
+          innerCard.classList.toggle('opacity-100', isActive);
+          innerCard.classList.toggle('scale-100', isActive);
+          innerCard.classList.toggle('shadow-2xl', isActive);
+          innerCard.classList.toggle('opacity-25', !isActive);
+          innerCard.classList.toggle('scale-[0.96]', !isActive);
+          innerCard.classList.toggle('hover:opacity-60', !isActive);
+          innerCard.classList.toggle('cursor-pointer', !isActive);
+        }
+      });
+
+      // Update Tabs styling
+      tabButtons.forEach((btn, i) => {
+        const isActive = i === activeLogicalIndex;
+        TAB_ACTIVE_CLASSES.forEach(cls => btn.classList.toggle(cls, isActive));
+        TAB_INACTIVE_CLASSES.forEach(cls => btn.classList.toggle(cls, !isActive));
+
+        if (isActive) centerActiveTab(btn);
+      });
+
+      // Update Dots styling
+      dotButtons.forEach((dot, i) => {
+        const isActive = i === activeLogicalIndex;
+        dot.classList.toggle('w-8', isActive);
+        dot.classList.toggle('bg-primary', isActive);
+        dot.classList.toggle('w-2', !isActive);
+        dot.classList.toggle('bg-muted-foreground/30', !isActive);
+      });
+    }
+
+    // Scroll the pill strip only. `scrollIntoView` would also scroll every scrollable
+    // ancestor — including this overflow-hidden section — shunting the whole section sideways.
+    function centerActiveTab(btn: HTMLButtonElement) {
+      if (!tabsScroller) return;
+      if (tabsScroller.scrollWidth <= tabsScroller.clientWidth) return;
+
+      const btnRect = btn.getBoundingClientRect();
+      const stripRect = tabsScroller.getBoundingClientRect();
+      const delta = (btnRect.left + btnRect.width / 2) - (stripRect.left + stripRect.width / 2);
+      if (Math.abs(delta) < 1) return;
+
+      tabsScroller.scrollTo({ left: tabsScroller.scrollLeft + delta, behavior: 'smooth' });
+    }
+
+    // Snap a clone slide back onto its real counterpart so the loop never runs out of track
+    function normalizeLoopPosition() {
+      if (currentTrackIndex >= REAL_SLIDE_COUNT + PRE_CLONES) {
+        // Wrapped past the end -> snap back to real start
+        currentTrackIndex = currentTrackIndex - REAL_SLIDE_COUNT;
+        updateCarouselPosition(false);
+        // Force layout reflow
+        void track.offsetHeight;
+      } else if (currentTrackIndex < PRE_CLONES) {
+        // Wrapped before the start -> snap to real end
+        currentTrackIndex = currentTrackIndex + REAL_SLIDE_COUNT;
+        updateCarouselPosition(false);
+        // Force layout reflow
+        void track.offsetHeight;
+      }
+      isTransitioning = false;
+    }
+
+    // Resolve an in-flight slide immediately instead of dropping the new interaction
+    function settleTransition() {
+      if (wrapTimer) {
+        clearTimeout(wrapTimer);
+        wrapTimer = null;
+      }
+      normalizeLoopPosition();
+    }
+
+    function goToTrackSlide(targetTrackIndex: number) {
+      settleTransition();
+
+      isTransitioning = true;
+      currentTrackIndex = targetTrackIndex;
+
+      // Calculate the active logical index (0 to 5)
+      const rawLogical = currentTrackIndex - PRE_CLONES;
+      activeLogicalIndex = (rawLogical % REAL_SLIDE_COUNT + REAL_SLIDE_COUNT) % REAL_SLIDE_COUNT;
+
+      updateCarouselPosition(true);
+
+      // Handle seamless wrap-around loop after transition
+      wrapTimer = setTimeout(() => {
+        wrapTimer = null;
+        normalizeLoopPosition();
+      }, 520);
+    }
+
+    function goToLogicalSlide(logicalIndex: number) {
+      activeLogicalIndex = (logicalIndex % REAL_SLIDE_COUNT + REAL_SLIDE_COUNT) % REAL_SLIDE_COUNT;
+      goToTrackSlide(activeLogicalIndex + PRE_CLONES);
+    }
+
+    // Settle first so `currentTrackIndex` is already normalized when the step is applied
+    function goToRelativeSlide(step: number) {
+      settleTransition();
+      goToTrackSlide(currentTrackIndex + step);
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      if (isPlaying) {
+        autoplayTimer = setInterval(() => {
+          goToRelativeSlide(1);
+        }, AUTOPLAY_INTERVAL);
+      }
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    // Clicking peek slides navigates directly to them
+    slides.forEach((slide, trackIdx) => {
+      slide.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (trackIdx === currentTrackIndex && target.closest('a, button')) return;
+        
+        if (trackIdx !== currentTrackIndex) {
+          goToTrackSlide(trackIdx);
+          startAutoplay();
+        }
+      });
+
+      // Card internal next arrow
+      const cardNextBtn = slide.querySelector<HTMLButtonElement>('[data-card-next]');
+      cardNextBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goToRelativeSlide(1);
+        startAutoplay();
+      });
+    });
+
+    // Event Listeners for Tabs
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.tabIndex);
+        goToLogicalSlide(idx);
+        startAutoplay();
+      });
+    });
+
+    // Event Listeners for Dots
+    dotButtons.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = Number(dot.dataset.dotIndex);
+        goToLogicalSlide(idx);
+        startAutoplay();
+      });
+    });
+
+    // Pause on Hover over carousel viewport
+    viewport?.addEventListener('mouseenter', () => {
+      if (isPlaying) stopAutoplay();
+    });
+    viewport?.addEventListener('mouseleave', () => {
+      if (isPlaying) startAutoplay();
+    });
+
+    // Touch Swipe Gestures for Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    viewport?.addEventListener('touchstart', (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    viewport?.addEventListener('touchend', (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchStartX - touchEndX;
+      const SWIPE_THRESHOLD = 45;
+      if (swipeDistance > SWIPE_THRESHOLD) {
+        goToRelativeSlide(1);
+        startAutoplay();
+      } else if (swipeDistance < -SWIPE_THRESHOLD) {
+        goToRelativeSlide(-1);
+        startAutoplay();
+      }
+    }
+
+    // Keyboard navigation when section is in view
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      const rect = section.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView) return;
+
+      if (e.key === 'ArrowLeft') {
+        goToRelativeSlide(-1);
+        startAutoplay();
+      } else if (e.key === 'ArrowRight') {
+        goToRelativeSlide(1);
+        startAutoplay();
+      }
+    });
+
+    // Window resize handler to keep slide centered
+    window.addEventListener('resize', () => {
+      updateCarouselPosition(false);
+    });
+
+    // Initial setup with immediate and RAF calculations
+    updateCarouselPosition(false);
+    requestAnimationFrame(() => updateCarouselPosition(false));
+    window.addEventListener('load', () => updateCarouselPosition(false));
+    setTimeout(() => updateCarouselPosition(false), 80);
+    startAutoplay();
+  }
+</script>
