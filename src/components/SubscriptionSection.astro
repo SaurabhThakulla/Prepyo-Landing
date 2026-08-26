@@ -1,0 +1,606 @@
+---
+import { Icon } from 'astro-icon/components';
+import { appUrl } from '@/consts';
+
+export interface ExactPricingPlan {
+  id: string;
+  name: string;
+  subtitle: string;
+  priceNPR: number;
+  bonusText?: string;
+  features: string[];
+  isPopular: boolean;
+  ctaText: string;
+  isDefault?: boolean;
+}
+
+export const EXACT_PLANS: ExactPricingPlan[] = [
+  {
+    id: 'free',
+    name: 'Free Learner',
+    subtitle: 'Free starter plan',
+    priceNPR: 0,
+    features: [
+      'Core practice tasks',
+      '3 AI evaluations per day',
+      '1 full mock exam',
+    ],
+    isPopular: false,
+    ctaText: 'Default Plan',
+    isDefault: true,
+  },
+  {
+    id: 'weekly',
+    name: 'Weekly Sprint',
+    subtitle: '7 days',
+    priceNPR: 99,
+    features: [
+      '7 days intensive sprint',
+      '10 AI evaluations per day',
+      '1 full mock exam',
+      'All practice question types',
+    ],
+    isPopular: false,
+    ctaText: 'Choose Plan',
+  },
+  {
+    id: 'pro',
+    name: 'Pro Prep',
+    subtitle: '33 days (30 + 3 bonus)',
+    priceNPR: 299,
+    bonusText: '+3 bonus days',
+    features: [
+      'Unlimited practice',
+      '30 AI evaluations per day',
+      '5 full mock exams',
+      'Sentence-level rewrites',
+    ],
+    isPopular: true,
+    ctaText: 'Choose Plan',
+  },
+  {
+    id: 'elite',
+    name: 'Elite Master',
+    subtitle: '97 days (90 + 7 bonus)',
+    priceNPR: 999,
+    bonusText: '+7 bonus days',
+    features: [
+      '90 days full access',
+      '100 AI evaluations per day',
+      '15 full mock exams',
+      'Priority evaluation queue',
+    ],
+    isPopular: false,
+    ctaText: 'Choose Plan',
+  },
+];
+
+// Pre-clone last 2 slides and post-clone first 2 slides for infinite loop mobile carousel
+const TRACK_PLANS = [
+  ...EXACT_PLANS.slice(-2).map((p, i) => ({ ...p, isClone: true, originalIndex: EXACT_PLANS.length - 2 + i })),
+  ...EXACT_PLANS.map((p, i) => ({ ...p, isClone: false, originalIndex: i })),
+  ...EXACT_PLANS.slice(0, 2).map((p, i) => ({ ...p, isClone: true, originalIndex: i })),
+];
+const PRE_CLONES = 2;
+---
+
+<section id="pricing" class="py-14 sm:py-20 lg:py-24 border-t border-border relative overflow-hidden" data-subscription-section>
+  {/* Dual anchor target so #subscription and #pricing both scroll here smoothly */}
+  <div id="subscription" class="sr-only" aria-hidden="true"></div>
+
+  {/* Ambient background glows */}
+  <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/5 blur-[120px] rounded-full"></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    {/* Centered Header with Note */}
+    <div class="text-center space-y-2.5 mb-8 sm:mb-16">
+      <div class="flex justify-center">
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 shadow-sm"
+        >
+          <Icon name="lucide:sparkles" class="w-3.5 h-3.5 text-emerald-500" />
+          SUBSCRIPTION & PRICING
+        </span>
+      </div>
+
+      <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+        Affordable plans for Nepali students
+      </h2>
+
+      <p class="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
+        Prices in NPR. Paid plans include bonus days on top of the base duration.
+      </p>
+    </div>
+
+    {/* ========================================================================= */}
+    {/* MOBILE ONLY: Interactive Infinite Loop Peek Carousel (Under sm breakpoint) */}
+    {/* ========================================================================= */}
+
+    {/* Category Pills Navigation Bar (Mobile only, Centered Single Line) */}
+    <div class="sm:hidden w-full px-2 mb-4" data-pricing-tabs-scroller>
+      <div class="flex items-center gap-1.5 w-max mx-auto whitespace-nowrap py-1 px-1" data-pricing-tabs>
+        {
+          EXACT_PLANS.map((plan, idx) => (
+            <button
+              type="button"
+              data-pricing-tab-index={idx}
+              class:list={[
+                'group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 shrink-0 cursor-pointer select-none border whitespace-nowrap',
+                idx === 0
+                  ? 'bg-foreground text-background border-foreground shadow-sm'
+                  : 'bg-card/90 text-muted-foreground border-border/80 hover:text-foreground hover:bg-card hover:border-border',
+              ]}
+            >
+              {plan.isPopular && <Icon name="lucide:sparkles" class="w-3 h-3 text-emerald-500 shrink-0" />}
+              <span>{plan.name}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Mobile Carousel Viewport */}
+    <div class="sm:hidden relative overflow-hidden py-3 w-full" data-pricing-viewport>
+      <div
+        class="relative flex items-stretch w-max gap-3.5 transition-transform duration-500 ease-out will-change-transform"
+        data-pricing-track
+      >
+        {
+          TRACK_PLANS.map((plan, trackIdx) => {
+            const isPopular = plan.isPopular;
+            const ctaHref = appUrl(plan.isDefault ? '/signup' : '/subscription');
+            const isInitialActive = trackIdx === PRE_CLONES;
+
+            return (
+              <div
+                class="w-[84vw] max-w-[340px] shrink-0 select-none py-2"
+                data-pricing-track-index={trackIdx}
+                data-original-index={plan.originalIndex}
+              >
+                <div
+                  class:list={[
+                    'h-full rounded-2xl sm:rounded-3xl border bg-card p-6 flex flex-col justify-between transition-all duration-500 ease-out relative',
+                    isInitialActive
+                      ? 'opacity-100 scale-100 shadow-xl'
+                      : 'opacity-40 scale-[0.96] hover:opacity-70 cursor-pointer shadow-sm',
+                    isPopular
+                      ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-emerald-500/10'
+                      : 'border-border',
+                  ]}
+                  data-pricing-card-inner
+                >
+                  {isPopular && (
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
+                      <span class="rounded-full bg-emerald-600 px-3.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-md flex items-center gap-1 whitespace-nowrap">
+                        MOST POPULAR
+                      </span>
+                    </div>
+                  )}
+
+                  <div class="space-y-4">
+                    {/* Plan Name & Subtitle */}
+                    <div class="space-y-1">
+                      <h3 class="font-display text-lg font-bold text-foreground">
+                        {plan.name}
+                      </h3>
+                      <p class="text-xs text-muted-foreground font-medium">{plan.subtitle}</p>
+                    </div>
+
+                    {/* Large Price Display */}
+                    <div class="pt-1">
+                      <span class="font-display text-3xl font-black text-foreground tracking-tight">
+                        NPR {plan.priceNPR.toLocaleString()}
+                      </span>
+                    </div>
+
+                    {/* Bonus Days Pill or Spacer */}
+                    <div class="h-7 flex items-center">
+                      {plan.bonusText ? (
+                        <div class="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold px-2.5 py-0.5 rounded-lg">
+                          <Icon name="lucide:gift" class="w-3.5 h-3.5 text-emerald-500" />
+                          <span>{plan.bonusText}</span>
+                        </div>
+                      ) : (
+                        <div class="h-1" aria-hidden="true" />
+                      )}
+                    </div>
+
+                    {/* Divider Line */}
+                    <div class="w-full h-px bg-border/80 pt-0 my-1" aria-hidden="true" />
+
+                    {/* Features Checklist */}
+                    <ul class="space-y-2.5 pt-1">
+                      {plan.features.map(feature => (
+                        <li class="flex items-start gap-2.5 text-xs text-foreground/90 font-medium leading-relaxed">
+                          <Icon name="lucide:check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Action Button */}
+                  <div class="pt-6">
+                    {plan.isDefault ? (
+                      <a
+                        href={ctaHref}
+                        class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-200"
+                      >
+                        {plan.ctaText}
+                      </a>
+                    ) : isPopular ? (
+                      <a
+                        href={ctaHref}
+                        class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-emerald-500 text-white hover:bg-emerald-600 shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-all duration-200"
+                      >
+                        {plan.ctaText}
+                      </a>
+                    ) : (
+                      <a
+                        href={ctaHref}
+                        class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-muted/60 text-foreground hover:bg-muted active:scale-[0.98] transition-all duration-200"
+                      >
+                        {plan.ctaText}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+
+    {/* Mobile Carousel Bottom Centered Controls (Dots + Prev/Next Arrows) */}
+    <div class="sm:hidden flex items-center justify-center gap-3 mt-4 mb-2 px-4" data-pricing-carousel-controls>
+      <button
+        type="button"
+        data-pricing-prev
+        aria-label="Previous plan"
+        class="w-8 h-8 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-sm hover:bg-card active:scale-90 transition-all cursor-pointer"
+      >
+        <Icon name="lucide:chevron-left" class="w-4 h-4" />
+      </button>
+
+      <div class="flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-card/80 border border-border/60 backdrop-blur-sm shadow-sm" data-pricing-dots>
+        {
+          EXACT_PLANS.map((_, idx) => (
+            <button
+              type="button"
+              data-pricing-dot-index={idx}
+              aria-label={`Go to plan ${idx + 1}`}
+              class:list={[
+                'h-2 rounded-full transition-all duration-300 cursor-pointer',
+                idx === 0 ? 'w-7 bg-emerald-500' : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60',
+              ]}
+            ></button>
+          ))
+        }
+      </div>
+
+      <button
+        type="button"
+        data-pricing-next
+        aria-label="Next plan"
+        class="w-8 h-8 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-sm hover:bg-card active:scale-90 transition-all cursor-pointer"
+      >
+        <Icon name="lucide:chevron-right" class="w-4 h-4" />
+      </button>
+    </div>
+
+    {/* ========================================================================= */}
+    {/* DESKTOP & TABLET: Exact 4-Column Pricing Cards Grid (sm breakpoint and up) */}
+    {/* ========================================================================= */}
+    <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch" data-plans-grid>
+      {
+        EXACT_PLANS.map(plan => {
+          const isPopular = plan.isPopular;
+          const ctaHref = appUrl(plan.isDefault ? '/signup' : '/subscription');
+
+          return (
+            <div
+              class:list={[
+                'relative rounded-2xl sm:rounded-3xl border bg-card p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 group',
+                isPopular
+                  ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-xl shadow-emerald-500/10 lg:-translate-y-2 z-20'
+                  : 'border-border hover:border-slate-300 dark:hover:border-slate-700 shadow-sm hover:shadow-md',
+              ]}
+              data-plan-card={plan.id}
+            >
+              {isPopular && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span class="rounded-full bg-emerald-600 px-3.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-md flex items-center gap-1 whitespace-nowrap">
+                    MOST POPULAR
+                  </span>
+                </div>
+              )}
+
+              <div class="space-y-4">
+                {/* Plan Name & Subtitle */}
+                <div class="space-y-1">
+                  <h3 class="font-display text-lg font-bold text-foreground">
+                    {plan.name}
+                  </h3>
+                  <p class="text-xs text-muted-foreground font-medium">{plan.subtitle}</p>
+                </div>
+
+                {/* Large Price Display */}
+                <div class="pt-1">
+                  <span class="font-display text-3xl sm:text-4xl font-black text-foreground tracking-tight">
+                    NPR {plan.priceNPR.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* Bonus Days Pill */}
+                {plan.bonusText ? (
+                  <div class="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold px-2.5 py-1 rounded-lg">
+                    <Icon name="lucide:gift" class="w-3.5 h-3.5 text-emerald-500" />
+                    <span>{plan.bonusText}</span>
+                  </div>
+                ) : (
+                  <div class="h-1" aria-hidden="true" />
+                )}
+
+                {/* Divider Line */}
+                <div class="w-full h-px bg-border/80 pt-0 my-1" aria-hidden="true" />
+
+                {/* Features Checklist */}
+                <ul class="space-y-2.5 pt-1">
+                  {plan.features.map(feature => (
+                    <li class="flex items-start gap-2.5 text-xs text-foreground/90 font-medium leading-relaxed">
+                      <Icon name="lucide:check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Action Button */}
+              <div class="pt-8">
+                {plan.isDefault ? (
+                  <a
+                    href={ctaHref}
+                    class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-200"
+                  >
+                    {plan.ctaText}
+                  </a>
+                ) : isPopular ? (
+                  <a
+                    href={ctaHref}
+                    class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-emerald-500 text-white hover:bg-emerald-600 shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-all duration-200"
+                  >
+                    {plan.ctaText}
+                  </a>
+                ) : (
+                  <a
+                    href={ctaHref}
+                    class="w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center bg-muted/60 text-foreground hover:bg-muted active:scale-[0.98] transition-all duration-200"
+                  >
+                    {plan.ctaText}
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Mobile Infinite Loop Peek Carousel for Pricing (Matching FeaturesSection approach)
+  const section = document.querySelector<HTMLElement>('[data-subscription-section]');
+  if (section) {
+    const viewport = section.querySelector<HTMLElement>('[data-pricing-viewport]');
+    const track = section.querySelector<HTMLElement>('[data-pricing-track]');
+    const tabsScroller = section.querySelector<HTMLElement>('[data-pricing-tabs-scroller]');
+    const slides = Array.from(section.querySelectorAll<HTMLElement>('[data-pricing-track-index]'));
+    const tabButtons = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-pricing-tab-index]'));
+    const dotButtons = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-pricing-dot-index]'));
+    const prevBtn = section.querySelector<HTMLButtonElement>('[data-pricing-prev]');
+    const nextBtn = section.querySelector<HTMLButtonElement>('[data-pricing-next]');
+
+    const PRE_CLONES = 2;
+    const REAL_PLANS_COUNT = 4;
+    let activeLogicalIndex = 0; // 0 to 3 (Free, Weekly, Pro, Elite)
+    let currentTrackIndex = activeLogicalIndex + PRE_CLONES; // 2 to 5
+    let isTransitioning = false;
+    let wrapTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const TAB_ACTIVE_CLASSES = ['bg-foreground', 'text-background', 'border-foreground', 'shadow-sm'];
+    const TAB_INACTIVE_CLASSES = ['bg-card/90', 'text-muted-foreground', 'border-border/80', 'hover:text-foreground', 'hover:bg-card', 'hover:border-border'];
+
+    function updateCarouselPosition(animate = true) {
+      if (!viewport || !track || slides.length === 0) return;
+      // Skip if viewport is hidden (e.g. on tablet/desktop screen >= 640px)
+      if (viewport.offsetParent === null && viewport.clientWidth === 0) return;
+
+      const activeSlide = slides[currentTrackIndex];
+      if (!activeSlide) return;
+
+      const viewportWidth = viewport.clientWidth;
+      const slideWidth = activeSlide.offsetWidth;
+      const slideOffsetLeft = activeSlide.offsetLeft;
+
+      // Exact mathematical center: center activeSlide inside viewport
+      const targetOffset = ((viewportWidth - slideWidth) / 2) - slideOffsetLeft;
+
+      if (!animate) {
+        track.style.transition = 'none';
+      } else {
+        track.style.transition = 'transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1)';
+      }
+
+      track.style.transform = `translateX(${targetOffset}px)`;
+
+      // Update inner card visual active states
+      slides.forEach((slide, i) => {
+        const isActive = i === currentTrackIndex;
+        const innerCard = slide.querySelector<HTMLElement>('[data-pricing-card-inner]');
+        if (innerCard) {
+          innerCard.classList.toggle('opacity-100', isActive);
+          innerCard.classList.toggle('scale-100', isActive);
+          innerCard.classList.toggle('shadow-xl', isActive);
+          innerCard.classList.toggle('opacity-40', !isActive);
+          innerCard.classList.toggle('scale-[0.96]', !isActive);
+          innerCard.classList.toggle('hover:opacity-70', !isActive);
+          innerCard.classList.toggle('cursor-pointer', !isActive);
+        }
+      });
+
+      // Update Tabs styling
+      tabButtons.forEach((btn, i) => {
+        const isActive = i === activeLogicalIndex;
+        TAB_ACTIVE_CLASSES.forEach(cls => btn.classList.toggle(cls, isActive));
+        TAB_INACTIVE_CLASSES.forEach(cls => btn.classList.toggle(cls, !isActive));
+
+        if (isActive) centerActiveTab(btn);
+      });
+
+      // Update Dots styling
+      dotButtons.forEach((dot, i) => {
+        const isActive = i === activeLogicalIndex;
+        dot.classList.toggle('w-7', isActive);
+        dot.classList.toggle('bg-emerald-500', isActive);
+        dot.classList.toggle('w-2', !isActive);
+        dot.classList.toggle('bg-muted-foreground/30', !isActive);
+      });
+    }
+
+    function centerActiveTab(btn: HTMLButtonElement) {
+      if (!tabsScroller) return;
+      if (tabsScroller.scrollWidth <= tabsScroller.clientWidth) return;
+
+      const btnRect = btn.getBoundingClientRect();
+      const stripRect = tabsScroller.getBoundingClientRect();
+      const delta = (btnRect.left + btnRect.width / 2) - (stripRect.left + stripRect.width / 2);
+      if (Math.abs(delta) < 1) return;
+
+      tabsScroller.scrollTo({ left: tabsScroller.scrollLeft + delta, behavior: 'smooth' });
+    }
+
+    function normalizeLoopPosition() {
+      if (currentTrackIndex >= REAL_PLANS_COUNT + PRE_CLONES) {
+        currentTrackIndex = currentTrackIndex - REAL_PLANS_COUNT;
+        updateCarouselPosition(false);
+        void track.offsetHeight;
+      } else if (currentTrackIndex < PRE_CLONES) {
+        currentTrackIndex = currentTrackIndex + REAL_PLANS_COUNT;
+        updateCarouselPosition(false);
+        void track.offsetHeight;
+      }
+      isTransitioning = false;
+    }
+
+    function settleTransition() {
+      if (wrapTimer) {
+        clearTimeout(wrapTimer);
+        wrapTimer = null;
+      }
+      normalizeLoopPosition();
+    }
+
+    function goToTrackSlide(targetTrackIndex: number) {
+      settleTransition();
+
+      isTransitioning = true;
+      currentTrackIndex = targetTrackIndex;
+
+      // Calculate active logical index (0 to 3)
+      const rawLogical = currentTrackIndex - PRE_CLONES;
+      activeLogicalIndex = ((rawLogical % REAL_PLANS_COUNT) + REAL_PLANS_COUNT) % REAL_PLANS_COUNT;
+
+      updateCarouselPosition(true);
+
+      wrapTimer = setTimeout(() => {
+        wrapTimer = null;
+        normalizeLoopPosition();
+      }, 520);
+    }
+
+    function goToLogicalSlide(logicalIndex: number) {
+      activeLogicalIndex = ((logicalIndex % REAL_PLANS_COUNT) + REAL_PLANS_COUNT) % REAL_PLANS_COUNT;
+      goToTrackSlide(activeLogicalIndex + PRE_CLONES);
+    }
+
+    function goToRelativeSlide(step: number) {
+      settleTransition();
+      goToTrackSlide(currentTrackIndex + step);
+    }
+
+    // Clicking peek slides navigates directly to them
+    slides.forEach((slide, trackIdx) => {
+      slide.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (trackIdx === currentTrackIndex && target.closest('a, button')) return;
+
+        if (trackIdx !== currentTrackIndex) {
+          goToTrackSlide(trackIdx);
+        }
+      });
+    });
+
+    // Event Listeners for Tabs
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.dataset.pricingTabIndex);
+        goToLogicalSlide(idx);
+      });
+    });
+
+    // Event Listeners for Dots
+    dotButtons.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = Number(dot.dataset.pricingDotIndex);
+        goToLogicalSlide(idx);
+      });
+    });
+
+    // Event Listeners for Arrows
+    prevBtn?.addEventListener('click', () => {
+      goToRelativeSlide(-1);
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      goToRelativeSlide(1);
+    });
+
+    // Touch Swipe Gestures for Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    viewport?.addEventListener('touchstart', (e: TouchEvent) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    viewport?.addEventListener('touchend', (e: TouchEvent) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchStartX - touchEndX;
+      const SWIPE_THRESHOLD = 40;
+      if (swipeDistance > SWIPE_THRESHOLD) {
+        goToRelativeSlide(1);
+      } else if (swipeDistance < -SWIPE_THRESHOLD) {
+        goToRelativeSlide(-1);
+      }
+    }
+
+    // Window resize handler to keep slide centered
+    window.addEventListener('resize', () => {
+      updateCarouselPosition(false);
+    });
+
+    // Initial setup with immediate and RAF calculations
+    updateCarouselPosition(false);
+    requestAnimationFrame(() => updateCarouselPosition(false));
+    window.addEventListener('load', () => updateCarouselPosition(false));
+    setTimeout(() => updateCarouselPosition(false), 100);
+  }
+</script>

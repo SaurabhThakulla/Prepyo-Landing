@@ -1,0 +1,339 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface SolutionItem {
+  iconBg: string;
+  iconColor: string;
+  title: string;
+}
+
+const SOLUTION_ITEMS: SolutionItem[] = [
+  {
+    iconBg: 'bg-orange-100 dark:bg-orange-950/60',
+    iconColor: 'text-orange-500 fill-orange-500',
+    title: 'Accelerated Mock Test',
+  },
+  {
+    iconBg: 'bg-purple-100 dark:bg-purple-950/60',
+    iconColor: 'text-purple-600 fill-purple-600',
+    title: 'Skills Analysis',
+  },
+  {
+    iconBg: 'bg-orange-100 dark:bg-orange-950/60',
+    iconColor: 'text-orange-500 fill-orange-500',
+    title: 'AI Scoring',
+  },
+];
+---
+
+<section id="problems-and-solutions" class="py-14 sm:py-20 border-t border-border">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Outer Rounded Container Card with Subtle Ambient Glow */}
+    <div
+      class="relative rounded-[28px] sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-card/90 backdrop-blur-xl p-6 sm:p-10 lg:p-12 shadow-xl overflow-hidden"
+    >
+      {/* Background Soft Glows */}
+      <div
+        class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-purple-500/10 dark:bg-purple-600/15 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-indigo-500/10 dark:bg-indigo-600/15 blur-3xl pointer-events-none"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        {/* Left Column: Heading, Subtitle & Feature Highlights */}
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-1.5 rounded-full border border-sky-500/20 bg-sky-500/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 shadow-sm">
+            <Icon name="lucide:sparkles" class="w-3.5 h-3.5 text-sky-500" />
+            THE PROBLEMS & SOLUTIONS
+          </div>
+
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0f172a] dark:text-white tracking-tight leading-[1.15]">
+            New: Advanced Performance Tools
+          </h2>
+
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+            Elevate your preparation with our latest suite of intelligence-driven features designed for elite performance.
+          </p>
+
+          <div class="space-y-4 pt-2">
+            {
+              SOLUTION_ITEMS.map(({ iconBg, iconColor, title }) => (
+                <div class="flex items-center gap-3.5 group">
+                  <div
+                    class={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${iconBg} flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}
+                  >
+                    <Icon name="lucide:zap" class={`w-4 h-4 ${iconColor}`} />
+                  </div>
+                  <span class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                    {title}
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        {/* Right Column: High-Fidelity UI Dashboard Canvas */}
+        <div class="lg:col-span-7">
+          <div class="rounded-3xl bg-[#f0f2f8] dark:bg-slate-900/90 p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-inner">
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+              {/* Left Sub-Column: Accelerated Test Progress & Skill Profile Diamond */}
+              <div class="sm:col-span-7 flex flex-col gap-4">
+                {/* 1. Accelerated Test Progress Card */}
+                <div class="rounded-2xl bg-white dark:bg-card p-4 sm:p-5 border border-slate-100 dark:border-slate-800 shadow-sm space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
+                      <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                      ACCELERATED TEST #1
+                    </div>
+                    <span class="text-[11px] font-extrabold text-orange-500">85% Complete</span>
+                  </div>
+
+                  <div class="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div class="h-full rounded-full bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 w-[85%] transition-all duration-1000"></div>
+                  </div>
+
+                  <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                    Estimated Completion: 48 mins
+                  </p>
+                </div>
+
+                {/* 2. Skill Strength Profile Card (Spider-Web Radar Graph) */}
+                <div class="rounded-2xl bg-white dark:bg-card p-4 sm:p-5 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center flex-1">
+                  <div class="flex items-center justify-between w-full mb-2">
+                    <h4 class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-900 dark:text-indigo-300">
+                      SKILL STRENGTH PROFILE
+                    </h4>
+                    <span class="inline-flex items-center gap-1 text-[9px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-900/40">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      DIAGNOSTIC RADAR
+                    </span>
+                  </div>
+
+                  <div class="relative w-full max-w-[240px] aspect-square flex items-center justify-center my-1.5">
+                    {/* Top: Speaking Pill */}
+                    <div class="absolute -top-1 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700/80 px-2.5 py-0.5 text-[9px] font-bold text-slate-700 dark:text-slate-200 shadow-sm z-10 whitespace-nowrap">
+                      <Icon name="lucide:mic" class="w-2.5 h-2.5 text-emerald-500 shrink-0" />
+                      <span>Speaking</span>
+                      <span class="font-extrabold text-emerald-600 dark:text-emerald-400 font-mono ml-0.5">86</span>
+                    </div>
+
+                    {/* Right: Writing Pill */}
+                    <div class="absolute -right-1.5 sm:-right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700/80 px-2.5 py-0.5 text-[9px] font-bold text-slate-700 dark:text-slate-200 shadow-sm z-10 whitespace-nowrap">
+                      <Icon name="lucide:file-edit" class="w-2.5 h-2.5 text-amber-500 shrink-0" />
+                      <span>Writing</span>
+                      <span class="font-extrabold text-amber-600 dark:text-amber-400 font-mono ml-0.5">74</span>
+                    </div>
+
+                    {/* Bottom: Reading Pill */}
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700/80 px-2.5 py-0.5 text-[9px] font-bold text-slate-700 dark:text-slate-200 shadow-sm z-10 whitespace-nowrap">
+                      <Icon name="lucide:book-open" class="w-2.5 h-2.5 text-indigo-500 shrink-0" />
+                      <span>Reading</span>
+                      <span class="font-extrabold text-indigo-600 dark:text-indigo-400 font-mono ml-0.5">78</span>
+                    </div>
+
+                    {/* Left: Listening Pill */}
+                    <div class="absolute -left-1.5 sm:-left-3 top-1/2 -translate-y-1/2 flex items-center gap-1 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700/80 px-2.5 py-0.5 text-[9px] font-bold text-slate-700 dark:text-slate-200 shadow-sm z-10 whitespace-nowrap">
+                      <Icon name="lucide:headphones" class="w-2.5 h-2.5 text-purple-500 shrink-0" />
+                      <span>Listening</span>
+                      <span class="font-extrabold text-purple-600 dark:text-purple-400 font-mono ml-0.5">82</span>
+                    </div>
+
+                    {/* Spider-Web Radar Graph SVG */}
+                    <svg viewBox="0 0 200 200" class="w-36 h-36 sm:w-44 sm:h-44 text-indigo-600 dark:text-indigo-400 overflow-visible">
+                      <defs>
+                        {/* Area Gradient for Active Skill Polygon */}
+                        <linearGradient id="skill-radar-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#10b981" stop-opacity="0.3" />
+                          <stop offset="50%" stop-color="#6366f1" stop-opacity="0.25" />
+                          <stop offset="100%" stop-color="#a855f7" stop-opacity="0.3" />
+                        </linearGradient>
+                        {/* Target Reference Gradient */}
+                        <linearGradient id="target-radar-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#f97316" stop-opacity="0.6" />
+                          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.6" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* 1. Spider Web Radial Guidelines (4 Cardinal + 4 Diagonal) */}
+                      <g class="opacity-20" stroke="currentColor" stroke-width="0.8">
+                        {/* Main Cardinal Axes */}
+                        <line x1="100" y1="24" x2="100" y2="176" stroke-width="1.2" />
+                        <line x1="24" y1="100" x2="176" y2="100" stroke-width="1.2" />
+                        {/* Diagonal Web Spokes */}
+                        <line x1="46" y1="46" x2="154" y2="154" stroke-dasharray="2 2" />
+                        <line x1="154" y1="46" x2="46" y2="154" stroke-dasharray="2 2" />
+                      </g>
+
+                      {/* 2. Concentric Spider-Web Diamond Polygons (25%, 50%, 75%, 100%) */}
+                      {/* 25% Ring (Level ~25) */}
+                      <polygon
+                        points="100,82 118,100 100,118 82,100"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="0.8"
+                        stroke-dasharray="2 2"
+                        class="opacity-15"
+                      />
+                      {/* 50% Ring (Level ~50) */}
+                      <polygon
+                        points="100,64 136,100 100,136 64,100"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="0.9"
+                        class="opacity-20"
+                      />
+                      {/* 75% Ring (Level ~70) */}
+                      <polygon
+                        points="100,46 154,100 100,154 46,100"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="0.9"
+                        stroke-dasharray="3 3"
+                        class="opacity-25"
+                      />
+                      {/* 100% Perimeter Ring (Level 90 Max) */}
+                      <polygon
+                        points="100,28 172,100 100,172 28,100"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        class="opacity-35"
+                      />
+
+                      {/* Level Calibration Marks */}
+                      <text x="103" y="67" font-size="6.5" font-weight="700" fill="currentColor" class="opacity-30 select-none">50</text>
+                      <text x="103" y="49" font-size="6.5" font-weight="700" fill="currentColor" class="opacity-30 select-none">70</text>
+
+                      {/* 3. Ghost Target Reference Line (PTE 79 Benchmark) */}
+                      <polygon
+                        points="100,38 162,100 100,162 38,100"
+                        fill="none"
+                        stroke="url(#target-radar-stroke)"
+                        stroke-width="1.2"
+                        stroke-dasharray="3 3"
+                      />
+
+                      {/* 4. Active Current Skill Profile Polygon */}
+                      <polygon
+                        points="100,31 158,100 100,160 36,100"
+                        fill="url(#skill-radar-fill)"
+                        stroke="#6366f1"
+                        stroke-width="2.5"
+                        stroke-linejoin="round"
+                        class="drop-shadow-md"
+                      />
+
+                      {/* 5. Glowing Vertex Nodes (Speaking, Writing, Reading, Listening) */}
+                      {/* Top: Speaking (86) */}
+                      <circle cx="100" cy="31" r="5" fill="#10b981" opacity="0.25" class="animate-ping" />
+                      <circle cx="100" cy="31" r="3.5" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+
+                      {/* Right: Writing (74) */}
+                      <circle cx="158" cy="100" r="5" fill="#f59e0b" opacity="0.25" class="animate-ping" />
+                      <circle cx="158" cy="100" r="3.5" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" />
+
+                      {/* Bottom: Reading (78) */}
+                      <circle cx="100" cy="160" r="5" fill="#6366f1" opacity="0.25" class="animate-ping" />
+                      <circle cx="100" cy="160" r="3.5" fill="#6366f1" stroke="#ffffff" stroke-width="1.5" />
+
+                      {/* Left: Listening (82) */}
+                      <circle cx="36" cy="100" r="5" fill="#a855f7" opacity="0.25" class="animate-ping" />
+                      <circle cx="36" cy="100" r="3.5" fill="#a855f7" stroke="#ffffff" stroke-width="1.5" />
+
+                      {/* 6. Center Hub Nucleus */}
+                      <circle cx="100" cy="100" r="5" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.3" />
+                      <circle cx="100" cy="100" r="2.5" fill="#6366f1" opacity="0.8" />
+                    </svg>
+                  </div>
+
+                  {/* Micro Legend */}
+                  <div class="flex items-center justify-center gap-4 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 w-full text-[9px]">
+                    <div class="flex items-center gap-1.5 font-bold text-slate-600 dark:text-slate-300">
+                      <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                      <span>Your Score (Avg 80)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 font-semibold text-slate-400 dark:text-slate-400">
+                      <span class="w-3 h-0.5 border-t border-dashed border-orange-500"></span>
+                      <span>Target 79+</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Sub-Column: PTE Score Donut, AI Status, Feedback & CTA */}
+              <div class="sm:col-span-5 rounded-2xl bg-white dark:bg-card p-4 sm:p-5 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-3.5">
+                {/* Donut Score Gauge */}
+                <div class="flex flex-col items-center justify-center pt-1">
+                  <div class="relative w-24 h-24 flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                      {/* Background circle */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        class="text-slate-100 dark:text-slate-800"
+                      />
+                      {/* Active score arc */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="#f97316"
+                        stroke-width="8"
+                        stroke-linecap="round"
+                        stroke-dasharray="251.2"
+                        stroke-dashoffset="37.68"
+                      />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span class="text-2xl font-black text-slate-900 dark:text-white leading-none">79</span>
+                      <span class="text-[8px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mt-0.5">
+                        PTE SCORE
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Status Badge */}
+                <div class="flex justify-center">
+                  <span class="rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/40 text-[10px] font-bold px-3 py-1">
+                    AI Evaluation Ready
+                  </span>
+                </div>
+
+                {/* Feedback Insight Box */}
+                <div class="rounded-xl bg-[#fff4eb] dark:bg-amber-950/30 p-3 border border-orange-100 dark:border-orange-900/30">
+                  <div class="text-[8px] font-extrabold uppercase text-orange-600 dark:text-orange-400 tracking-wider">
+                    FEEDBACK INSIGHT
+                  </div>
+                  <p class="text-[10px] text-slate-700 dark:text-slate-300 italic mt-1 leading-relaxed">
+                    "Your oral fluency is exceptional. Focus on word stress in complex academic vocabulary to reach 85+."
+                  </p>
+                </div>
+
+                {/* CTA Button */}
+                <button
+                  type="button"
+                  class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#2e2365] to-[#45328c] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg hover:brightness-110 active:scale-[0.98] transition-all"
+                >
+                  <span>Detailed Analysis Report</span>
+                  <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -2,11 +2,10 @@
 import Layout from '@/layouts/Layout.astro';
 import Hero from '@/components/Hero.astro';
 import ExamsSection from '@/components/ExamsSection.astro';
+import ProblemSection from '@/components/ProblemSection.astro';
 import FeaturesSection from '@/components/FeaturesSection.astro';
+import SubscriptionSection from '@/components/SubscriptionSection.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
-import PricingSection from '@/components/PricingSection.astro';
-import TrustBadges from '@/components/TrustBadges.astro';
-import InstitutionsSection from '@/components/InstitutionsSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import FinalCTA from '@/components/FinalCTA.astro';
 
@@ -14,7 +13,7 @@ import FinalCTA from '@/components/FinalCTA.astro';
  * The public landing page for Prepyo.
  *
  * Top navigation links smoothly scroll directly to each respective section
- * on this page (#products, #features, #how-it-works, #pricing, #institutions, #faq).
+ * on this page (#products, #features, #pricing, #how-it-works, #faq).
  */
 ---
 
@@ -25,11 +24,10 @@ import FinalCTA from '@/components/FinalCTA.astro';
   <div class="w-full space-y-4">
     <Hero />
     <ExamsSection />
+    <ProblemSection />
     <FeaturesSection />
+    <SubscriptionSection />
     <HowItWorksSection />
-    <PricingSection />
-    <TrustBadges />
-    <InstitutionsSection />
     <FAQSection />
     <FinalCTA />
   </div>
