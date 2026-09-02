@@ -115,7 +115,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         {/* Login and the arrow drop out on a phone: both are one tap away in
             the mobile menu, and keeping them here overflows a 360px screen. */}
         <Button
-          href={appUrl('/login')}
+          href={appUrl('/')}
           variant="ghost"
           size="sm"
           class="hidden sm:inline-flex rounded-full font-bold text-xs px-4 h-9"
@@ -124,7 +124,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         </Button>
 
         <Button
-          href={appUrl('/signup')}
+          href={appUrl('/')}
           size="sm"
           class="rounded-full font-extrabold text-xs px-3.5 sm:px-5 h-9 shadow-sm hover:shadow-md transition-all gap-1.5"
         >
@@ -188,10 +188,10 @@ const DEFAULT_EXAM: ExamType = 'PTE';
       </div>
 
       <div class="pt-2 border-t border-border flex items-center gap-2">
-        <Button href={appUrl('/login')} variant="outline" size="sm" class="flex-1 rounded-xl text-xs font-bold">
+        <Button href={appUrl('/')} variant="outline" size="sm" class="flex-1 rounded-xl text-xs font-bold">
           Login
         </Button>
-        <Button href={appUrl('/signup')} size="sm" class="flex-1 rounded-xl text-xs font-bold">
+        <Button href={appUrl('/')} size="sm" class="flex-1 rounded-xl text-xs font-bold">
           Sign up Free
         </Button>
       </div>
