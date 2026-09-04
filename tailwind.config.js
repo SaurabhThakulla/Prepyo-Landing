@@ -19,8 +19,13 @@ export default {
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          hover: "#059669",
+          hover: "#4752C4",
           foreground: "hsl(var(--primary-foreground))",
+        },
+        discord: {
+          DEFAULT: "#5865F2",
+          hover: "#4752C4",
+          light: "#7983F5",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

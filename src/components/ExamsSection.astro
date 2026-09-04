@@ -1,162 +1,242 @@
 ---
 import { Icon } from 'astro-icon/components';
-import Button from '@/components/Button.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
 import { appUrl, type ExamType } from '@/consts';
 
 interface ExamCard {
   exam: ExamType;
+  letter: string;
   name: string;
   targetLabel: string;
   scaleLabel: string;
   description: string;
-  skills: string[];
-  accent: string;
-  accentBg: string;
+  moreTasks: string;
+  skills: [string, string][]; // Pairs for 2-column display
+  letterBg: string;
+  letterText: string;
+  pillBg: string;
+  pillBorder: string;
+  pillText: string;
+  checkColor: string;
 }
 
 const EXAMS: ExamCard[] = [
   {
     exam: 'PTE',
+    letter: 'P',
     name: 'PTE Academic',
-    targetLabel: '79+',
-    scaleLabel: 'Scored 10 – 90',
-    description: 'Taken on a computer, marked by AI. Results usually arrive within 48 hours.',
-    skills: ['Read Aloud', 'Repeat Sentence', 'Summarize Written Text', 'Write from Dictation'],
-    accent: 'text-primary',
-    accentBg: 'bg-primary/10',
+    targetLabel: '79+ goal',
+    scaleLabel: 'Computer-marked · scored 10–90',
+    description: 'Taken on a computer and marked by AI. Results usually arrive within 48 hours.',
+    moreTasks: '+ 16 more task types',
+    skills: [
+      ['Read Aloud', 'Repeat Sentence'],
+      ['Summarize Written Text', 'Write from Dictation'],
+    ],
+    letterBg: 'bg-[#5865F2]/15 dark:bg-[#5865F2]/25',
+    letterText: 'text-[#5865F2] dark:text-indigo-300',
+    pillBg: 'bg-[#5865F2]/10 dark:bg-[#5865F2]/20',
+    pillBorder: 'border-[#5865F2]/30 dark:border-[#5865F2]/40',
+    pillText: 'text-[#5865F2] dark:text-indigo-300',
+    checkColor: 'text-[#5865F2] dark:text-indigo-400',
   },
   {
     exam: 'IELTS',
+    letter: 'I',
     name: 'IELTS Academic',
     targetLabel: 'Band 8.0',
-    scaleLabel: 'Scored 0 – 9 in half bands',
+    scaleLabel: 'Examiner-marked · bands 0–9',
     description: 'The most widely accepted English test for universities and visas worldwide.',
-    skills: ['Writing Task 1 & 2', 'True / False / Not Given', 'Matching Headings', 'Speaking Parts 1 – 3'],
-    accent: 'text-amber-500',
-    accentBg: 'bg-amber-500/10',
+    moreTasks: '+ 11 more task types',
+    skills: [
+      ['Writing Task 1 & 2', 'True / False / Not Given'],
+      ['Matching Headings', 'Speaking Parts 1–3'],
+    ],
+    letterBg: 'bg-amber-100 dark:bg-amber-950/60',
+    letterText: 'text-amber-800 dark:text-amber-300',
+    pillBg: 'bg-amber-50 dark:bg-amber-950/50',
+    pillBorder: 'border-amber-200/80 dark:border-amber-800/40',
+    pillText: 'text-amber-800 dark:text-amber-400',
+    checkColor: 'text-amber-600 dark:text-amber-400',
   },
 ];
 
-// PTE is the default, so it renders pre-selected and the script only corrects
-// it for a visitor who previously picked IELTS.
 const DEFAULT_EXAM: ExamType = 'PTE';
 ---
 
-{/*
-  The "Products" entry in the nav, as a section on the page.
-
-  Picking an exam here is remembered locally and shared with the nav, so the
-  page reflects the choice — the profile-level target exam is set inside the app
-  once the visitor has an account.
-*/}
 <section id="products" class="py-14 sm:py-20 border-t border-border" data-exams>
-  <SectionHeading
-    eyebrow="Products"
-    eyebrowIcon="lucide:graduation-cap"
-    title="Choose your exam"
-    description="Pick one and every task, timer and score matches the real thing."
-  />
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    <div class="text-center space-y-2.5 mb-10 sm:mb-14">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-black text-foreground tracking-tight">
+        Choose your exam
+      </h2>
+      <p class="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+        Pick one exam to focus on. Every task, timer and score matches the real thing.
+      </p>
+    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {
-      EXAMS.map(({ exam, name, targetLabel, scaleLabel, description, skills, accent, accentBg }) => (
-        <div
-          data-exam-card={exam}
-          class:list={[
-            'rounded-2xl border bg-card p-6 space-y-5 transition-all hover:-translate-y-1 duration-200',
-            exam === DEFAULT_EXAM ? 'border-primary/50 shadow-card' : 'border-border hover:border-primary/30',
-          ]}
-        >
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <div class={`w-11 h-11 rounded-xl ${accentBg} flex items-center justify-center`}>
-                <Icon name="lucide:book-open" class={`w-5 h-5 ${accent}`} />
+    {/* Two Column Cards Grid */}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+      {
+        EXAMS.map((item) => {
+          const isInitialActive = item.exam === DEFAULT_EXAM;
+          return (
+            <div
+              data-exam-card={item.exam}
+              class:list={[
+                'rounded-2xl lg:rounded-3xl bg-card p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 cursor-pointer',
+                isInitialActive
+                  ? 'border-2 border-[#5865F2] shadow-md shadow-[#5865F2]/15'
+                  : 'border border-border/80 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm hover:shadow-md',
+              ]}
+            >
+              <div class="space-y-4">
+                {/* Header Row */}
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class:list={[
+                        'w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg shrink-0',
+                        item.letterBg,
+                        item.letterText,
+                      ]}
+                    >
+                      {item.letter}
+                    </div>
+                    <div>
+                      <h3 class="font-display text-lg sm:text-xl font-bold text-foreground">
+                        {item.name}
+                      </h3>
+                      <p class="text-xs text-muted-foreground font-normal">
+                        {item.scaleLabel}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span
+                    class:list={[
+                      'rounded-full px-3 py-0.5 text-xs font-mono font-bold shrink-0 border',
+                      item.pillBg,
+                      item.pillBorder,
+                      item.pillText,
+                    ]}
+                  >
+                    {item.targetLabel}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+
+                {/* Skills Section */}
+                <div class="space-y-2 pt-1">
+                  <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 block">
+                    WHAT YOU'LL PRACTISE
+                  </span>
+
+                  <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                    {item.skills.map(([col1, col2]) => (
+                      <>
+                        <div class="flex items-center gap-1.5 text-xs text-foreground font-medium">
+                          <Icon name="lucide:check" class:list={['w-3.5 h-3.5 shrink-0 stroke-[2.5]', item.checkColor]} />
+                          <span class="truncate">{col1}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-foreground font-medium">
+                          <Icon name="lucide:check" class:list={['w-3.5 h-3.5 shrink-0 stroke-[2.5]', item.checkColor]} />
+                          <span class="truncate">{col2}</span>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+
+                  <p class="text-xs text-muted-foreground font-normal pt-0.5">
+                    {item.moreTasks}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 class="font-display text-lg font-bold text-foreground">{name}</h3>
-                <p class="text-[11px] text-muted-foreground">{scaleLabel}</p>
+
+              {/* Bottom Actions Row */}
+              <div class="flex items-center gap-4 pt-6 mt-auto">
+                <button
+                  type="button"
+                  data-exam-select={item.exam}
+                  class:list={[
+                    'font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-sm',
+                    isInitialActive
+                      ? 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                      : 'bg-[#5865F2] hover:bg-[#4752C4] text-white',
+                  ]}
+                >
+                  {isInitialActive ? 'Selected' : `Prepare for ${item.exam}`}
+                </button>
+
+                <a
+                  href={appUrl('/diagnostic')}
+                  class="text-[#5865F2] dark:text-indigo-400 hover:text-[#4752C4] dark:hover:text-indigo-300 text-xs font-bold inline-flex items-center gap-1 transition-colors"
+                >
+                  <span>Free diagnostic</span>
+                  <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
-
-            <span class={`rounded-full ${accentBg} ${accent} px-3 py-1 text-xs font-black font-mono shrink-0`}>
-              {targetLabel}
-            </span>
-          </div>
-
-          <p class="text-xs text-muted-foreground leading-relaxed">{description}</p>
-
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-            {skills.map(skill => (
-              <li class="flex items-center gap-2 text-xs text-foreground font-medium">
-                <Icon name="lucide:check-circle-2" class="w-3.5 h-3.5 text-primary shrink-0" />
-                {skill}
-              </li>
-            ))}
-          </ul>
-
-          <div class="flex items-center gap-2 pt-1">
-            <Button
-              size="sm"
-              variant={exam === DEFAULT_EXAM ? 'outline' : 'default'}
-              class="rounded-xl font-bold text-xs h-9 px-4"
-              data-exam-select={exam}
-            >
-              {exam === DEFAULT_EXAM ? 'Selected' : `Prepare for ${exam}`}
-            </Button>
-
-            <Button
-              href={appUrl('/diagnostic')}
-              variant="ghost"
-              size="sm"
-              class="rounded-xl font-bold text-xs h-9 px-3 gap-1.5"
-            >
-              Free diagnostic
-              <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
-            </Button>
-          </div>
-        </div>
-      ))
-    }
+          );
+        })
+      }
+    </div>
   </div>
 </section>
 
 <script>
   import { getActiveExam, setActiveExam, onExamChange, type ExamType } from '@/scripts/exam-state';
 
-  const section = document.querySelector<HTMLElement>('[data-exams]')!;
-  const cards = section.querySelectorAll<HTMLElement>('[data-exam-card]');
-  const buttons = section.querySelectorAll<HTMLButtonElement>('[data-exam-select]');
+  const section = document.querySelector<HTMLElement>('[data-exams]');
+  if (section) {
+    const cards = section.querySelectorAll<HTMLElement>('[data-exam-card]');
+    const buttons = section.querySelectorAll<HTMLButtonElement>('[data-exam-select]');
 
-  // The two button variants differ only by these classes, so the selected state
-  // can be swapped without re-rendering anything.
-  const DEFAULT_VARIANT = ['bg-primary', 'text-primary-foreground', 'hover:bg-primary/90'];
-  const OUTLINE_VARIANT = ['border', 'border-border', 'bg-background', 'hover:bg-accent', 'hover:text-accent-foreground'];
+    const ACTIVE_CARD_CLASSES = ['border-2', 'border-[#5865F2]', 'shadow-md', 'shadow-[#5865F2]/15'];
+    const INACTIVE_CARD_CLASSES = ['border', 'border-border/80', 'hover:border-slate-300', 'dark:hover:border-slate-700', 'shadow-sm', 'hover:shadow-md'];
 
-  function paintActiveExam(active: ExamType) {
-    cards.forEach(card => {
-      const isActive = card.dataset.examCard === active;
-      card.classList.toggle('border-primary/50', isActive);
-      card.classList.toggle('shadow-card', isActive);
-      card.classList.toggle('border-border', !isActive);
-      card.classList.toggle('hover:border-primary/30', !isActive);
+    const ACTIVE_BTN_CLASSES = ['bg-slate-100', 'dark:bg-slate-800', 'border', 'border-slate-200', 'dark:border-slate-700', 'text-slate-700', 'dark:text-slate-300'];
+    const INACTIVE_BTN_CLASSES = ['bg-[#5865F2]', 'hover:bg-[#4752C4]', 'text-white'];
+
+    function paintActiveExam(active: ExamType) {
+      cards.forEach((card) => {
+        const isActive = card.dataset.examCard === active;
+        ACTIVE_CARD_CLASSES.forEach((cls) => card.classList.toggle(cls, isActive));
+        INACTIVE_CARD_CLASSES.forEach((cls) => card.classList.toggle(cls, !isActive));
+      });
+
+      buttons.forEach((button) => {
+        const exam = button.dataset.examSelect as ExamType;
+        const isActive = exam === active;
+
+        button.textContent = isActive ? 'Selected' : `Prepare for ${exam}`;
+        ACTIVE_BTN_CLASSES.forEach((cls) => button.classList.toggle(cls, isActive));
+        INACTIVE_BTN_CLASSES.forEach((cls) => button.classList.toggle(cls, !isActive));
+      });
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('a')) return;
+        const exam = card.dataset.examCard as ExamType;
+        if (exam) setActiveExam(exam);
+      });
     });
 
-    buttons.forEach(button => {
-      const exam = button.dataset.examSelect as ExamType;
-      const isActive = exam === active;
-
-      button.textContent = isActive ? 'Selected' : `Prepare for ${exam}`;
-      button.classList.toggle('shadow-sm', true);
-      DEFAULT_VARIANT.forEach(cls => button.classList.toggle(cls, !isActive));
-      OUTLINE_VARIANT.forEach(cls => button.classList.toggle(cls, isActive));
+    buttons.forEach((button) => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const exam = button.dataset.examSelect as ExamType;
+        if (exam) setActiveExam(exam);
+      });
     });
+
+    onExamChange(paintActiveExam);
+    paintActiveExam(getActiveExam());
   }
-
-  buttons.forEach(button => {
-    button.addEventListener('click', () => setActiveExam(button.dataset.examSelect as ExamType));
-  });
-
-  onExamChange(paintActiveExam);
-  paintActiveExam(getActiveExam());
 </script>

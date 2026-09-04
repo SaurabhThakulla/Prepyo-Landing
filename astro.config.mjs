@@ -6,15 +6,29 @@ import icon from 'astro-icon';
 // domain all serve it at the root, while GitHub Pages serves a project repo
 // from /<repo>/. Root is the default because it is the normal case — the Pages
 // workflow is the one place that overrides it.
-//
-// Getting this wrong is not subtle: every asset URL is built from it, so a
-// mismatch 404s the stylesheet and the page renders as bare HTML.
 const base = process.env.PUBLIC_BASE_PATH || '/';
 
 // Vercel exposes the deployment's own hostname at build time, so canonical and
 // Open Graph URLs stay correct on preview deploys as well as production.
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
 const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://prepyo.online');
+
+/**
+ * Vite plugin that intercepts and suppresses Windows locked-file EBUSY errors
+ * on root system files (e.g. C:\DumpStack.log.tmp) preventing dev server crash.
+ * @type {import('vite').Plugin}
+ */
+const suppressEbusyPlugin = {
+  name: 'suppress-ebusy',
+  configureServer(server) {
+    server.watcher.on('error', (error) => {
+      if (error && /** @type {any} */ (error).code === 'EBUSY') {
+        return;
+      }
+      console.error(error);
+    });
+  },
+};
 
 // The marketing site is fully static — every section renders at build time and
 // the only runtime JavaScript is the handful of inline scripts that drive the
@@ -27,4 +41,21 @@ export default defineConfig({
     // ships to the browser.
     icon({ include: { lucide: ['*'] } }),
   ],
+  vite: {
+    plugins: [suppressEbusyPlugin],
+    server: {
+      fs: {
+        strict: true,
+      },
+      watch: {
+        ignored: [
+          '**/DumpStack.log.tmp',
+          '**/hiberfil.sys',
+          '**/pagefile.sys',
+          '**/node_modules/**',
+          '**/.git/**',
+        ],
+      },
+    },
+  },
 });
