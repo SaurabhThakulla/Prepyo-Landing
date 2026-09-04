@@ -24,10 +24,10 @@ const NODES: NerveNode[] = [
     title: '1. Take a free test',
     desc: 'Adaptive scan maps your baseline across all 4 skills in 20 minutes.',
     icon: 'lucide:scan',
-    color: 'text-emerald-500 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/30 hover:border-emerald-500/80',
-    glowColor: 'rgba(16, 185, 129, 0.25)',
+    color: 'text-[#5865F2] dark:text-indigo-400',
+    bgColor: 'bg-[#5865F2]/10',
+    borderColor: 'border-[#5865F2]/30 hover:border-[#5865F2]/80',
+    glowColor: 'rgba(88, 101, 242, 0.25)',
     positionDesktop: 'lg:top-4 lg:left-6',
     satellites: [
       { label: '4-Skill Baseline', icon: 'lucide:bar-chart-2' },
@@ -274,9 +274,9 @@ const NODES: NerveNode[] = [
         />
 
         {/* Synapse Connection Node Dots (Matching each node's theme color) */}
-        {/* Node 1: Emerald (Top Left) */}
-        <circle cx="220" cy="120" r="4" fill="#10b981" />
-        <circle cx="220" cy="120" r="8" fill="#10b981" opacity="0.25" class="animate-ping" />
+        {/* Node 1: Discord Blue (Top Left) */}
+        <circle cx="220" cy="120" r="4" fill="#5865F2" />
+        <circle cx="220" cy="120" r="8" fill="#5865F2" opacity="0.25" class="animate-ping" />
 
         {/* Node 2: Amber (Top Right) */}
         <circle cx="780" cy="120" r="4" fill="#f59e0b" />
@@ -296,10 +296,10 @@ const NODES: NerveNode[] = [
         <div class="relative flex items-center justify-center">
           {/* Outer Pulsing Synaptic Waves */}
           <div class="absolute w-32 h-32 rounded-full border border-primary/30 animate-ping opacity-20" />
-          <div class="absolute w-24 h-24 rounded-full bg-gradient-to-tr from-emerald-500/20 via-purple-500/20 to-cyan-500/20 blur-md animate-pulse" />
+          <div class="absolute w-24 h-24 rounded-full bg-gradient-to-tr from-[#5865F2]/20 via-purple-500/20 to-cyan-500/20 blur-md animate-pulse" />
 
           {/* Central Neural Sphere */}
-          <div class="w-18 h-18 p-1 rounded-full bg-gradient-to-tr from-emerald-500 via-amber-500 to-indigo-500 shadow-xl shadow-primary/20 flex items-center justify-center">
+          <div class="w-18 h-18 p-1 rounded-full bg-gradient-to-tr from-[#5865F2] via-amber-500 to-indigo-500 shadow-xl shadow-primary/20 flex items-center justify-center">
             <div class="w-16 h-16 rounded-full bg-card flex flex-col items-center justify-center text-center p-2">
               <Icon name="lucide:sparkles" class="w-5 h-5 text-primary animate-spin" style="animation-duration: 12s;" />
               <span class="text-[8px] font-black tracking-tight text-foreground uppercase mt-0.5">AI CORE</span>

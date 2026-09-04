@@ -81,7 +81,6 @@ src/
     TrustBadges.astro
     InstitutionsSection.astro #institutions
     FAQSection.astro         #faq, accordion
-    FinalCTA.astro
     Button.astro             the app's button styles as an Astro component
     SectionHeading.astro     the eyebrow + title + description block
   scripts/
