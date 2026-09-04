@@ -25,18 +25,9 @@ const ORBITS = [
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/10 dark:bg-primary/15 blur-[140px] rounded-full animate-pulse"></div>
   </div>
 
-  {/* Concentric orbital rings & floating message capsules */}
+  {/* Concentric floating message capsules */}
   <div class="absolute inset-0 pointer-events-none flex items-center justify-center z-10 overflow-hidden" aria-hidden="true">
     <div class="relative w-[1500px] h-[1500px] flex items-center justify-center scale-[0.52] sm:scale-[0.68] md:scale-[0.80] lg:scale-[0.92] xl:scale-100 transition-transform origin-center">
-      <div class="absolute w-[560px] h-[560px] rounded-full border border-border/50 dark:border-white/10"></div>
-      <div class="absolute w-[880px] h-[880px] rounded-full border border-border/40 dark:border-white/10 relative">
-        <div class="absolute inset-0 rounded-full border-t-2 border-[#5865F2]/40 dark:border-[#5865F2]/60 spin-orbit-cw"></div>
-      </div>
-      <div class="absolute w-[1240px] h-[1240px] rounded-full border border-border/30 dark:border-white/5 relative">
-        <div class="absolute inset-0 rounded-full border-r-2 border-amber-500/30 dark:border-amber-500/40 spin-orbit-ccw"></div>
-      </div>
-      <div class="absolute w-[1500px] h-[1500px] rounded-full border border-border/20 dark:border-white/5"></div>
-
       {
         ORBITS.map(({ icon, color, bg, label, x, y, anim }) => (
           <div
@@ -62,10 +53,10 @@ const ORBITS = [
 
   {/* Centered Hero Content */}
   <div class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-foreground text-balance max-w-3xl leading-[1.08] sm:leading-[1.06]">
-      AI-powered tools to{' '}
+    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-foreground text-balance max-w-4xl leading-[1.08] sm:leading-[1.06]">
+      Master your IELTS and PTE exam with{' '}
       <span class="bg-gradient-to-r from-primary via-[#5865F2] to-sky-400 bg-clip-text text-transparent">
-        master your exam
+        PREPYO
       </span>
     </h1>
 
@@ -97,14 +88,7 @@ const ORBITS = [
 </section>
 
 <style>
-  @keyframes spinCw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes spinCcw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-  .spin-orbit-cw { animation: spinCw 50s linear infinite; }
-  .spin-orbit-ccw { animation: spinCcw 70s linear infinite; }
   .animate-float:hover, .animate-float-delay:hover { animation-play-state: paused; }
-  @media (prefers-reduced-motion: reduce) {
-    .spin-orbit-cw, .spin-orbit-ccw { animation: none !important; }
-  }
 </style>
 
 <script>
