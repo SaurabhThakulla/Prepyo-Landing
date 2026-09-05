@@ -99,16 +99,7 @@ const NODES: NerveNode[] = [
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     {/* Compact Header */}
     <div class="text-center space-y-2 mb-8 sm:mb-12">
-      <div class="flex justify-center">
-        <span
-          class="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm"
-        >
-          <Icon name="lucide:network" class="w-3.5 h-3.5 text-primary" />
-          NEURAL PREP SYSTEM
-        </span>
-      </div>
-
-      <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+      <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
         Four steps to your target score
       </h2>
 
@@ -291,24 +282,28 @@ const NODES: NerveNode[] = [
         <circle cx="780" cy="380" r="8" fill="#06b6d4" opacity="0.25" class="animate-ping" />
       </svg>
 
-      {/* Central Neural Hub / Core Nucleus (Desktop Center) */}
+      {/* Central Prepyo Hub / Core Nucleus (Desktop Center) */}
       <div class="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex-col items-center justify-center pointer-events-none">
         <div class="relative flex items-center justify-center">
           {/* Outer Pulsing Synaptic Waves */}
           <div class="absolute w-32 h-32 rounded-full border border-primary/30 animate-ping opacity-20" />
           <div class="absolute w-24 h-24 rounded-full bg-gradient-to-tr from-[#5865F2]/20 via-purple-500/20 to-cyan-500/20 blur-md animate-pulse" />
 
-          {/* Central Neural Sphere */}
-          <div class="w-18 h-18 p-1 rounded-full bg-gradient-to-tr from-[#5865F2] via-amber-500 to-indigo-500 shadow-xl shadow-primary/20 flex items-center justify-center">
-            <div class="w-16 h-16 rounded-full bg-card flex flex-col items-center justify-center text-center p-2">
-              <Icon name="lucide:sparkles" class="w-5 h-5 text-primary animate-spin" style="animation-duration: 12s;" />
-              <span class="text-[8px] font-black tracking-tight text-foreground uppercase mt-0.5">AI CORE</span>
+          {/* Central Prepyo Sphere */}
+          <div class="w-18 h-18 p-1 rounded-full bg-gradient-to-tr from-[#5865F2] via-primary to-indigo-500 shadow-xl shadow-primary/25 flex items-center justify-center">
+            <div class="w-16 h-16 rounded-full bg-card flex flex-col items-center justify-center text-center p-1.5 shadow-inner">
+              <div class="w-7 h-7 rounded-xl bg-primary text-white font-bold text-xs flex items-center justify-center shadow-sm">
+                P
+              </div>
+              <span class="font-display text-[9px] font-bold tracking-tight text-foreground mt-0.5">
+                prep<span class="text-primary">yo</span>
+              </span>
             </div>
           </div>
         </div>
 
-        <span class="mt-2.5 px-3 py-0.5 rounded-full bg-card border border-border text-[9px] font-extrabold uppercase tracking-widest text-muted-foreground shadow-sm">
-          Neural Engine
+        <span class="mt-2.5 px-3 py-0.5 rounded-full bg-card border border-border text-[9px] font-bold uppercase tracking-widest text-muted-foreground shadow-sm">
+          Prepyo
         </span>
       </div>
 
@@ -342,13 +337,13 @@ const NODES: NerveNode[] = [
                         <Icon name={node.icon} class={`w-4 h-4 ${node.color}`} />
                       </div>
                       <span
-                        class={`text-[9px] font-black uppercase tracking-wider ${node.color} px-2 py-0.5 rounded-md ${node.bgColor}`}
+                        class={`text-[9px] font-bold uppercase tracking-wider ${node.color} px-2 py-0.5 rounded-md ${node.bgColor}`}
                       >
                         {node.badge}
                       </span>
                     </div>
 
-                    <span class="text-xs font-black font-mono text-muted-foreground/60">
+                    <span class="text-xs font-bold font-mono text-muted-foreground/60">
                       STEP {node.step}
                     </span>
                   </div>
