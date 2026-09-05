@@ -32,7 +32,10 @@ const suppressEbusyPlugin = {
 
 // The marketing site is fully static — every section renders at build time and
 // the only runtime JavaScript is the handful of inline scripts that drive the
-// nav, the theme toggle, the FAQ accordion and the live pricing fetch.
+// nav, the theme toggle and the FAQ accordion.
+//
+// Pricing is not fetched. It is written into SubscriptionSection.astro and has
+// to be kept in step with the `plans` table by hand.
 export default defineConfig({
   site,
   base,
