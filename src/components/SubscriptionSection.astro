@@ -1,48 +1,122 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { appUrl } from '@/consts';
+import { Icon } from "astro-icon/components";
+import { appUrl } from "@/consts";
 
 export interface ExactPricingPlan {
   id: string;
   name: string;
+  /** English sense of the Nepali name, so it never depends on knowing the word. */
+  gloss: string;
   priceNPR: number;
   subtitle: string;
   popular: boolean;
   cta: string;
 }
 
+/**
+ * These must agree with the `plans` table, which is what checkout actually
+ * charges and what the app enforces. Nothing here is fetched — the two live in
+ * separate repositories — so a change to plan quotas has to be made in both.
+ *
+ * Names are the learner's journey: Suru (start), Abhyas (practice), Taiyari
+ * (preparation), Udaan (take-off). Roman script rather than Devanagari because
+ * the site's fonts carry no Devanagari and would fall back to a broken face.
+ *
+ * `subtitle` is the plan's real duration. It used to read "Per month" on all
+ * four, which was wrong on all four: nothing here renews, and the durations are
+ * lifetime, 7, 33 and 97 days.
+ */
 export const EXACT_PLANS: ExactPricingPlan[] = [
-  { id: 'free', name: 'Free', priceNPR: 0, subtitle: 'Per month', popular: false, cta: 'Get Started' },
-  { id: 'weekly', name: 'Team', priceNPR: 99, subtitle: 'Per month', popular: false, cta: 'Get Started' },
-  { id: 'pro', name: 'Popular', priceNPR: 299, subtitle: 'Per month', popular: true, cta: 'Get Started' },
-  { id: 'elite', name: 'Enterprise', priceNPR: 999, subtitle: 'Per month', popular: false, cta: 'Get Started' },
+  {
+    id: "free",
+    name: "Suru",
+    gloss: "Start",
+    priceNPR: 0,
+    subtitle: "Free forever",
+    popular: false,
+    cta: "Get Started",
+  },
+  {
+    id: "weekly",
+    name: "Abhyas",
+    gloss: "Practice",
+    priceNPR: 99,
+    subtitle: "One-time · 7 days",
+    popular: false,
+    cta: "Get Started",
+  },
+  {
+    id: "pro",
+    name: "Taiyari",
+    gloss: "Preparation",
+    priceNPR: 299,
+    subtitle: "One-time · 33 days",
+    popular: true,
+    cta: "Get Started",
+  },
+  {
+    id: "elite",
+    name: "Udaan",
+    gloss: "Take-off",
+    priceNPR: 999,
+    subtitle: "One-time · 97 days",
+    popular: false,
+    cta: "Get Started",
+  },
 ];
 
+/**
+ * Values are positional: index 0 is Suru, 3 is Udaan.
+ *
+ * Every number here is what the backend enforces, not an aspiration. The
+ * previous table advertised Pro at 30 evaluations and 5 mocks against an
+ * enforced 15 and 3, because a migration changed the quotas and left the
+ * marketing copy behind.
+ *
+ * Mock periods are stated because the two models differ: the free mock is
+ * lifetime, paid allowances reset each calendar month.
+ */
 export const FEATURES = [
-  { label: 'AI Evaluations per day', values: ['03', '10', '30', '100'] },
-  { label: 'Full Mock Exams', values: ['01', '01', '05', '15'] },
-  { label: 'Practice Question Types', values: ['Core tasks', 'All Types', 'All Types', 'All Types'] },
-  { label: 'Sentence-Level Rewrites', values: [false, false, true, true] },
-  { label: 'AI Score Breakdown', values: ['Basic', 'Standard', true, true] },
-  { label: 'Priority AI Queue', values: [false, false, true, true] },
-  { label: 'Bonus Prep Days', values: [false, false, '+3 Days', '+7 Days'] },
-  { label: 'Access Duration', values: ['Lifetime', '7 Days', '33 Days', '97 Days'] },
+  { label: "Practice sub-tests per day", values: ["5", "40", "50", "60"] },
+  {
+    label: "Full mock exams",
+    values: ["1 lifetime", "2", "5 / calendar month", "10 / calendar month"],
+  },
+  {
+    label: "Practice question types",
+    values: ["Core tasks", "All types", "All types", "All types"],
+  },
+  { label: "Sentence-level rewrites", values: [false, true, true, true] },
+  { label: "AI score breakdown", values: ["Basic", "Standard", true, true] },
+  { label: "Bonus prep days", values: [false, false, "+3 days", "+7 days"] },
+  {
+    label: "Access duration",
+    values: ["Lifetime", "7 days", "33 days", "97 days"],
+  },
 ];
 ---
 
-<section id="pricing" class="py-16 sm:py-24 border-t border-border relative overflow-hidden">
+<section
+  id="pricing"
+  class="py-16 sm:py-24 border-t border-border relative overflow-hidden"
+>
   <div id="subscription" class="sr-only" aria-hidden="true"></div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="text-center space-y-2 mb-12 sm:mb-16">
-      <span class="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+      <span
+        class="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary"
+      >
         <Icon name="lucide:sparkles" class="w-3.5 h-3.5" /> Subscription & Pricing
       </span>
-      <h2 class="font-display text-3xl sm:text-4xl font-black text-foreground tracking-tight">
-       saurabh Pricing Plans 
+      <h2
+        class="font-display text-3xl sm:text-4xl font-black text-foreground tracking-tight"
+      >
+        Plans for every exam timeline
       </h2>
       <p class="text-sm text-muted-foreground max-w-xl mx-auto">
-        Transparent pricing with all features compared. Select the plan that fits your target exam date.
+        Transparent pricing with all features compared. Select the plan that
+        fits your target exam date.
       </p>
     </div>
 
@@ -50,96 +124,150 @@ export const FEATURES = [
       <div class="min-w-[760px] grid grid-cols-5 items-stretch">
         {/* Column 1: Feature Labels */}
         <div class="flex flex-col pr-4">
-          <div class="h-40 flex items-end pb-5 font-bold uppercase text-xs text-muted-foreground">
+          <div
+            class="h-40 flex items-end pb-5 font-bold uppercase text-xs text-muted-foreground"
+          >
             Plan Comparison
           </div>
-          {FEATURES.map((f) => (
-            <div class="h-14 flex items-center border-b border-border/70 text-xs sm:text-sm font-medium text-foreground/90">
-              {f.label}
-            </div>
-          ))}
+          {
+            FEATURES.map((f) => (
+              <div class="h-14 flex items-center border-b border-border/70 text-xs sm:text-sm font-medium text-foreground/90">
+                {f.label}
+              </div>
+            ))
+          }
         </div>
 
         {/* Columns 2-5: Dynamic Plan Columns */}
-        {EXACT_PLANS.map((plan, planIdx) => {
-          const isPop = plan.popular;
-          const href = appUrl(plan.id === 'free' ? '/' : '/subscription');
+        {
+          EXACT_PLANS.map((plan, planIdx) => {
+            const isPop = plan.popular;
+            const href = appUrl(plan.id === "free" ? "/" : "/subscription");
 
-          return (
-            <div
-              class:list={[
-                'flex flex-col text-center transition-all',
-                isPop
-                  ? 'relative z-20 bg-[#0B132B] dark:bg-[#070D1E] text-white rounded-2xl lg:rounded-3xl p-4 sm:p-5 shadow-2xl border border-slate-700/60 -my-4 sm:-my-6'
-                  : 'px-2 sm:px-3 text-foreground',
-              ]}
-            >
-              {/* Header */}
-              <div class="h-40 flex flex-col items-center justify-end pb-5 space-y-1">
-                {isPop ? (
-                  <span class="rounded-full bg-[#2563EB] px-3.5 py-0.5 text-[11px] font-bold text-white shadow-sm mb-1">
-                    {plan.name}
-                  </span>
-                ) : (
-                  <span class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    {plan.name}
-                  </span>
-                )}
-                <div class:list={['text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight', isPop ? 'text-white' : 'text-foreground']}>
-                  NPR {plan.priceNPR.toLocaleString()}
-                </div>
-                <span class:list={['text-xs', isPop ? 'text-slate-400' : 'text-muted-foreground']}>
-                  {plan.subtitle}
-                </span>
-              </div>
-
-              {/* Rows */}
-              {FEATURES.map((f) => {
-                const val = f.values[planIdx];
-                return (
-                  <div
+            return (
+              <div
+                class:list={[
+                  "flex flex-col text-center transition-all",
+                  isPop
+                    ? "relative z-20 bg-[#0B132B] dark:bg-[#070D1E] text-white rounded-2xl lg:rounded-3xl p-4 sm:p-5 shadow-2xl border border-slate-700/60 -my-4 sm:-my-6"
+                    : "px-2 sm:px-3 text-foreground",
+                ]}
+              >
+                {/* Header */}
+                <div class="h-40 flex flex-col items-center justify-end pb-5 space-y-1">
+                  {isPop && (
+                    <span class="rounded-full bg-primary px-3.5 py-0.5 text-[11px] font-bold text-primary-foreground shadow-sm mb-1">
+                      Most popular
+                    </span>
+                  )}
+                  <span
                     class:list={[
-                      'h-14 flex items-center justify-center text-xs sm:text-sm font-medium border-b',
-                      isPop ? 'border-slate-800 text-slate-100' : 'border-border/70 text-foreground/80',
+                      "text-sm sm:text-base font-bold",
+                      isPop ? "text-white" : "text-primary",
                     ]}
                   >
-                    {typeof val === 'boolean' ? (
-                      val ? (
-                        <Icon name="lucide:check" class:list={['w-4 h-4', isPop ? 'text-white' : 'text-foreground/80']} />
-                      ) : (
-                        <span class={isPop ? 'text-slate-600' : 'text-muted-foreground/60'}>—</span>
-                      )
-                    ) : (
-                      <span>{val}</span>
-                    )}
+                    {plan.name}
+                  </span>
+                  <span
+                    class:list={[
+                      "text-[10px] uppercase tracking-wider font-semibold",
+                      isPop ? "text-slate-400" : "text-muted-foreground",
+                    ]}
+                  >
+                    {plan.gloss}
+                  </span>
+                  <div
+                    class:list={[
+                      "text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight",
+                      isPop ? "text-white" : "text-foreground",
+                    ]}
+                  >
+                    NPR {plan.priceNPR.toLocaleString()}
                   </div>
-                );
-              })}
+                  <span
+                    class:list={[
+                      "text-xs",
+                      isPop ? "text-slate-400" : "text-muted-foreground",
+                    ]}
+                  >
+                    {plan.subtitle}
+                  </span>
+                </div>
 
-              {/* Footer CTA */}
-              <div class="h-24 flex items-center justify-center pt-2">
-                {isPop ? (
-                  <a
-                    href={href}
-                    class="w-full py-3 px-4 rounded-xl bg-[#F59E0B] hover:bg-[#EAB308] active:scale-[0.98] text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 transition-all"
-                  >
-                    <span>{plan.cta}</span>
-                    <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
-                  </a>
-                ) : (
-                  <a
-                    href={href}
-                    class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors group"
-                  >
-                    <span>{plan.cta}</span>
-                    <Icon name="lucide:arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </a>
-                )}
+                {/* Rows */}
+                {FEATURES.map((f) => {
+                  const val = f.values[planIdx];
+                  return (
+                    <div
+                      class:list={[
+                        "h-14 flex items-center justify-center text-xs sm:text-sm font-medium border-b",
+                        isPop
+                          ? "border-slate-800 text-slate-100"
+                          : "border-border/70 text-foreground/80",
+                      ]}
+                    >
+                      {typeof val === "boolean" ? (
+                        val ? (
+                          <Icon
+                            name="lucide:check"
+                            class:list={[
+                              "w-4 h-4",
+                              isPop ? "text-white" : "text-foreground/80",
+                            ]}
+                          />
+                        ) : (
+                          <span
+                            class={
+                              isPop
+                                ? "text-slate-600"
+                                : "text-muted-foreground/60"
+                            }
+                          >
+                            —
+                          </span>
+                        )
+                      ) : (
+                        <span>{val}</span>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Footer CTA */}
+                <div class="h-24 flex items-center justify-center pt-2">
+                  {isPop ? (
+                    <a
+                      href={href}
+                      class="w-full py-3 px-4 rounded-xl bg-nepal-gold hover:brightness-110 active:scale-[0.98] text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/25 transition-all"
+                    >
+                      <span>{plan.cta}</span>
+                      <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+                    </a>
+                  ) : (
+                    <a
+                      href={href}
+                      class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:brightness-110 transition-colors group"
+                    >
+                      <span>{plan.cta}</span>
+                      <Icon
+                        name="lucide:arrow-right"
+                        class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
+                      />
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        }
       </div>
     </div>
+
+    <p class="mt-6 text-center text-xs text-muted-foreground max-w-2xl mx-auto">
+      One sub-test is one practice task set — a True/False set, a Fill in the
+      Blanks task, an essay, or a speaking response — however many questions it
+      contains. Mock exams have their own allowance and never use your daily
+      sub-tests.
+    </p>
   </div>
 </section>
