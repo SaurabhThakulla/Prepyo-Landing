@@ -33,5 +33,5 @@ export function asset(path: string): string {
   return `${BASE_PATH}${path.replace(/^\//, '')}`;
 }
 
-export type ExamType = 'PTE' | 'IELTS';
+export type ExamType = 'PTE' | 'IELTS' | 'JAPANESE';
 

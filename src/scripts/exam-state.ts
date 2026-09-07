@@ -1,4 +1,4 @@
-export type ExamType = 'PTE' | 'IELTS';
+export type { ExamType } from '@/consts';
 
 const STORAGE_KEY = 'prepyo-active-exam';
 const EVENT = 'prepyo:exam-change';
@@ -13,7 +13,7 @@ const EVENT = 'prepyo:exam-change';
  */
 export function getActiveExam(): ExamType {
   const saved = localStorage.getItem(STORAGE_KEY);
-  return saved === 'IELTS' ? 'IELTS' : 'PTE';
+  return saved === 'IELTS' || saved === 'JAPANESE' ? saved : 'PTE';
 }
 
 export function setActiveExam(exam: ExamType): void {
