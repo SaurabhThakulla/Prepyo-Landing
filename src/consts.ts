@@ -11,18 +11,6 @@
  */
 export const APP_URL = (import.meta.env.PUBLIC_APP_URL ?? 'https://dashboard.prepyo.online').replace(/\/$/, '');
 
-/**
- * Base URL of the API. Only the public `/subscriptions/plans` endpoint is called
- * from here and it needs no session, but the browser still enforces CORS, so
- * this site's origin must be listed in the backend's ALLOWED_ORIGINS.
- *
- * This goes through the app's /api/v1 proxy rather than straight at the Go
- * service, so there is one public hostname to keep in that allowlist.
- */
-export const API_BASE_URL = (
-  import.meta.env.PUBLIC_API_BASE_URL ?? 'https://dashboard.prepyo.online/api/v1'
-).replace(/\/$/, '');
-
 /** Builds an absolute link into the Next.js app. */
 export function appUrl(path: string): string {
   return `${APP_URL}${path.startsWith('/') ? path : `/${path}`}`;
@@ -47,16 +35,3 @@ export function asset(path: string): string {
 
 export type ExamType = 'PTE' | 'IELTS';
 
-/** Mirrors the SubscriptionPlan shape returned by GET /subscriptions/plans. */
-export interface SubscriptionPlan {
-  id: string;
-  name: string;
-  priceNPR: number;
-  durationMonths: number;
-  durationDays: number;
-  bonusDays: number;
-  features: string[];
-  aiEvaluationsPerDay: number;
-  mockTestsIncluded: number;
-  isPopular: boolean;
-}
