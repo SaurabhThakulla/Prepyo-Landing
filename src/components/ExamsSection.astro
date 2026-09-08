@@ -2,6 +2,16 @@
 import { Icon } from 'astro-icon/components';
 import { appUrl, type ExamType } from '@/consts';
 
+interface ExamStat {
+  value: string;
+  label: string;
+}
+
+const STAT_STYLES: Record<string, { icon: string; text: string; bg: string; border: string }> = {
+  Students: { icon: 'lucide:users', text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-50 dark:bg-cyan-950/60', border: 'border-cyan-200/90 dark:border-cyan-500/30' },
+  'Pre-booking': { icon: 'lucide:users', text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-50 dark:bg-cyan-950/60', border: 'border-cyan-200/90 dark:border-cyan-500/30' },
+};
+
 interface ExamCard {
   exam: ExamType;
   name: string;
@@ -14,6 +24,7 @@ interface ExamCard {
   skills: string[];
   brandClass: string;
   dotColor: string;
+  stats?: ExamStat[];
 }
 
 const EXAMS: ExamCard[] = [
@@ -34,6 +45,7 @@ const EXAMS: ExamCard[] = [
     ],
     brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
     dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
+    stats: [{ value: '100+', label: 'Students' }],
   },
   {
     exam: 'IELTS',
@@ -52,22 +64,26 @@ const EXAMS: ExamCard[] = [
     ],
     brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
     dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
+    stats: [{ value: '50+', label: 'Students' }],
   },
   {
     exam: 'JAPANESE',
     name: 'Japanese Language',
-    heading: 'Planned Curriculum & Modules',
+    heading: "What You'll Practise & Master",
     targetLabel: 'JLPT N5–N1',
     scaleLabel: 'JLPT & NAT-TEST · N5–N1',
-    description: 'Essential test preparation for study and work visas in Japan. Master Kanji, grammar, reading, and listening.',
+    description: 'Essential test preparation for universities and visas in Japan.',
     moreTasks: '+ 10 more task types',
-    trackLabel: 'PLANNED MODULES',
+    trackLabel: 'INSIDE THIS TRACK',
     skills: [
       'Kanji & vocabulary',
       'Grammar drills',
+      'Reading comprehension',
+      'Listening practice',
     ],
     brandClass: 'text-[#48567e] dark:text-[#323d5b]',
     dotColor: 'bg-[#48567e] dark:bg-indigo-400',
+    stats: [{ value: '10+', label: 'Pre-booking' }],
   },
 ];
 
@@ -86,8 +102,8 @@ const DEFAULT_EXAM: ExamType = 'PTE';
       </p>
     </div>
 
-    {/* Outer Rounded Container Frame */}
-    <div class="rounded-3xl border border-blue-200/50 dark:border-slate-800/80 p-3 sm:p-5 lg:p-7 bg-blue-50/20 dark:bg-slate-950/30 max-w-6xl xl:max-w-7xl mx-auto">
+    {/* Stacked Cards Container */}
+    <div class="max-w-6xl xl:max-w-7xl mx-auto">
       {/* Stacked Cards */}
       <div class="flex flex-col gap-6 lg:gap-8">
         {
@@ -101,7 +117,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                 class:list={[
                   'relative rounded-2xl lg:rounded-3xl transition-all duration-300',
                   item.exam === 'JAPANESE'
-                    ? 'mt-3.5 cursor-default'
+                    ? 'cursor-default'
                     : isInitialActive
                       ? 'cursor-pointer ring-2 ring-[#1e4fe8] shadow-xl shadow-blue-500/15'
                       : 'cursor-pointer shadow-sm hover:shadow-md hover:ring-1 hover:ring-blue-300/40 dark:hover:ring-slate-700',
@@ -118,10 +134,10 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                 )}
 
                 {/* Card Outer Shell with Rounded Corners and Subtle Border */}
-                <div class="rounded-2xl lg:rounded-3xl overflow-hidden bg-white dark:bg-[#0f172a] border border-blue-100/80 dark:border-slate-800 relative w-full h-full min-h-[270px] lg:min-h-[300px]">
-                  {/* Desktop Sawtooth SVG Background */}
+                <div class="rounded-2xl lg:rounded-3xl overflow-hidden bg-white dark:bg-[#0f172a] border border-blue-100/80 dark:border-slate-800 relative w-full">
+                  {/* Desktop Slanted Line SVG Background */}
                   {!isReverse ? (
-                    // Left Brand: Cut slants from top-left to bottom-right with right-pointing teeth
+                    // Left Brand: Clean slanted cut from top-left to bottom-right
                     <svg
                       class:list={[
                         'hidden md:block absolute inset-0 w-full h-full pointer-events-none z-0 fill-current',
@@ -130,10 +146,10 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                       viewBox="0 0 1000 320"
                       preserveAspectRatio="none"
                     >
-                      <path d="M 0 0 L 320 0 L 322 18 L 365 40 L 328 62 L 372 84 L 334 106 L 379 128 L 340 150 L 386 172 L 346 194 L 393 216 L 352 238 L 400 260 L 358 282 L 365 320 L 0 320 Z" />
+                      <path d="M 0 0 L 320 0 L 440 320 L 0 320 Z" />
                     </svg>
                   ) : (
-                    // Right Brand (IELTS): Cut slants from top-right to bottom-left with left-pointing teeth
+                    // Right Brand (IELTS): Clean slanted cut from top-right to bottom-left
                     <svg
                       class:list={[
                         'hidden md:block absolute inset-0 w-full h-full pointer-events-none z-0 fill-current',
@@ -142,22 +158,22 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                       viewBox="0 0 1000 320"
                       preserveAspectRatio="none"
                     >
-                      <path d="M 1000 0 L 1000 320 L 635 320 L 642 282 L 600 260 L 648 238 L 607 216 L 654 194 L 614 172 L 660 150 L 621 128 L 666 106 L 628 84 L 672 62 L 635 40 L 678 18 L 680 0 Z" />
+                      <path d="M 1000 0 L 1000 320 L 560 320 L 680 0 Z" />
                     </svg>
                   )}
 
                   {/* Card Content Layout (Transparent on desktop so SVG sawtooth cut shows through!) */}
-                  <div class="relative z-10 flex flex-col md:flex-row items-stretch justify-between w-full h-full min-h-[270px] lg:min-h-[300px]">
+                  <div class="relative z-10 flex flex-col md:flex-row items-stretch justify-between w-full h-full">
                     {/* Brand & Action Section */}
                     <div
                       class:list={[
-                        'p-6 sm:p-7 lg:p-8 flex flex-col justify-between gap-5 text-white',
+                        'p-6 sm:p-7 lg:p-8 flex flex-col justify-between gap-5 text-white h-full',
                         // Mobile background uses solid brand color, desktop is transparent for SVG
                         item.exam === 'JAPANESE' ? 'bg-[#48567e] dark:bg-[#323d5b]' : 'bg-[#1e4fe8] dark:bg-[#1d4ed8]',
                         'md:bg-transparent md:dark:bg-transparent',
                         isReverse
-                          ? 'w-full md:w-[35%] lg:w-[34%] order-1 md:order-2 md:pl-10 lg:pl-12'
-                          : 'w-full md:w-[35%] lg:w-[34%] order-1 md:order-1 md:pr-10 lg:pr-12',
+                          ? 'w-full md:w-[44%] lg:w-[44%] order-1 md:order-2 md:pl-8 lg:pl-10'
+                          : 'w-full md:w-[44%] lg:w-[44%] order-1 md:order-1 md:pr-8 lg:pr-10',
                       ]}
                     >
                       <div class="space-y-3.5">
@@ -165,22 +181,24 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                         <div
                           class:list={[
                             'flex items-center gap-3.5',
-                            isReverse ? 'flex-row-reverse md:flex-row-reverse text-left md:text-right justify-between md:justify-end' : 'flex-row justify-start',
+                            isReverse
+                              ? 'flex-row-reverse text-left md:text-right justify-between md:justify-start'
+                              : 'flex-row justify-start',
                           ]}
                         >
                           {/* Logo Badge (White square with thin border matching screenshot) */}
                           <div class="w-12 h-12 bg-white rounded-xl shadow-xs border border-slate-200/50 flex flex-col items-center justify-center shrink-0 select-none p-1">
                             {item.exam === 'PTE' && (
                               <>
-                                <span class="text-[7.5px] font-bold text-slate-500 tracking-wider uppercase leading-none">PEARSON</span>
-                                <span class="text-sm font-black text-[#002B49] leading-none mt-0.5">PTE</span>
+                                <span class="text-[7.5px] font-bold text-slate-500 tracking-wider uppercase leading-none font-display">PEARSON</span>
+                                <span class="text-sm font-black text-[#002B49] leading-none mt-0.5 font-display">PTE</span>
                               </>
                             )}
                             {item.exam === 'IELTS' && (
-                              <span class="text-xs sm:text-sm font-black text-[#D32F2F] tracking-wide uppercase font-sans">IELTS</span>
+                              <span class="text-xs sm:text-sm font-black text-[#D32F2F] tracking-wide uppercase font-display">IELTS</span>
                             )}
                             {item.exam === 'JAPANESE' && (
-                              <span class="text-xs sm:text-sm font-black text-[#BC002D] tracking-wide uppercase font-sans">JLPT</span>
+                              <span class="text-xs sm:text-sm font-black text-[#BC002D] tracking-wide uppercase font-display">JLPT</span>
                             )}
                           </div>
 
@@ -188,7 +206,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                             <h3 class="font-display text-lg sm:text-xl font-bold text-white leading-tight">
                               {item.name}
                             </h3>
-                            <p class="text-xs sm:text-[13px] text-blue-100 dark:text-slate-300 font-normal leading-tight mt-0.5">
+                            <p class="text-xs sm:text-[13px] text-blue-100 dark:text-slate-300 font-normal leading-tight mt-0.5 whitespace-normal md:whitespace-nowrap">
                               {item.scaleLabel}
                             </p>
                           </div>
@@ -196,23 +214,16 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
                         {/* Goal / Target Pill */}
                         <div class:list={['flex', isReverse ? 'justify-start md:justify-end' : 'justify-start']}>
-                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-white/15 text-white border border-white/20 backdrop-blur-sm">
+                          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/15 text-white border border-white/20 backdrop-blur-sm">
                             {item.targetLabel}
                           </span>
                         </div>
                       </div>
 
-                      {/* Mobile Horizontal Sawtooth Divider */}
-                      <div class="md:hidden w-full -mx-6 px-6 -mb-6 mt-2">
-                        <svg class="w-full h-3 text-white dark:text-[#0f172a] fill-current" viewBox="0 0 100 8" preserveAspectRatio="none">
-                          <polygon points="0,8 100,8 100,2 96,7 92,2 88,7 84,2 80,7 76,2 72,7 68,2 64,7 60,2 56,7 52,2 48,7 44,2 40,7 36,2 32,7 28,2 24,7 20,2 16,7 12,2 8,7 4,2 0,7" />
-                        </svg>
-                      </div>
-
                       {/* Action Buttons Row */}
                       <div
                         class:list={[
-                          'flex items-center gap-4 pt-1',
+                          'flex items-center gap-4 pt-1 h-10',
                           isReverse ? 'justify-start md:justify-end' : 'justify-start',
                         ]}
                       >
@@ -249,23 +260,46 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                     {/* Content: Description & Practise Preview (Transparent on desktop so SVG white card background shows!) */}
                     <div
                       class:list={[
-                        'p-6 sm:p-7 lg:p-8 flex flex-col justify-between gap-5',
+                        'p-6 sm:p-7 lg:p-8 flex flex-col justify-between gap-5 h-full',
                         // Mobile background uses white / dark card background; desktop is transparent
                         'bg-white dark:bg-[#0f172a] md:bg-transparent md:dark:bg-transparent',
                         isReverse
-                          ? 'w-full md:w-[65%] lg:w-[66%] order-2 md:order-1 md:pr-24 lg:pr-28 xl:pr-32'
-                          : 'w-full md:w-[65%] lg:w-[66%] order-2 md:order-2 md:pl-24 lg:pl-28 xl:pl-32',
+                          ? 'w-full md:w-[56%] lg:w-[56%] order-2 md:order-1 md:pr-10 lg:pr-12'
+                          : 'w-full md:w-[56%] lg:w-[56%] order-2 md:order-2 md:pl-10 lg:pl-12',
                       ]}
                     >
-                      {/* Top Header with Bullet Hole / Dot + Description (matching sketch) */}
-                      <div class="space-y-1.5">
-                        <div class="flex items-center gap-2.5">
-                          <span class:list={['w-2.5 h-2.5 rounded-full shrink-0', item.dotColor]} />
-                          <h4 class="font-display font-bold text-base sm:text-lg text-foreground tracking-tight">
-                            {item.heading}
-                          </h4>
+                      {/* Top Header with Heading, Description & Stat Badges */}
+                      <div class="space-y-2.5 sm:space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div class="flex items-center gap-2.5 min-w-0">
+                            <span class:list={['w-2.5 h-2.5 rounded-full shrink-0', item.dotColor]} />
+                            <h4 class="font-display font-bold text-base sm:text-lg text-foreground tracking-tight whitespace-nowrap">
+                              {item.heading}
+                            </h4>
+                          </div>
+
+                          {/* Stat badge aligned on the side of the heading */}
+                          {item.stats && item.stats.length > 0 && (
+                            <div class="flex items-center shrink-0 pl-5 sm:pl-0">
+                              {item.stats.map((stat) => {
+                                const st = STAT_STYLES[stat.label];
+                                return (
+                                  <div class:list={['inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border bg-white/90 dark:bg-slate-900/90 shadow-2xs transition-all', st.border]}>
+                                    <div class:list={['w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border', st.bg, st.border]}>
+                                      <Icon name={st.icon} class:list={['w-3.5 h-3.5', st.text]} />
+                                    </div>
+                                    <div class="flex flex-col text-left">
+                                      <span class:list={['text-xs font-extrabold tracking-tight leading-none', st.text]}>{stat.value}</span>
+                                      <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 leading-tight mt-0.5 whitespace-nowrap">{stat.label}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl pl-5">
+
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl pl-5">
                           {item.description}
                         </p>
                       </div>
