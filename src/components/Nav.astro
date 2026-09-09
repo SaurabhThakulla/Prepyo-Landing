@@ -18,7 +18,8 @@ const NAV_LINKS = [
 
 const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string }[] = [
   { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary' },
-  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600' },
+  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
+  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
 ];
 
 // PTE is the default, so it is rendered pre-selected and the script only has to
@@ -62,7 +63,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
           </button>
 
           <div
-            class="absolute top-full left-0 mt-2 w-52 rounded-2xl bg-card border border-border p-2 shadow-xl space-y-1 z-50 hidden"
+            class="absolute top-full left-0 mt-2 w-56 rounded-2xl bg-card border border-border p-2 shadow-xl space-y-1 z-50 hidden"
             data-products-panel
           >
             {
