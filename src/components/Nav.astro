@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
-import { appUrl, BASE_PATH, type ExamType } from '@/consts';
+import { appUrl, asset, BASE_PATH, type ExamType } from '@/consts';
 
 /**
  * Public navigation for the Prepyo landing page.
@@ -34,17 +34,24 @@ const DEFAULT_EXAM: ExamType = 'PTE';
   >
     <div class="flex items-center justify-between gap-2 px-3 sm:px-6 py-2.5">
       {/* Logo */}
-      <a href={BASE_PATH} class="flex items-center gap-2 group" data-logo>
+      <a href={BASE_PATH} class="flex items-center group" data-logo>
+        {/* The wordmark is navy, so dark mode gets a light-ink copy of the
+            same file rather than a filter. */}
         <img
-          src="/prepyo.webp"
-          alt="Prepyo logo"
-          class="h-8 w-auto object-contain group-hover:scale-105 transition-transform"
+          src={asset('/prepyo-logo.webp')}
+          alt="Prepyo"
+          width="545"
+          height="176"
+          class="h-7 sm:h-8 w-auto object-contain group-hover:scale-105 transition-transform dark:hidden"
         />
-        <span
-          class="text-[9px] font-bold uppercase tracking-wider bg-nepal-blue/10 text-nepal-blue dark:text-indigo-400 px-1.5 py-0.5 rounded border border-nepal-blue/20"
-        >
-          NP
-        </span>
+        <img
+          src={asset('/prepyo-logo-dark.webp')}
+          alt=""
+          aria-hidden="true"
+          width="545"
+          height="176"
+          class="h-7 sm:h-8 w-auto object-contain group-hover:scale-105 transition-transform hidden dark:block"
+        />
       </a>
 
       {/* Center navigation links (desktop) */}

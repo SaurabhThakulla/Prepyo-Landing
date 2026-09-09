@@ -1,86 +1,97 @@
 ---
 import { Icon } from 'astro-icon/components';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { asset } from '@/consts';
 
-interface NerveNode {
-  id: string;
+interface Step {
   step: string;
   badge: string;
   title: string;
   desc: string;
   icon: string;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  glowColor: string;
-  satellites: { label: string; icon: string }[];
-  positionDesktop: string;
+  /** Which way the branch leaves the root. */
+  side: 'left' | 'right';
+  /** Accent text colour. Deepened vs the brand hue so 10px badge text clears AA. */
+  accent: string;
+  /** Tinted fill behind the marker and badge. */
+  tint: string;
+  /** Ring around the numbered marker. */
+  ring: string;
+  /** Border tint on hover. */
+  hoverBorder: string;
+  /** Literal colour for the SVG branch, which cannot use a Tailwind class. */
+  hex: string;
+  chips: { label: string; icon: string }[];
 }
 
-const NODES: NerveNode[] = [
+// Read order is 01 02 / 03 04, so the odd steps hang left and the even ones
+// right. The step number lives on the marker, so it is deliberately absent
+// from the titles: it used to appear three times per card.
+const STEPS: Step[] = [
   {
-    id: 'node-1',
     step: '01',
-    badge: 'DIAGNOSTIC SCAN',
-    title: '1. Take a free test',
+    badge: 'Diagnostic scan',
+    title: 'Take a free test',
     desc: 'Adaptive scan maps your baseline across all 4 skills in 20 minutes.',
     icon: 'lucide:scan',
-    color: 'text-[#5865F2] dark:text-indigo-400',
-    bgColor: 'bg-[#5865F2]/10',
-    borderColor: 'border-[#5865F2]/30 hover:border-[#5865F2]/80',
-    glowColor: 'rgba(88, 101, 242, 0.25)',
-    positionDesktop: 'lg:top-4 lg:left-6',
-    satellites: [
+    side: 'left',
+    accent: 'text-[#4a53d9] dark:text-indigo-400',
+    tint: 'bg-[#5865F2]/10',
+    ring: 'ring-[#5865F2]/25',
+    hoverBorder: 'hover:border-[#5865F2]/50',
+    hex: '#5865F2',
+    chips: [
       { label: '4-Skill Baseline', icon: 'lucide:bar-chart-2' },
       { label: 'Weakness Map', icon: 'lucide:crosshair' },
     ],
   },
   {
-    id: 'node-2',
     step: '02',
-    badge: 'NEURAL PRACTICE',
-    title: '2. Practise weak spots',
+    badge: 'Targeted practice',
+    title: 'Practise weak spots',
     desc: 'Daily targeted drills with instant pronunciation & rubric AI feedback.',
     icon: 'lucide:cpu',
-    color: 'text-amber-500 dark:text-amber-400',
-    bgColor: 'bg-amber-500/10',
-    borderColor: 'border-amber-500/30 hover:border-amber-500/80',
-    glowColor: 'rgba(245, 158, 11, 0.25)',
-    positionDesktop: 'lg:top-4 lg:right-6',
-    satellites: [
+    side: 'right',
+    accent: 'text-amber-700 dark:text-amber-400',
+    tint: 'bg-amber-500/10',
+    ring: 'ring-amber-500/25',
+    hoverBorder: 'hover:border-amber-500/50',
+    hex: '#f59e0b',
+    chips: [
       { label: 'Mistake Bank', icon: 'lucide:book-marked' },
       { label: 'Fluency Waveform', icon: 'lucide:activity' },
     ],
   },
   {
-    id: 'node-3',
     step: '03',
-    badge: 'EXAM SIMULATION',
-    title: '3. Sit a full mock',
+    badge: 'Exam simulation',
+    title: 'Sit a full mock',
     desc: 'Authentic Pearson & IDP exam pressure with instant band report.',
     icon: 'lucide:play-circle',
-    color: 'text-purple-500 dark:text-purple-400',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-purple-500/30 hover:border-purple-500/80',
-    glowColor: 'rgba(168, 85, 247, 0.25)',
-    positionDesktop: 'lg:bottom-4 lg:left-6',
-    satellites: [
+    side: 'left',
+    accent: 'text-purple-600 dark:text-purple-400',
+    tint: 'bg-purple-500/10',
+    ring: 'ring-purple-500/25',
+    hoverBorder: 'hover:border-purple-500/50',
+    hex: '#a855f7',
+    chips: [
       { label: 'Real Exam Timing', icon: 'lucide:timer' },
       { label: '3-Sec Marking', icon: 'lucide:zap' },
     ],
   },
   {
-    id: 'node-4',
     step: '04',
-    badge: 'TARGET MASTERY',
-    title: '4. Book the real exam',
+    badge: 'Target mastery',
+    title: 'Book the real exam',
     desc: 'Lock in PTE 79+ or IELTS Band 8.0 confidence before test day.',
     icon: 'lucide:trophy',
-    color: 'text-cyan-500 dark:text-cyan-400',
-    bgColor: 'bg-cyan-500/10',
-    borderColor: 'border-cyan-500/30 hover:border-cyan-500/80',
-    glowColor: 'rgba(6, 182, 212, 0.25)',
-    positionDesktop: 'lg:bottom-4 lg:right-6',
-    satellites: [
+    side: 'right',
+    accent: 'text-cyan-700 dark:text-cyan-400',
+    tint: 'bg-cyan-500/10',
+    ring: 'ring-cyan-500/25',
+    hoverBorder: 'hover:border-cyan-500/50',
+    hex: '#06b6d4',
+    chips: [
       { label: 'PTE 79+ / IELTS 8.0', icon: 'lucide:award' },
       { label: 'Test-Day Ready', icon: 'lucide:shield-check' },
     ],
@@ -89,7 +100,7 @@ const NODES: NerveNode[] = [
 ---
 
 <section id="how-it-works" class="py-14 sm:py-20 border-t border-border relative overflow-hidden">
-  {/* Ambient background glows */}
+  {/* Ambient background glow */}
   <div
     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 dark:bg-primary/10 blur-[100px] pointer-events-none"
     aria-hidden="true"
@@ -97,280 +108,186 @@ const NODES: NerveNode[] = [
   </div>
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    {/* Compact Header */}
-    <div class="text-center space-y-2 mb-8 sm:mb-12">
-      <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-        Four steps to your target score
-      </h2>
+    <SectionHeading
+      eyebrow="How it works"
+      eyebrowIcon="lucide:route"
+      title="Four steps to your target score"
+      description="One connected path that adapts to your progress, from first baseline to exam day."
+    />
 
-      <p class="text-xs sm:text-sm text-muted-foreground max-w-xl mx-auto">
-        An interconnected learning network that continuously adapts to your progress from baseline to exam day.
-      </p>
-    </div>
-
-    {/* Neural Nerve Tree Canvas (Fits in a single screen view) */}
-    <div
-      class="relative rounded-[28px] sm:rounded-[36px] border border-border/80 bg-card/60 dark:bg-card/40 backdrop-blur-xl p-5 sm:p-8 lg:p-10 shadow-2xl overflow-hidden min-h-[580px] lg:min-h-[520px] flex items-center justify-center"
-    >
-      {/* Neural Background Grid Pattern */}
-      <div
-        class="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px] opacity-20 pointer-events-none"
-        aria-hidden="true"
-      >
-      </div>
-
-      {/* SVG Neural Axon Synapse Curves (Desktop & Tablet) */}
+    {/* Prepyo sits at the root and the four steps branch off it, two per side.
+        The branch curves are drawn from measured DOM positions by the script
+        below, so they stay attached at every width instead of being stretched
+        to fit a fixed viewBox. */}
+    <div class="relative" data-tree>
       <svg
-        class="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-0"
-        viewBox="0 0 1000 500"
-        preserveAspectRatio="none"
+        class="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
+        data-tree-svg
+        aria-hidden="true"></svg>
+
+      {/* Root. In normal flow above the steps on small screens, pinned to the
+          centre of the trunk gap on desktop. */}
+      <div
+        class="flex justify-center mb-8 lg:mb-0 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-20"
+        data-tree-hub
       >
-        <defs>
-          <linearGradient id="grad-core-1" x1="50%" y1="50%" x2="20%" y2="20%">
-            <stop offset="0%" stop-color="rgba(16, 185, 129, 0.8)" />
-            <stop offset="100%" stop-color="rgba(16, 185, 129, 0.1)" />
-          </linearGradient>
-          <linearGradient id="grad-core-2" x1="50%" y1="50%" x2="80%" y2="20%">
-            <stop offset="0%" stop-color="rgba(245, 158, 11, 0.8)" />
-            <stop offset="100%" stop-color="rgba(245, 158, 11, 0.1)" />
-          </linearGradient>
-          <linearGradient id="grad-core-3" x1="50%" y1="50%" x2="20%" y2="80%">
-            <stop offset="0%" stop-color="rgba(168, 85, 247, 0.8)" />
-            <stop offset="100%" stop-color="rgba(168, 85, 247, 0.1)" />
-          </linearGradient>
-          <linearGradient id="grad-core-4" x1="50%" y1="50%" x2="80%" y2="80%">
-            <stop offset="0%" stop-color="rgba(6, 182, 212, 0.8)" />
-            <stop offset="100%" stop-color="rgba(6, 182, 212, 0.1)" />
-          </linearGradient>
-          <linearGradient id="grad-ring" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#10b981" />
-            <stop offset="33%" stop-color="#f59e0b" />
-            <stop offset="66%" stop-color="#a855f7" />
-            <stop offset="100%" stop-color="#06b6d4" />
-          </linearGradient>
-          <linearGradient id="grad-path-1-2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(16, 185, 129, 0.55)" />
-            <stop offset="100%" stop-color="rgba(245, 158, 11, 0.55)" />
-          </linearGradient>
-          <linearGradient id="grad-path-2-3" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="rgba(245, 158, 11, 0.55)" />
-            <stop offset="100%" stop-color="rgba(168, 85, 247, 0.55)" />
-          </linearGradient>
-          <linearGradient id="grad-path-3-4" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(168, 85, 247, 0.55)" />
-            <stop offset="100%" stop-color="rgba(6, 182, 212, 0.55)" />
-          </linearGradient>
-
-          {/* Directional Arrow Markers */}
-          <marker
-            id="arrow-1-2"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(245, 158, 11, 0.75)" />
-          </marker>
-          <marker
-            id="arrow-2-3"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(168, 85, 247, 0.75)" />
-          </marker>
-          <marker
-            id="arrow-3-4"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
-          >
-            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="rgba(6, 182, 212, 0.75)" />
-          </marker>
-        </defs>
-
-        {/* Neural Synapse Branch Pathways from Core to Nodes */}
-        {/* Core -> Node 1 (Top Left) */}
-        <path
-          d="M 500 250 C 400 250, 300 130, 220 120"
-          fill="none"
-          stroke="url(#grad-core-1)"
-          stroke-width="2.5"
-          stroke-dasharray="6 4"
-          class="animate-pulse"
-        />
-        {/* Core -> Node 2 (Top Right) */}
-        <path
-          d="M 500 250 C 600 250, 700 130, 780 120"
-          fill="none"
-          stroke="url(#grad-core-2)"
-          stroke-width="2.5"
-          stroke-dasharray="6 4"
-          class="animate-pulse"
-        />
-        {/* Core -> Node 3 (Bottom Left) */}
-        <path
-          d="M 500 250 C 400 250, 300 370, 220 380"
-          fill="none"
-          stroke="url(#grad-core-3)"
-          stroke-width="2.5"
-          stroke-dasharray="6 4"
-          class="animate-pulse"
-        />
-        {/* Core -> Node 4 (Bottom Right) */}
-        <path
-          d="M 500 250 C 600 250, 700 370, 780 380"
-          fill="none"
-          stroke="url(#grad-core-4)"
-          stroke-width="2.5"
-          stroke-dasharray="6 4"
-          class="animate-pulse"
-        />
-
-        {/* Inter-Node Progression Nerve Pathways (01 -> 02 -> 03 -> 04 Linear Flow) */}
-        {/* 01 (Top Left) -> 02 (Top Right) */}
-        <path
-          d="M 220 100 C 380 25, 620 25, 780 100"
-          fill="none"
-          stroke="url(#grad-path-1-2)"
-          stroke-width="2"
-          stroke-dasharray="5 4"
-          marker-end="url(#arrow-1-2)"
-        />
-        {/* 02 (Top Right) -> 03 (Bottom Left - Diagonal Flow through Center Hub) */}
-        <path
-          d="M 740 145 C 640 255, 360 245, 260 360"
-          fill="none"
-          stroke="url(#grad-path-2-3)"
-          stroke-width="2"
-          stroke-dasharray="5 4"
-          marker-end="url(#arrow-2-3)"
-        />
-        {/* 03 (Bottom Left) -> 04 (Bottom Right) */}
-        <path
-          d="M 220 400 C 380 475, 620 475, 780 400"
-          fill="none"
-          stroke="url(#grad-path-3-4)"
-          stroke-width="2"
-          stroke-dasharray="5 4"
-          marker-end="url(#arrow-3-4)"
-        />
-
-        {/* Synapse Connection Node Dots (Matching each node's theme color) */}
-        {/* Node 1: Discord Blue (Top Left) */}
-        <circle cx="220" cy="120" r="4" fill="#5865F2" />
-        <circle cx="220" cy="120" r="8" fill="#5865F2" opacity="0.25" class="animate-ping" />
-
-        {/* Node 2: Amber (Top Right) */}
-        <circle cx="780" cy="120" r="4" fill="#f59e0b" />
-        <circle cx="780" cy="120" r="8" fill="#f59e0b" opacity="0.25" class="animate-ping" />
-
-        {/* Node 3: Purple (Bottom Left) */}
-        <circle cx="220" cy="380" r="4" fill="#a855f7" />
-        <circle cx="220" cy="380" r="8" fill="#a855f7" opacity="0.25" class="animate-ping" />
-
-        {/* Node 4: Cyan (Bottom Right) */}
-        <circle cx="780" cy="380" r="4" fill="#06b6d4" />
-        <circle cx="780" cy="380" r="8" fill="#06b6d4" opacity="0.25" class="animate-ping" />
-      </svg>
-
-      {/* Central Prepyo Hub / Core Nucleus (Desktop Center) */}
-      <div class="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex-col items-center justify-center pointer-events-none">
         <div class="relative flex items-center justify-center">
-          {/* Outer Pulsing Synaptic Waves */}
-          <div class="absolute w-32 h-32 rounded-full border border-primary/30 animate-ping opacity-20" />
-          <div class="absolute w-24 h-24 rounded-full bg-gradient-to-tr from-[#5865F2]/20 via-purple-500/20 to-cyan-500/20 blur-md animate-pulse" />
-
-          {/* Central Prepyo Sphere */}
-          <div class="w-18 h-18 p-1 rounded-full bg-gradient-to-tr from-[#5865F2] via-primary to-indigo-500 shadow-xl shadow-primary/25 flex items-center justify-center">
-            <div class="w-16 h-16 rounded-full bg-card flex flex-col items-center justify-center text-center p-1.5 shadow-inner">
-              <div class="w-7 h-7 rounded-xl bg-primary text-white font-bold text-xs flex items-center justify-center shadow-sm">
-                P
-              </div>
-              <span class="font-display text-[9px] font-bold tracking-tight text-foreground mt-0.5">
-                prep<span class="text-primary">yo</span>
-              </span>
-            </div>
+          <div
+            class="absolute w-32 h-32 rounded-full bg-primary/10 dark:bg-primary/20 blur-2xl"
+            aria-hidden="true"
+          >
+          </div>
+          <div
+            class="relative w-20 h-20 2xl:w-24 2xl:h-24 rounded-full bg-card border border-border shadow-lg flex items-center justify-center"
+            data-tree-hub-core
+          >
+            <img
+              src={asset('/prepyo-mark.webp')}
+              alt="Prepyo"
+              width="256"
+              height="256"
+              class="w-10 h-10 2xl:w-12 2xl:h-12 object-contain"
+            />
           </div>
         </div>
-
-        <span class="mt-2.5 px-3 py-0.5 rounded-full bg-card border border-border text-[9px] font-bold uppercase tracking-widest text-muted-foreground shadow-sm">
-          Prepyo
-        </span>
       </div>
 
-      {/* Grid of 4 Nerve Nodes (Structured 2D Tree Layout on Desktop, 2x2 on Mobile/Tablet) */}
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-y-8 relative z-10">
+      <ol class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:gap-x-[240px] lg:gap-y-14 2xl:gap-x-[320px] relative z-10">
         {
-          NODES.map((node, idx) => {
-            const isLeft = idx === 0 || idx === 2;
-            const isTop = idx === 0 || idx === 1;
-
-            return (
-              <div
-                class:list={[
-                  'lg:col-span-5 flex flex-col justify-center',
-                  isLeft ? 'lg:col-start-1 lg:mr-auto' : 'lg:col-start-8 lg:ml-auto',
-                  isTop ? 'lg:row-start-1' : 'lg:row-start-2',
-                ]}
-              >
+          STEPS.map(step => (
+            <li
+              class:list={[
+                'group relative rounded-2xl border border-border/70 bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5',
+                step.hoverBorder,
+              ]}
+              data-branch={step.side}
+              data-branch-color={step.hex}
+            >
+              {/* Centred, so both arms of the tree read as mirror images. */}
+              <div class="flex items-center justify-center gap-2.5 mb-3">
                 <div
                   class:list={[
-                    'relative rounded-2xl sm:rounded-3xl border bg-card/95 backdrop-blur-md p-4 sm:p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group',
-                    node.borderColor,
+                    'shrink-0 w-9 h-9 rounded-full flex items-center justify-center ring-4 bg-card',
+                    step.ring,
+                  ]}
+                  data-branch-anchor
+                >
+                  <span
+                    class:list={[
+                      'w-full h-full rounded-full flex items-center justify-center font-mono text-[11px] font-bold',
+                      step.tint,
+                      step.accent,
+                    ]}
+                  >
+                    {step.step}
+                  </span>
+                </div>
+
+                <span
+                  class:list={[
+                    'inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md',
+                    step.tint,
+                    step.accent,
                   ]}
                 >
-                  {/* Step Pin & Header */}
-                  <div class="flex items-center justify-between gap-3 mb-2.5">
-                    <div class="flex items-center gap-2">
-                      <div
-                        class={`w-8 h-8 rounded-xl ${node.bgColor} flex items-center justify-center shrink-0 shadow-sm`}
-                      >
-                        <Icon name={node.icon} class={`w-4 h-4 ${node.color}`} />
-                      </div>
-                      <span
-                        class={`text-[9px] font-bold uppercase tracking-wider ${node.color} px-2 py-0.5 rounded-md ${node.bgColor}`}
-                      >
-                        {node.badge}
-                      </span>
-                    </div>
+                  <Icon name={step.icon} class="w-3 h-3" />
+                  <span>{step.badge}</span>
+                </span>
+              </div>
 
-                    <span class="text-xs font-bold font-mono text-muted-foreground/60">
-                      STEP {node.step}
+              <div class="text-center">
+                <h3 class="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                  {step.title}
+                </h3>
+                <p class="text-xs text-muted-foreground leading-relaxed mt-1.5">{step.desc}</p>
+
+                <div class="flex flex-wrap justify-center gap-1.5 mt-3.5">
+                  {step.chips.map(chip => (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-foreground/80 bg-muted/60 dark:bg-muted/40 border border-border/60 rounded-md px-2 py-0.5">
+                      <Icon name={chip.icon} class={`w-2.5 h-2.5 ${step.accent}`} />
+                      <span>{chip.label}</span>
                     </span>
-                  </div>
-
-                  {/* Title & Desc */}
-                  <h3 class="font-display font-bold text-sm sm:text-base text-foreground group-hover:text-primary transition-colors">
-                    {node.title}
-                  </h3>
-                  <p class="text-xs text-muted-foreground leading-relaxed mt-1 mb-3">
-                    {node.desc}
-                  </p>
-
-                  {/* Synaptic Satellite Chips (Leaves) */}
-                  <div class="flex flex-wrap gap-1.5 pt-2.5 border-t border-border/70">
-                    {node.satellites.map(sat => (
-                      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-foreground/80 bg-muted/60 dark:bg-muted/40 border border-border/60 rounded-md px-2 py-0.5">
-                        <Icon name={sat.icon} class={`w-2.5 h-2.5 ${node.color}`} />
-                        <span>{sat.label}</span>
-                      </span>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
-            );
-          })
+            </li>
+          ))
         }
-      </div>
+      </ol>
     </div>
   </div>
 </section>
+
+<script>
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const tree = document.querySelector<HTMLElement>('[data-tree]');
+
+  if (tree) {
+    const svg = tree.querySelector<SVGSVGElement>('[data-tree-svg]')!;
+    const core = tree.querySelector<HTMLElement>('[data-tree-hub-core]')!;
+    const leaves = [...tree.querySelectorAll<HTMLElement>('[data-branch]')];
+    const desktop = window.matchMedia('(min-width: 1024px)');
+
+    function draw() {
+      svg.replaceChildren();
+      // Below `lg` the root sits in normal flow and there is no trunk to hang
+      // branches from, so there is nothing to draw.
+      if (!desktop.matches) return;
+
+      const wrap = tree!.getBoundingClientRect();
+      const hub = core.getBoundingClientRect();
+      const hubX = hub.left - wrap.left + hub.width / 2;
+      const hubY = hub.top - wrap.top + hub.height / 2;
+      const radius = hub.width / 2;
+
+      for (const leaf of leaves) {
+        const onLeft = leaf.dataset.branch === 'left';
+        const colour = leaf.dataset.branchColor!;
+        const box = leaf.getBoundingClientRect();
+        const anchor = leaf
+          .querySelector<HTMLElement>('[data-branch-anchor]')!
+          .getBoundingClientRect();
+
+        // Leave the root at its edge and arrive at the leaf's inner edge,
+        // level with its numbered marker.
+        const startX = hubX + (onLeft ? -radius : radius);
+        const endX = (onLeft ? box.right : box.left) - wrap.left;
+        const endY = anchor.top - wrap.top + anchor.height / 2;
+        // Horizontal tangents at both ends give the branch its limb-like bend.
+        const bend = (startX + endX) / 2;
+
+        const path = document.createElementNS(SVG_NS, 'path');
+        path.setAttribute('d', `M ${startX} ${hubY} C ${bend} ${hubY}, ${bend} ${endY}, ${endX} ${endY}`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', colour);
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-dasharray', '5 5');
+        path.setAttribute('opacity', '0.5');
+        svg.append(path);
+
+        const bud = document.createElementNS(SVG_NS, 'circle');
+        bud.setAttribute('cx', String(endX));
+        bud.setAttribute('cy', String(endY));
+        bud.setAttribute('r', '3.5');
+        bud.setAttribute('fill', colour);
+        svg.append(bud);
+      }
+    }
+
+    // Redraw whenever the layout that the curves were measured against moves.
+    // Coalesced through rAF, which a background tab never fires -- so the first
+    // pass is direct, otherwise the branches are missing until the tab is shown.
+    let queued = 0;
+    function redraw() {
+      cancelAnimationFrame(queued);
+      queued = requestAnimationFrame(draw);
+    }
+
+    draw();
+    new ResizeObserver(redraw).observe(tree);
+    desktop.addEventListener('change', redraw);
+    // Webfonts land after first paint and reflow the cards under the branches.
+    document.fonts?.ready.then(redraw);
+  }
+</script>
