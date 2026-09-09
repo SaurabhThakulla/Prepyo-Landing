@@ -1,0 +1,19 @@
+<svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bank building icon -->
+  <g transform="translate(10, 12)">
+    <!-- Roof / pediment -->
+    <polygon points="38,8 6,30 70,30" fill="#1E40AF" />
+    <!-- Frieze -->
+    <rect x="6" y="30" width="64" height="6" rx="1" fill="#1E3A8A" />
+    <!-- Pillars -->
+    <rect x="14" y="38" width="7" height="26" rx="2" fill="#2563EB" />
+    <rect x="31.5" y="38" width="7" height="26" rx="2" fill="#2563EB" />
+    <rect x="49" y="38" width="7" height="26" rx="2" fill="#2563EB" />
+    <!-- Base -->
+    <rect x="4" y="64" width="66" height="7" rx="2" fill="#1E3A8A" />
+  </g>
+  <!-- "All Banks" text -->
+  <text x="95" y="60" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="36" fill="#1E3A8A">All Banks</text>
+  <!-- Subtitle -->
+  <text x="95" y="78" font-family="Arial, Helvetica, sans-serif" font-weight="500" font-size="14" fill="#6B7280">Supported</text>
+</svg>

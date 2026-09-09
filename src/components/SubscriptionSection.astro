@@ -8,6 +8,8 @@ export interface ExactPricingPlan {
   /** English sense of the Nepali name, so it never depends on knowing the word. */
   gloss: string;
   priceNPR: number;
+  /** Original price before discount — shown as a strikethrough. Omit for free. */
+  originalPriceNPR?: number;
   subtitle: string;
   popular: boolean;
   cta: string;
@@ -41,6 +43,7 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Abhyas",
     gloss: "Practice",
     priceNPR: 99,
+    originalPriceNPR: 199,
     subtitle: "One-time · 7 days",
     popular: false,
     cta: "Get Started",
@@ -50,6 +53,7 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Taiyari",
     gloss: "Preparation",
     priceNPR: 299,
+    originalPriceNPR: 599,
     subtitle: "One-time · 33 days",
     popular: false,
     cta: "Get Started",
@@ -59,6 +63,7 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Udaan",
     gloss: "Take-off",
     priceNPR: 999,
+    originalPriceNPR: 1999,
     subtitle: "One-time · 97 days",
     popular: false,
     cta: "Get Started",
@@ -107,6 +112,14 @@ export const FEATURES = [
         Transparent pricing with all features compared. Select the plan that
         fits your target exam date.
       </p>
+      <div class="flex flex-col items-center gap-2 pt-4">
+        <span class="text-xs text-muted-foreground font-medium">Payments powered by</span>
+        <div class="flex items-center gap-6 flex-wrap justify-center">
+          <img src="/images/esewa-logo.png" alt="eSewa" class="h-8 object-contain opacity-85 hover:opacity-100 transition-opacity" />
+          <img src="/images/khalti-logo.svg" alt="Khalti" class="h-8 object-contain opacity-85 hover:opacity-100 transition-opacity" />
+          <img src="/images/bank-logo.svg" alt="All Banks Supported" class="h-10 object-contain opacity-85 hover:opacity-100 transition-opacity" />
+        </div>
+      </div>
     </div>
 
     <div class="overflow-x-auto pb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -165,9 +178,19 @@ export const FEATURES = [
                   >
                     {plan.gloss}
                   </span>
+                  {plan.originalPriceNPR && (
+                    <span
+                      class:list={[
+                        "text-lg sm:text-xl font-semibold line-through decoration-red-500 decoration-[1.5px]",
+                        isPop ? "text-black-400" : "text-muted-foreground/70",
+                      ]}
+                    >
+                      NPR {plan.originalPriceNPR.toLocaleString()}
+                    </span>
+                  )}
                   <div
                     class:list={[
-                      "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+                      "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight",
                       isPop ? "text-white" : "text-foreground",
                     ]}
                   >
