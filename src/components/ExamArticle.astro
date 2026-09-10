@@ -1,0 +1,195 @@
+---
+import { Icon } from 'astro-icon/components';
+import Button from '@/components/Button.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SocialProof from '@/components/SocialProof.astro';
+import FAQSection from '@/components/FAQSection.astro';
+import { appUrl, asset, homeSection } from '@/consts';
+import type { ExamPage } from '@/data/exam-pages';
+
+/**
+ * The whole body of an exam page, driven by one entry from exam-pages.ts.
+ *
+ * Both exam pages are the same shape — that is deliberate. The thing that has
+ * to differ between them is the words, not the layout, and keeping the layout
+ * in one place is what stops the second page from becoming a stale copy of the
+ * first.
+ */
+interface Props {
+  page: ExamPage;
+}
+
+const { page } = Astro.props;
+const target = page.exam === 'PTE' ? '79+' : 'Band 8.0';
+---
+
+<article class="w-full space-y-4">
+  <Breadcrumbs
+    trail={[
+      { name: 'Home', href: asset('/') },
+      { name: 'Exams', href: homeSection('products') },
+      { name: page.name },
+    ]}
+  />
+
+  {/* Header */}
+  <header class="pt-6 sm:pt-10 pb-2 max-w-3xl">
+    <div
+      class="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+    >
+      <span class="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true"></span>
+      <span>{page.name} · {target}</span>
+    </div>
+
+    <h1
+      class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1] mt-5"
+    >
+      {page.h1}
+    </h1>
+
+    <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
+      {page.standfirst}
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 mt-7">
+      <Button
+        href={appUrl('/diagnostic')}
+        size="lg"
+        class="group rounded-full font-bold text-sm px-7 h-12 gap-2 shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
+      >
+        <span>Take the free diagnostic</span>
+        <Icon name="lucide:arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+      </Button>
+      <Button
+        href={homeSection('pricing')}
+        variant="outline"
+        size="lg"
+        class="rounded-full font-bold text-sm px-7 h-12 hover:-translate-y-0.5 transition-all"
+      >
+        See plans
+      </Button>
+    </div>
+  </header>
+
+  {/* Intro */}
+  <section class="max-w-3xl space-y-4 py-6">
+    {
+      page.intro.map(paragraph => (
+        <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">{paragraph}</p>
+      ))
+    }
+  </section>
+
+  <SocialProof methodologyHref={asset('/how-scoring-works/')} />
+
+  {/* At a glance */}
+  <section class="py-10 sm:py-14 border-t border-border">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+      {page.name} at a glance
+    </h2>
+
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
+      {
+        page.format.map(({ label, value }) => (
+          <div class="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <dt class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</dt>
+            <dd class="text-sm font-semibold text-foreground mt-1.5 leading-snug">{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  {/* Scoring */}
+  <section class="py-10 sm:py-14 border-t border-border">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+      How {page.name} is scored
+    </h2>
+
+    <div class="max-w-3xl space-y-4 mt-6">
+      {
+        page.scoring.map(paragraph => (
+          <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">{paragraph}</p>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Task types */}
+  <section class="py-10 sm:py-14 border-t border-border">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+      The task types you will practise
+    </h2>
+    <p class="text-sm text-muted-foreground mt-2 max-w-2xl">
+      Each one is a separate drill on Prepyo, with the timing and answer format the real test uses.
+    </p>
+
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mt-6">
+      {
+        page.taskTypes.map(task => (
+          <li class="rounded-2xl border border-border bg-card p-4 sm:p-5 hover:border-primary/40 transition-colors">
+            <h3 class="font-display font-bold text-sm text-foreground">{task.name}</h3>
+            <p class="text-xs sm:text-sm text-muted-foreground mt-1.5 leading-relaxed">{task.blurb}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {/* How Prepyo helps */}
+  <section class="py-10 sm:py-14 border-t border-border">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+      What you get on Prepyo
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mt-6">
+      {
+        page.prepBlocks.map(block => (
+          <div class="rounded-2xl border border-border bg-card p-5 sm:p-6 flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <Icon name={block.icon} class="w-5 h-5" />
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-sm text-foreground">{block.title}</h3>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-1.5 leading-relaxed">{block.body}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-wrap gap-3 mt-7">
+      <Button href={appUrl('/')} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+        Start practising free
+      </Button>
+      <Button
+        href={homeSection('features')}
+        variant="outline"
+        size="lg"
+        class="rounded-full font-bold text-sm px-7 h-12"
+      >
+        See every feature
+      </Button>
+    </div>
+  </section>
+
+  <FAQSection faqs={page.faqs} title={`${page.name} questions`} />
+
+  {/* Across to the other exam */}
+  <section class="py-10 sm:py-14 border-t border-border">
+    <a
+      href={asset(page.sibling.href)}
+      class="group flex items-start gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-primary/40 transition-colors max-w-3xl"
+    >
+      <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <Icon name="lucide:arrow-left-right" class="w-5 h-5" />
+      </div>
+      <div>
+        <h2 class="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+          {page.sibling.label}
+        </h2>
+        <p class="text-xs sm:text-sm text-muted-foreground mt-1.5 leading-relaxed">{page.sibling.blurb}</p>
+      </div>
+    </a>
+  </section>
+</article>

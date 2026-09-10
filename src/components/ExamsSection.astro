@@ -1,91 +1,12 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { appUrl, type ExamType } from '@/consts';
-
-interface ExamStat {
-  value: string;
-  label: string;
-}
+import { appUrl, asset, type ExamType } from '@/consts';
+import { EXAMS } from '@/data/exams';
 
 const STAT_STYLES: Record<string, { icon: string; text: string; bg: string; border: string }> = {
   Students: { icon: 'lucide:users', text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-50 dark:bg-cyan-950/60', border: 'border-cyan-200/90 dark:border-cyan-500/30' },
   'Pre-booking': { icon: 'lucide:users', text: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-50 dark:bg-cyan-950/60', border: 'border-cyan-200/90 dark:border-cyan-500/30' },
 };
-
-interface ExamCard {
-  exam: ExamType;
-  name: string;
-  heading: string;
-  targetLabel: string;
-  scaleLabel: string;
-  description: string;
-  moreTasks: string;
-  trackLabel: string;
-  skills: string[];
-  brandClass: string;
-  dotColor: string;
-  stats?: ExamStat[];
-}
-
-const EXAMS: ExamCard[] = [
-  {
-    exam: 'PTE',
-    name: 'PTE Academic',
-    heading: "What You'll Practise & Master",
-    targetLabel: '79+ goal',
-    scaleLabel: 'Computer-marked · scored 10–90',
-    description: 'Taken on a computer and marked by AI. Results usually arrive within 48 hours.',
-    moreTasks: '+ 16 more task types',
-    trackLabel: 'INSIDE THIS TRACK',
-    skills: [
-      'Read Aloud',
-      'Repeat Sentence',
-      'Summarize Written Text',
-      'Write from Dictation',
-    ],
-    brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
-    dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
-    stats: [{ value: '100+', label: 'Students' }],
-  },
-  {
-    exam: 'IELTS',
-    name: 'IELTS Academic',
-    heading: "What You'll Practise & Master",
-    targetLabel: 'Band 8.0',
-    scaleLabel: 'Examiner-marked · bands 0–9',
-    description: 'The most widely accepted English test for universities and visas worldwide.',
-    moreTasks: '+ 11 more task types',
-    trackLabel: 'INSIDE THIS TRACK',
-    skills: [
-      'Writing Task 1 & 2',
-      'True / False / Not Given',
-      'Matching Headings',
-      'Speaking Parts 1–3',
-    ],
-    brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
-    dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
-    stats: [{ value: '50+', label: 'Students' }],
-  },
-  {
-    exam: 'JAPANESE',
-    name: 'Japanese Language',
-    heading: "What You'll Practise & Master",
-    targetLabel: 'JLPT N5–N1',
-    scaleLabel: 'JLPT & NAT-TEST · N5–N1',
-    description: 'Essential test preparation for universities and visas in Japan.',
-    moreTasks: '+ 10 more task types',
-    trackLabel: 'INSIDE THIS TRACK',
-    skills: [
-      'Kanji & vocabulary',
-      'Grammar drills',
-      'Reading comprehension',
-      'Listening practice',
-    ],
-    brandClass: 'text-[#48567e] dark:text-[#323d5b]',
-    dotColor: 'bg-[#48567e] dark:bg-indigo-400',
-    stats: [{ value: '10+', label: 'Pre-booking' }],
-  },
-];
 
 const DEFAULT_EXAM: ExamType = 'PTE';
 ---
@@ -252,6 +173,18 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                               <span>Free diagnostic</span>
                               <span class="transition-transform group-hover:translate-x-0.5">→</span>
                             </a>
+
+                            {/* The card is a summary; the exam's own page is the
+                                one search results should land on, so it needs a
+                                link from here and not only from the nav. */}
+                            {item.slug && (
+                              <a
+                                href={asset(item.slug)}
+                                class="text-white/85 hover:text-white text-xs sm:text-sm font-semibold underline underline-offset-4 decoration-white/40 hover:decoration-white transition-colors"
+                              >
+                                {item.name} guide
+                              </a>
+                            )}
                           </>
                         )}
                       </div>

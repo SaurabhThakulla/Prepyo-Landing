@@ -35,3 +35,14 @@ export function asset(path: string): string {
 
 export type ExamType = 'PTE' | 'IELTS' | 'JAPANESE';
 
+
+/**
+ * A link to a section of the landing page from anywhere on the site.
+ *
+ * The landing page's own links stay bare fragments so the smooth-scroll script
+ * can claim them; every other page needs the base path in front, or the link
+ * resolves against the sub-page and goes nowhere.
+ */
+export function homeSection(id: string): string {
+  return `${BASE_PATH}#${id}`;
+}

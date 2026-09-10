@@ -7,22 +7,43 @@ import FeaturesSection from '@/components/FeaturesSection.astro';
 import SubscriptionSection from '@/components/SubscriptionSection.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
+import SocialProof from '@/components/SocialProof.astro';
+import { FAQS } from '@/data/faq';
+import { faqPage, howTo, organization, softwareApplication, website } from '@/lib/schema';
+import { asset, BASE_PATH } from '@/consts';
 
 /**
  * The public landing page for Prepyo.
  *
  * Top navigation links smoothly scroll directly to each respective section
- * on this page (#products, #features, #pricing, #how-it-works, #faq).
+ * on this page (#products, #features, #pricing, #how-it-works, #faq). The
+ * exam tracks also have pages of their own, which is where the exam-specific
+ * search traffic is meant to land.
  */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+// Built from the same arrays the sections render, so the markup cannot drift
+// away from what a visitor actually sees.
+const schema = [
+  organization(site),
+  website(site),
+  softwareApplication(site),
+  faqPage(url, FAQS),
+  howTo(url),
+];
 ---
 
 <Layout
-  title="Prepyo — Nepal’s Premier PTE & IELTS AI Prep Platform"
-  description="Master PTE 79+ and IELTS Band 8.0+ with realistic practice, full mock exam simulations, instant AI writing & speaking evaluations, and Nepal leaderboards."
+  title="Prepyo — Nepal’s Premier PTE & IELTS Prep Platform"
+  description="Master PTE 79+ and IELTS Band 8.0+ with realistic practice, full mock exam simulations, instant writing & speaking feedback, and Nepal leaderboards."
+  schema={schema}
 >
   <div class="w-full space-y-4">
     <Hero />
     <ExamsSection />
+    <SocialProof methodologyHref={asset('/how-scoring-works/')} />
     <ProblemSection />
     <FeaturesSection />
     <SubscriptionSection />

@@ -1,0 +1,18 @@
+---
+/**
+ * Renders a page's structured data as a single `@graph`.
+ *
+ * `<` is escaped because a stray "</script>" inside any string — an FAQ answer,
+ * a plan name — would otherwise end the script element early and break the page.
+ */
+import type { JsonLdNode } from '@/lib/schema';
+
+interface Props {
+  nodes: JsonLdNode[];
+}
+
+const { nodes } = Astro.props;
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes }).replace(/</g, '\u003c');
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
+import sitemap from '@astrojs/sitemap';
 
 // Where the site is served from differs by host: Vercel, Netlify and a custom
 // domain all serve it at the root, while GitHub Pages serves a project repo
@@ -34,12 +35,15 @@ const suppressEbusyPlugin = {
 // the only runtime JavaScript is the handful of inline scripts that drive the
 // nav, the theme toggle and the FAQ accordion.
 //
-// Pricing is not fetched. It is written into SubscriptionSection.astro and has
-// to be kept in step with the `plans` table by hand.
+// Pricing is not fetched. It is written into src/data/pricing.ts and has to be
+// kept in step with the `plans` table by hand.
 export default defineConfig({
   site,
   base,
   integrations: [
+    // Needs the resolved `site` above: without it the sitemap has no absolute
+    // URLs to write and the integration does nothing.
+    sitemap(),
     // Renders lucide icons as inline SVG at build time, so no icon library
     // ships to the browser.
     icon({ include: { lucide: ['*'] } }),

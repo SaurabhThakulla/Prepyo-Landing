@@ -1,0 +1,32 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle from '@/components/ExamArticle.astro';
+import { IELTS_PAGE } from '@/data/exam-pages';
+import { breadcrumbs, course, faqPage, organization, website } from '@/lib/schema';
+import { BASE_PATH, homeSection } from '@/consts';
+
+/**
+ * The IELTS Academic pillar page — the counterpart to the PTE one, so each
+ * exam's search intent lands on a page written for it rather than on a shared
+ * homepage section.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const schema = [
+  organization(site),
+  website(site),
+  course(site, url, IELTS_PAGE),
+  faqPage(url, IELTS_PAGE.faqs),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Exams', item: new URL(homeSection('products'), origin).href },
+    { name: IELTS_PAGE.name, item: url.href },
+  ]),
+];
+---
+
+<Layout title={IELTS_PAGE.title} description={IELTS_PAGE.metaDescription} schema={schema}>
+  <ExamArticle page={IELTS_PAGE} />
+</Layout>

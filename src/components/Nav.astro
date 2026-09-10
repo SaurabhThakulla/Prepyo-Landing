@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
-import { appUrl, asset, BASE_PATH, type ExamType } from '@/consts';
+import { appUrl, asset, BASE_PATH, homeSection, type ExamType } from '@/consts';
 
 /**
  * Public navigation for the Prepyo landing page.
@@ -16,10 +16,18 @@ const NAV_LINKS = [
   { id: 'faq', label: 'FAQ' },
 ];
 
-const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string }[] = [
-  { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary' },
-  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
-  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
+// On the landing page these stay bare fragments so the smooth-scroll script can
+// claim them; anywhere else they have to point back at the landing page or they
+// resolve against the current sub-page and scroll nowhere.
+const isHome = Astro.url.pathname === BASE_PATH;
+const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
+
+// PTE and IELTS have pages of their own now, so the dropdown is a real
+// navigation menu rather than three ways of scrolling to the same section.
+const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
+  { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary', href: asset('/pte-academic-preparation/') },
+  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', href: asset('/ielts-academic-preparation/') },
+  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: sectionHref('products') },
 ];
 
 // PTE is the default, so it is rendered pre-selected and the script only has to
@@ -74,9 +82,9 @@ const DEFAULT_EXAM: ExamType = 'PTE';
             data-products-panel
           >
             {
-              EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
+              EXAM_OPTIONS.map(({ exam, label, target, targetClass, href }) => (
                 <a
-                  href="#products"
+                  href={href}
                   data-exam-option={exam}
                   class:list={[
                     'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer hover:bg-accent hover:text-accent-foreground',
@@ -93,7 +101,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
         {
           NAV_LINKS.map(({ id, label }) => (
-            <a href={`#${id}`} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
+            <a href={sectionHref(id)} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
               {label}
             </a>
           ))
@@ -159,9 +167,9 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         Select Exam
       </span>
       {
-        EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
+        EXAM_OPTIONS.map(({ exam, label, target, targetClass, href }) => (
           <a
-            href="#products"
+            href={href}
             data-exam-option={exam}
             class:list={[
               'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors hover:bg-accent hover:text-accent-foreground',
@@ -181,7 +189,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         {
           NAV_LINKS.map(({ id, label }) => (
             <a
-              href={`#${id}`}
+              href={sectionHref(id)}
               class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
             >
               {label}
@@ -264,8 +272,14 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
   examOptions.forEach(option => {
     option.addEventListener('click', event => {
-      event.preventDefault();
       setActiveExam(option.dataset.examOption as ExamType);
+
+      // Two of the three options are links to real pages now, and those have to
+      // navigate. Only the ones still pointing at a section on this page get
+      // turned into a scroll.
+      if (!option.getAttribute('href')!.startsWith('#')) return;
+
+      event.preventDefault();
       setProductsOpen(false);
       setMobileOpen(false);
       scrollToSection('products');
@@ -288,6 +302,10 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
   const logo = nav.querySelector<HTMLAnchorElement>('[data-logo]')!;
   logo.addEventListener('click', event => {
+    // On a sub-page the logo is an ordinary link home and must be left alone;
+    // only on the landing page itself does it become a scroll to the top.
+    if (window.location.pathname !== new URL(logo.href).pathname) return;
+
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // The logo's own href already accounts for a sub-path deploy.

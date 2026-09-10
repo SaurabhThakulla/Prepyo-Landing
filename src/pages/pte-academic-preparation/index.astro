@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle from '@/components/ExamArticle.astro';
+import { PTE_PAGE } from '@/data/exam-pages';
+import { breadcrumbs, course, faqPage, organization, website } from '@/lib/schema';
+import { BASE_PATH, homeSection } from '@/consts';
+
+/**
+ * The PTE Academic pillar page.
+ *
+ * Split out of the landing page's exam section so "PTE preparation Nepal" has a
+ * URL of its own to rank with, instead of sharing one with IELTS.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const schema = [
+  organization(site),
+  website(site),
+  course(site, url, PTE_PAGE),
+  faqPage(url, PTE_PAGE.faqs),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Exams', item: new URL(homeSection('products'), origin).href },
+    { name: PTE_PAGE.name, item: url.href },
+  ]),
+];
+---
+
+<Layout title={PTE_PAGE.title} description={PTE_PAGE.metaDescription} schema={schema}>
+  <ExamArticle page={PTE_PAGE} />
+</Layout>

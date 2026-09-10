@@ -339,11 +339,17 @@ const PRE_CLONES = 2;
         TRACK_SLIDES.map((feature, trackIdx) => {
           const [badge1, badge2] = feature.floatingBadges;
           const isInitialActive = trackIdx === PRE_CLONES;
+          // The loop clones repeat two slides verbatim. Rendering their headline
+          // as an h3 would put every cloned title in the document outline twice,
+          // which reads as duplicate headings to a crawler and gives a screen
+          // reader four "Speaking" headings to walk past.
+          const Headline = feature.isClone ? 'div' : 'h3';
           return (
             <div
               class="w-[86vw] sm:w-[78vw] lg:w-[72vw] xl:w-[68vw] 2xl:w-[64vw] max-w-5xl shrink-0 select-none"
               data-track-index={trackIdx}
               data-original-index={feature.originalIndex}
+              aria-hidden={feature.isClone ? 'true' : undefined}
             >
               <div
                 class:list={[
@@ -365,9 +371,9 @@ const PRE_CLONES = 2;
                     </div>
 
                     {/* Headline */}
-                    <h3 class="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground leading-tight text-balance">
+                    <Headline class="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground leading-tight text-balance">
                       {feature.title}
-                    </h3>
+                    </Headline>
 
                     {/* Description */}
                     <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -391,6 +397,7 @@ const PRE_CLONES = 2;
                       <Button
                         href={feature.ctaHref}
                         size="default"
+                        tabindex={feature.isClone ? -1 : undefined}
                         class="rounded-xl font-bold text-xs sm:text-sm px-6 h-11 shadow-md shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all gap-2"
                       >
                         <span>{feature.ctaText}</span>
@@ -752,6 +759,7 @@ const PRE_CLONES = 2;
                   type="button"
                   data-card-next
                   aria-label="Next feature slide"
+                  tabindex={feature.isClone ? -1 : undefined}
                   class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-card/90 border border-border/80 text-foreground flex items-center justify-center shadow-lg hover:bg-foreground hover:text-background hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 >
                   <Icon name="lucide:arrow-right" class="w-4 h-4" />
