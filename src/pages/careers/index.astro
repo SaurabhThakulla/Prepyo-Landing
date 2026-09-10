@@ -1,0 +1,219 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Button from '@/components/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { breadcrumbs, jobPosting, organization, website } from '@/lib/schema';
+import { APPLICATION_STEPS, CAREERS_EMAIL, OPEN_ROLES, WORK_HIGHLIGHTS } from '@/data/careers';
+import { asset, BASE_PATH } from '@/consts';
+
+/**
+ * Careers.
+ *
+ * The listings come from OPEN_ROLES, which is empty until something is
+ * genuinely open — an advertised role nobody is hiring for wastes a
+ * candidate's afternoon and costs more trust than an empty page does. While it
+ * is empty the page makes the open-application case instead.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const title = 'Careers at Prepyo — Work on PTE & IELTS prep for Nepal';
+const description =
+  'Open roles at Prepyo, and how to send an open application to the team building PTE, IELTS and Japanese language preparation for students in Nepal.';
+
+const schema = [
+  organization(site),
+  website(site),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Careers', item: url.href },
+  ]),
+  ...OPEN_ROLES.map(role => jobPosting(site, url, role)),
+];
+
+const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open application')}`;
+---
+
+<Layout title={title} description={description} schema={schema}>
+  <article class="w-full space-y-4">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Careers' }]} />
+
+    <header class="pt-6 sm:pt-10 max-w-3xl">
+      <h1
+        class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1]"
+      >
+        Work at Prepyo
+      </h1>
+      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
+        We build the practice that decides whether a student in Nepal gets the score their
+        application depends on. It is a small surface with a lot riding on it.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 mt-7">
+        <Button
+          href={OPEN_ROLES.length > 0 ? '#open-roles' : mailto}
+          size="lg"
+          class="group rounded-full font-bold text-sm px-7 h-12 gap-2 shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
+        >
+          <span>{OPEN_ROLES.length > 0 ? 'See open roles' : 'Send an open application'}</span>
+          <Icon name="lucide:arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </Button>
+      </div>
+    </header>
+
+    {/* Why here */}
+    <section class="py-10 sm:py-14 border-t border-border mt-6">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        What you would be joining
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mt-6">
+        {
+          WORK_HIGHLIGHTS.map(item => (
+            <div class="rounded-2xl border border-border bg-card p-5 sm:p-6">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Icon name={item.icon} class="w-5 h-5" />
+              </div>
+              <h3 class="font-display font-bold text-sm text-foreground mt-4">{item.title}</h3>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    {/* Roles */}
+    <section id="open-roles" class="py-10 sm:py-14 border-t border-border">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        Open roles
+      </h2>
+
+      {
+        OPEN_ROLES.length === 0 ? (
+          <div class="rounded-2xl border border-dashed border-border bg-card/60 p-6 sm:p-8 mt-6 max-w-3xl">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+                <Icon name="lucide:inbox" class="w-5 h-5" />
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-sm text-foreground">
+                  Nothing is open at the moment
+                </h3>
+                <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
+                  We would rather leave this page empty than advertise a role nobody is hiring for.
+                  Open applications are read, though, and we keep the good ones on file for when
+                  something does open.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <ul class="space-y-3 sm:space-y-4 mt-6">
+            {OPEN_ROLES.map(role => (
+              <li
+                id={role.id}
+                class="rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-primary/40 transition-colors scroll-mt-24"
+              >
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 class="font-display font-bold text-base text-foreground">{role.title}</h3>
+                    <p class="text-xs text-muted-foreground mt-1">
+                      {role.team} · {role.location} · {role.typeLabel}
+                    </p>
+                  </div>
+                  <Button
+                    href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(role.title)}`}
+                    size="sm"
+                    class="rounded-full font-bold text-xs px-5 h-9 shrink-0"
+                  >
+                    Apply
+                  </Button>
+                </div>
+
+                <p class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed">
+                  {role.description}
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                      What you would do
+                    </h4>
+                    <ul class="space-y-2 mt-3">
+                      {role.responsibilities.map(point => (
+                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
+                          </div>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                      What we are looking for
+                    </h4>
+                    <ul class="space-y-2 mt-3">
+                      {role.requirements.map(point => (
+                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
+                          </div>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+
+    {/* How to apply */}
+    <section class="py-10 sm:py-14 border-t border-border">
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 max-w-3xl">
+        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          How to apply
+        </h2>
+        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+          One email to{' '}
+          <a href={mailto} class="text-primary font-medium hover:underline">{CAREERS_EMAIL}</a>. No
+          form, no portal, no account to create.
+        </p>
+
+        <ol class="space-y-3 mt-6">
+          {
+            APPLICATION_STEPS.map((step, index) => (
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  {index + 1}
+                </span>
+                <span class="text-xs sm:text-sm text-muted-foreground leading-relaxed">{step}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="flex flex-wrap gap-3 mt-7">
+          <Button href={mailto} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+            Email us
+          </Button>
+          <Button
+            href={asset('/how-scoring-works/')}
+            variant="outline"
+            size="lg"
+            class="rounded-full font-bold text-sm px-7 h-12"
+          >
+            See how the product works
+          </Button>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>

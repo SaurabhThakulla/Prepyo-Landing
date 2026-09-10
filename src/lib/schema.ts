@@ -11,6 +11,7 @@
  */
 import type { Faq } from '@/data/faq';
 import type { ExamPage } from '@/data/exam-pages';
+import type { Role } from '@/data/careers';
 import { EXACT_PLANS } from '@/data/pricing';
 import { STEPS } from '@/data/steps';
 import { asset } from '@/consts';
@@ -158,5 +159,45 @@ export function breadcrumbs(url: URL, trail: { name: string; item: string }[]): 
       name: entry.name,
       item: entry.item,
     })),
+  };
+}
+
+/**
+ * A single job listing.
+ *
+ * Google requires title, description, datePosted, validThrough,
+ * hiringOrganization and a location — a posting missing any of them is simply
+ * not eligible, so every field here is mandatory in the Role type rather than
+ * optional. Remote roles use `jobLocationType` plus an applicant location
+ * instead of a street address, which is what the spec asks for.
+ */
+export function jobPosting(site: URL, url: URL, role: Role): JsonLdNode {
+  const remote = /remote/i.test(role.location);
+
+  return {
+    '@type': 'JobPosting',
+    '@id': `${url.href}#${role.id}`,
+    title: role.title,
+    description: [role.description, ...role.responsibilities, ...role.requirements].join(' '),
+    datePosted: role.datePosted,
+    validThrough: role.validThrough,
+    employmentType: role.type,
+    hiringOrganization: { '@id': organizationId(site) },
+    directApply: true,
+    ...(remote
+      ? {
+          jobLocationType: 'TELECOMMUTE',
+          applicantLocationRequirements: { '@type': 'Country', name: 'Nepal' },
+        }
+      : {
+          jobLocation: {
+            '@type': 'Place',
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: role.location,
+              addressCountry: 'NP',
+            },
+          },
+        }),
   };
 }

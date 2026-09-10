@@ -22,6 +22,10 @@ const NAV_LINKS = [
 const isHome = Astro.url.pathname === BASE_PATH;
 const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
 
+// Links to pages rather than to sections, so they are never rewritten as
+// fragments and never claimed by the smooth-scroll handler.
+const PAGE_LINKS = [{ href: asset('/careers/'), label: 'Careers' }];
+
 // PTE and IELTS have pages of their own now, so the dropdown is a real
 // navigation menu rather than three ways of scrolling to the same section.
 const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
@@ -102,6 +106,14 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         {
           NAV_LINKS.map(({ id, label }) => (
             <a href={sectionHref(id)} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
+              {label}
+            </a>
+          ))
+        }
+
+        {
+          PAGE_LINKS.map(({ href, label }) => (
+            <a href={href} class="hover:text-foreground transition-colors text-xs xl:text-sm">
               {label}
             </a>
           ))
@@ -191,6 +203,16 @@ const DEFAULT_EXAM: ExamType = 'PTE';
             <a
               href={sectionHref(id)}
               class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+            >
+              {label}
+            </a>
+          ))
+        }
+        {
+          PAGE_LINKS.map(({ href, label }) => (
+            <a
+              href={href}
+              class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             >
               {label}
             </a>
