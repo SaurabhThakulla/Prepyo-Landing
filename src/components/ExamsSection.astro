@@ -25,7 +25,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
     {/* Stacked Cards Container */}
     <div class="max-w-6xl xl:max-w-7xl mx-auto">
       {/* Stacked Cards */}
-      <div class="flex flex-col gap-6 lg:gap-8">
+      <div class="grid grid-cols-1 md:auto-rows-fr gap-6 lg:gap-8">
         {
           EXAMS.map((item, index) => {
             const isInitialActive = item.exam === DEFAULT_EXAM;
@@ -35,7 +35,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
               <div
                 data-exam-card={item.exam}
                 class:list={[
-                  'relative rounded-2xl lg:rounded-3xl transition-all duration-300',
+                  'relative rounded-2xl lg:rounded-3xl transition-all duration-300 h-full',
                   item.exam === 'JAPANESE'
                     ? 'cursor-default'
                     : isInitialActive
@@ -54,7 +54,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
                 )}
 
                 {/* Card Outer Shell with Rounded Corners and Subtle Border */}
-                <div class="rounded-2xl lg:rounded-3xl overflow-hidden bg-white dark:bg-[#0f172a] border border-blue-100/80 dark:border-slate-800 relative w-full">
+                <div class="rounded-2xl lg:rounded-3xl overflow-hidden bg-white dark:bg-[#0f172a] border border-blue-100/80 dark:border-slate-800 relative w-full h-full">
                   {/* Desktop Slanted Line SVG Background */}
                   {!isReverse ? (
                     // Left Brand: Clean slanted cut from top-left to bottom-right
