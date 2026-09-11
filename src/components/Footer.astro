@@ -7,6 +7,9 @@ import { appUrl, asset, BASE_PATH, homeSection } from "@/consts";
 const isHome = Astro.url.pathname === BASE_PATH;
 const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
 
+const isHome = Astro.url.pathname === BASE_PATH || Astro.url.pathname === '/';
+const sectionHref = (id: string) => (isHome ? `#${id}` : `${BASE_PATH}#${id}`);
+
 const EXPLORE_LINKS = [
   { href: sectionHref("products"), label: "Exams" },
   { href: sectionHref("features"), label: "Features" },

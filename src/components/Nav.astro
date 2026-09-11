@@ -9,11 +9,14 @@ import { appUrl, asset, BASE_PATH, homeSection, type ExamType } from '@/consts';
  * Every in-page link smooth-scrolls to its section; everything that needs an
  * account (login, sign up) leaves for the Next.js app.
  */
+const isHome = Astro.url.pathname === BASE_PATH || Astro.url.pathname === '/';
+
 const NAV_LINKS = [
-  { id: 'features', label: 'Features' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'how-it-works', label: 'How it works' },
-  { id: 'faq', label: 'FAQ' },
+  { id: 'features', label: 'Features', href: isHome ? '#features' : `${BASE_PATH}#features` },
+  { id: 'pricing', label: 'Pricing', href: isHome ? '#pricing' : `${BASE_PATH}#pricing` },
+  { id: 'how-it-works', label: 'How it works', href: isHome ? '#how-it-works' : `${BASE_PATH}#how-it-works` },
+  { id: 'faq', label: 'FAQ', href: isHome ? '#faq' : `${BASE_PATH}#faq` },
+  { id: 'careers', label: 'Careers', href: asset('/careers/') },
 ];
 
 // On the landing page these stay bare fragments so the smooth-scroll script can
@@ -201,7 +204,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
           Navigation
         </span>
         {
-          NAV_LINKS.map(({ id, label }) => (
+          NAV_LINKS.map(({ href, label }) => (
             <a
               href={sectionHref(id)}
               class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"

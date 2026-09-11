@@ -59,8 +59,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["'Libre Franklin'", "Inter", "system-ui", "sans-serif"],
         display: ["'Plus Jakarta Sans'", "Inter", "system-ui", "sans-serif"],
+        serif: ["'Instrument Serif'", "Georgia", "serif"],
+        mono: ["'JetBrains Mono'", "monospace"],
       },
       boxShadow: {
         card: "0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.03)",
