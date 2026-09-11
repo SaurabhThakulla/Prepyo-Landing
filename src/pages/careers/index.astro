@@ -1,231 +1,219 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Button from '@/components/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { breadcrumbs, jobPosting, organization, website } from '@/lib/schema';
+import { APPLICATION_STEPS, CAREERS_EMAIL, OPEN_ROLES, WORK_HIGHLIGHTS } from '@/data/careers';
+import { asset, BASE_PATH } from '@/consts';
+
+/**
+ * Careers.
+ *
+ * The listings come from OPEN_ROLES, which is empty until something is
+ * genuinely open — an advertised role nobody is hiring for wastes a
+ * candidate's afternoon and costs more trust than an empty page does. While it
+ * is empty the page makes the open-application case instead.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
 
 const title = 'Careers at Prepyo — Work on PTE & IELTS prep for Nepal';
 const description =
-  'Join the team building AI-powered PTE, IELTS and Japanese language test preparation for students in Nepal.';
+  'Open roles at Prepyo, and how to send an open application to the team building PTE, IELTS and Japanese language preparation for students in Nepal.';
 
-const CAREERS_EMAIL = 'careers@prepyo.np';
-
-interface Role {
-  id: string;
-  title: string;
-  role: string;
-  location: string;
-  type: string;
-  description: string;
-}
-
-const OPEN_ROLES: Role[] = [
-  {
-    id: 'fullstack-engineer',
-    title: 'Senior Full-Stack Product Engineer',
-    role: 'Engineering',
-    location: 'Remote',
-    type: 'Full-time',
-    description: 'Lead web platform architecture, interactive mock exam engines, and real-time student evaluation surfaces.',
-  },
-  {
-    id: 'fullstack-intern',
-    title: 'Full-Stack Developer Intern',
-    role: 'Engineering',
-    location: 'Remote',
-    type: 'Internship',
-    description: 'Work alongside senior engineers building web applications, student practice features, and responsive user interfaces.',
-  },
-  {
-    id: 'devops-intern',
-    title: 'DevOps Developer Intern',
-    role: 'DevOps',
-    location: 'Remote',
-    type: 'Internship',
-    description: 'Help manage CI/CD pipelines, containerized deployments, cloud hosting, and infrastructure monitoring.',
-  },
-  {
-    id: 'content-specialist',
-    title: 'PTE & IELTS Content Specialist',
-    role: 'Academics',
-    location: 'Kathmandu',
-    type: 'Full-time',
-    description: 'Curate official-grade test items, question explanations, and accurate rubrics aligned to Pearson and Cambridge.',
-  },
-  {
-    id: 'social-media-intern',
-    title: 'Social Media Handler Intern',
-    role: 'Social Media Handler',
-    location: 'Remote',
-    type: 'Internship',
-    description: 'Create engaging short-form video content, manage Instagram/TikTok/Facebook, and build community for students in Nepal.',
-  },
-  {
-    id: 'marketing-intern',
-    title: 'Marketing Intern',
-    role: 'Marketing',
-    location: 'Remote',
-    type: 'Internship',
-    description: 'Support growth campaigns, campus ambassador programs, and outreach for PTE and IELTS test candidates.',
-  },
+const schema = [
+  organization(site),
+  website(site),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Careers', item: url.href },
+  ]),
+  ...OPEN_ROLES.map(role => jobPosting(site, url, role)),
 ];
+
+const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open application')}`;
 ---
 
-<Layout title={title} description={description}>
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-16 sm:space-y-20">
-    {/* Header & About */}
-    <header class="text-center max-w-3xl mx-auto space-y-4">
-      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
-        Careers at Prepyo
+<Layout title={title} description={description} schema={schema}>
+  <article class="w-full space-y-4">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Careers' }]} />
+
+    <header class="pt-6 sm:pt-10 max-w-3xl">
+      <h1
+        class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1]"
+      >
+        Work at Prepyo
       </h1>
+      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
+        We build the practice that decides whether a student in Nepal gets the score their
+        application depends on. It is a small surface with a lot riding on it.
+      </p>
 
-      <div class="text-left pt-6 sm:pt-8 space-y-2.5">
-        <span class="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
-          About Prepyo
-        </span>
-        <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
-          Prepyo is an AI-powered test preparation platform that lets students in Nepal practice full-length PTE, IELTS and Japanese mock exams with instant 3-second scoring. We are a fast-moving, product-first team operating remotely with our primary base in Kathmandu, Nepal.
-        </p>
-      </div>
-
-      {/* Filter Controls (like Hevy) */}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6" data-filters>
-        <div>
-          <label for="filter-location" class="sr-only">Filter by location</label>
-          <select
-            id="filter-location"
-            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
-          >
-            <option value="all">All locations</option>
-            <option value="Remote">Remote</option>
-            <option value="Kathmandu">Kathmandu</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="filter-role" class="sr-only">Filter by role</label>
-          <select
-            id="filter-role"
-            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
-          >
-            <option value="all">All roles</option>
-            <option value="Engineering">Engineering</option>
-            <option value="DevOps">DevOps</option>
-            <option value="Social Media Handler">Social Media Handler</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Academics">Academics</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="filter-type" class="sr-only">Filter by contract type</label>
-          <select
-            id="filter-type"
-            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
-          >
-            <option value="all">All contract types</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Internship">Internship</option>
-          </select>
-        </div>
+      <div class="flex flex-col sm:flex-row gap-3 mt-7">
+        <Button
+          href={OPEN_ROLES.length > 0 ? '#open-roles' : mailto}
+          size="lg"
+          class="group rounded-full font-bold text-sm px-7 h-12 gap-2 shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
+        >
+          <span>{OPEN_ROLES.length > 0 ? 'See open roles' : 'Send an open application'}</span>
+          <Icon name="lucide:arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </Button>
       </div>
     </header>
 
-    {/* Jobs List Section */}
-    <section class="max-w-3xl mx-auto space-y-4">
-      <h2 class="font-display text-xl sm:text-2xl font-bold text-foreground">
-        Kathmandu & Remote
+    {/* Why here */}
+    <section class="py-10 sm:py-14 border-t border-border mt-6">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        What you would be joining
       </h2>
 
-      <div class="space-y-3" data-roles-list>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mt-6">
         {
-          OPEN_ROLES.map((role) => {
-            const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(`Application: ${role.title}`)}`;
-            return (
-              <div
-                class="group rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-xs hover:border-primary/40 hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                data-role-item
-                data-location={role.location}
-                data-role={role.role}
-                data-type={role.type}
-              >
-                <div class="space-y-1 sm:max-w-sm">
-                  <h3 class="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors">
-                    {role.title}
-                  </h3>
-                  <p class="text-xs text-muted-foreground leading-relaxed">
-                    {role.description}
-                  </p>
-                </div>
-
-                <div class="flex items-center gap-3 sm:gap-5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/60 justify-between sm:justify-end text-xs font-medium text-muted-foreground">
-                  <span class="sm:text-center">{role.role}</span>
-                  <span class="sm:text-center">{role.location}</span>
-                  <span class="sm:text-center text-primary/90 font-semibold">{role.type}</span>
-                  <a
-                    href={mailto}
-                    class="rounded-xl border border-border bg-card px-4 py-2 text-xs font-bold text-foreground hover:bg-primary hover:text-white hover:border-primary shadow-2xs transition-all shrink-0 ml-1"
-                  >
-                    Apply now
-                  </a>
-                </div>
+          WORK_HIGHLIGHTS.map(item => (
+            <div class="rounded-2xl border border-border bg-card p-5 sm:p-6">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Icon name={item.icon} class="w-5 h-5" />
               </div>
-            );
-          })
+              <h3 class="font-display font-bold text-sm text-foreground mt-4">{item.title}</h3>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
+            </div>
+          ))
         }
       </div>
+    </section>
 
-      <div id="no-roles" class="hidden rounded-2xl border border-dashed border-border bg-card/60 p-8 text-center space-y-2">
-        <p class="font-display font-bold text-sm text-foreground">No roles matching your filters</p>
-        <p class="text-xs text-muted-foreground">Try selecting different filter options or send an open application below.</p>
-      </div>
+    {/* Roles */}
+    <section id="open-roles" class="py-10 sm:py-14 border-t border-border">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        Open roles
+      </h2>
 
-      {/* Direct open application note */}
-      <div class="pt-4 text-center">
-        <p class="text-xs sm:text-sm text-muted-foreground">
-          Don't see your specific role? Send an open application with your portfolio or CV to{' '}
-          <a href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open Application')}`} class="text-primary font-semibold hover:underline">
-            {CAREERS_EMAIL}
-          </a>.
+      {
+        OPEN_ROLES.length === 0 ? (
+          <div class="rounded-2xl border border-dashed border-border bg-card/60 p-6 sm:p-8 mt-6 max-w-3xl">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-muted text-muted-foreground flex items-center justify-center shrink-0">
+                <Icon name="lucide:inbox" class="w-5 h-5" />
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-sm text-foreground">
+                  Nothing is open at the moment
+                </h3>
+                <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
+                  We would rather leave this page empty than advertise a role nobody is hiring for.
+                  Open applications are read, though, and we keep the good ones on file for when
+                  something does open.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <ul class="space-y-3 sm:space-y-4 mt-6">
+            {OPEN_ROLES.map(role => (
+              <li
+                id={role.id}
+                class="rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-primary/40 transition-colors scroll-mt-24"
+              >
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 class="font-display font-bold text-base text-foreground">{role.title}</h3>
+                    <p class="text-xs text-muted-foreground mt-1">
+                      {role.team} · {role.location} · {role.typeLabel}
+                    </p>
+                  </div>
+                  <Button
+                    href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(role.title)}`}
+                    size="sm"
+                    class="rounded-full font-bold text-xs px-5 h-9 shrink-0"
+                  >
+                    Apply
+                  </Button>
+                </div>
+
+                <p class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed">
+                  {role.description}
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                      What you would do
+                    </h4>
+                    <ul class="space-y-2 mt-3">
+                      {role.responsibilities.map(point => (
+                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
+                          </div>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                      What we are looking for
+                    </h4>
+                    <ul class="space-y-2 mt-3">
+                      {role.requirements.map(point => (
+                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
+                          </div>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+
+    {/* How to apply */}
+    <section class="py-10 sm:py-14 border-t border-border">
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 max-w-3xl">
+        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          How to apply
+        </h2>
+        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+          One email to{' '}
+          <a href={mailto} class="text-primary font-medium hover:underline">{CAREERS_EMAIL}</a>. No
+          form, no portal, no account to create.
         </p>
+
+        <ol class="space-y-3 mt-6">
+          {
+            APPLICATION_STEPS.map((step, index) => (
+              <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  {index + 1}
+                </span>
+                <span class="text-xs sm:text-sm text-muted-foreground leading-relaxed">{step}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="flex flex-wrap gap-3 mt-7">
+          <Button href={mailto} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+            Email us
+          </Button>
+          <Button
+            href={asset('/how-scoring-works/')}
+            variant="outline"
+            size="lg"
+            class="rounded-full font-bold text-sm px-7 h-12"
+          >
+            See how the product works
+          </Button>
+        </div>
       </div>
     </section>
-  </div>
+  </article>
 </Layout>
-
-<script>
-  // Live filtering matching Hevy's 3-dropdown system
-  const locationSelect = document.getElementById('filter-location') as HTMLSelectElement | null;
-  const roleSelect = document.getElementById('filter-role') as HTMLSelectElement | null;
-  const typeSelect = document.getElementById('filter-type') as HTMLSelectElement | null;
-  const roleItems = document.querySelectorAll<HTMLElement>('[data-role-item]');
-  const noRolesMsg = document.getElementById('no-roles');
-
-  function filterRoles() {
-    const loc = locationSelect?.value || 'all';
-    const role = roleSelect?.value || 'all';
-    const type = typeSelect?.value || 'all';
-
-    let visibleCount = 0;
-
-    roleItems.forEach((item) => {
-      const itemLoc = item.dataset.location || '';
-      const itemRole = item.dataset.role || '';
-      const itemType = item.dataset.type || '';
-
-      const matchLoc = loc === 'all' || itemLoc === loc;
-      const matchRole = role === 'all' || itemRole === role;
-      const matchType = type === 'all' || itemType === type;
-
-      const matches = matchLoc && matchRole && matchType;
-      item.classList.toggle('hidden', !matches);
-      if (matches) visibleCount++;
-    });
-
-    if (noRolesMsg) {
-      noRolesMsg.classList.toggle('hidden', visibleCount > 0);
-    }
-  }
-
-  locationSelect?.addEventListener('change', filterRoles);
-  roleSelect?.addEventListener('change', filterRoles);
-  typeSelect?.addEventListener('change', filterRoles);
-</script>

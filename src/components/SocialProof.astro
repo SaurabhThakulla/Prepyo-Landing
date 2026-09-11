@@ -1,0 +1,63 @@
+---
+import { Icon } from 'astro-icon/components';
+
+/**
+ * The trust row.
+ *
+ * Only two numbers are claimed here — the student count and the average rating
+ * — because those are the two Prepyo can actually stand behind. Invented
+ * improvement percentages are what this row exists instead of, and an
+ * aggregateRating in the structured data would need reviews Google can verify,
+ * so this stays visible text.
+ */
+interface Props {
+  /** Link to the methodology page, so a claim about scoring can be checked. */
+  methodologyHref: string;
+  class?: string;
+}
+
+const { methodologyHref, class: className } = Astro.props;
+
+const POINTS = [
+  {
+    icon: 'lucide:users',
+    value: '100+',
+    label: 'students preparing on Prepyo',
+  },
+  {
+    icon: 'lucide:star',
+    value: '4.6 / 5',
+    label: 'average rating from learners',
+  },
+  {
+    icon: 'lucide:wallet',
+    value: 'eSewa · Khalti',
+    label: 'pay in rupees, no dollar card',
+  },
+];
+---
+
+<section
+  class:list={['rounded-2xl border border-border bg-card/70 px-5 py-4 sm:px-6 sm:py-5 max-w-4xl mx-auto', className]}
+>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+    {
+      POINTS.map(({ icon, value, label }) => (
+        <div class="flex items-center gap-3 justify-start sm:justify-center">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <Icon name={icon} class="w-4 h-4" />
+          </div>
+          <div>
+            <div class="font-display font-bold text-sm text-foreground">{value}</div>
+            <div class="text-xs text-muted-foreground leading-snug">{label}</div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="text-xs text-muted-foreground mt-3.5 pt-3.5 border-t border-border/60 text-center">
+    Scores are estimates produced from the published marking criteria, not official results.{' '}
+    <a href={methodologyHref} class="text-primary font-medium hover:underline">Read how the scoring works</a>.
+  </p>
+</section>

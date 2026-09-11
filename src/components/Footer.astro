@@ -1,19 +1,30 @@
 ---
 import { Icon } from "astro-icon/components";
-import { appUrl, asset, BASE_PATH } from "@/consts";
+import { appUrl, asset, BASE_PATH, homeSection } from "@/consts";
+
+// Bare fragments on the landing page so the smooth-scroll script claims them,
+// full paths everywhere else so they lead back to the right page first.
+const isHome = Astro.url.pathname === BASE_PATH;
+const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
 
 const isHome = Astro.url.pathname === BASE_PATH || Astro.url.pathname === '/';
 const sectionHref = (id: string) => (isHome ? `#${id}` : `${BASE_PATH}#${id}`);
 
 const EXPLORE_LINKS = [
-  { href: sectionHref('products'), label: 'Exams' },
-  { href: sectionHref('features'), label: 'Features' },
-  { href: sectionHref('pricing'), label: 'Pricing' },
-  { href: sectionHref('how-it-works'), label: 'How it works' },
-  { href: asset('/careers/'), label: 'Careers' },
+  { href: sectionHref("products"), label: "Exams" },
+  { href: sectionHref("features"), label: "Features" },
+  { href: sectionHref("pricing"), label: "Pricing" },
+  { href: sectionHref("how-it-works"), label: "How it works" },
+  { href: sectionHref("faq"), label: "FAQ" },
+  { href: asset("/careers/"), label: "Careers" },
 ];
 
-const PLATFORM_LINKS = [{ href: sectionHref('faq'), label: 'FAQ' }];
+// Real pages rather than sections — the ones search results should land on.
+const GUIDE_LINKS = [
+  { href: asset("/pte-academic-preparation/"), label: "PTE Academic prep" },
+  { href: asset("/ielts-academic-preparation/"), label: "IELTS Academic prep" },
+  { href: asset("/how-scoring-works/"), label: "How scoring works" },
+];
 
 const year = new Date().getFullYear();
 ---
@@ -46,7 +57,7 @@ const year = new Date().getFullYear();
           />
         </a>
         <p class="text-xs text-muted-foreground leading-relaxed">
-          AI-powered PTE, IELTS and Japanese language practice, built for Nepali
+          PTE, IELTS and Japanese language practice, built for Nepali
           students.
         </p>
         <div
@@ -81,11 +92,11 @@ const year = new Date().getFullYear();
       {/* Platform and community */}
       <div class="space-y-2.5">
         <h4 class="text-xs font-bold uppercase tracking-wider text-foreground">
-          Platform
+          Guides
         </h4>
         <ul class="space-y-1.5 text-xs text-muted-foreground">
           {
-            PLATFORM_LINKS.map(({ href, label }) => (
+            GUIDE_LINKS.map(({ href, label }) => (
               <li>
                 <a href={href} class="hover:text-primary transition-colors">
                   {label}

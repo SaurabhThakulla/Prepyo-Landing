@@ -1,29 +1,14 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { FAQS, type Faq } from '@/data/faq';
 
-const FAQS = [
-  {
-    question: 'How accurate is the AI score?',
-    answer:
-      'Prepyo marks your work against the official PTE and IELTS band descriptors — the same checklist an examiner uses. Treat it as a close estimate to study against, not a guaranteed exam score.',
-  },
-  {
-    question: 'How do I pay from Nepal?',
-    answer: 'In rupees, with eSewa, Khalti, Fonepay QR or mobile banking. No dollar card needed.',
-  },
-  {
-    question: 'Can I practise both PTE and IELTS?',
-    answer: 'Yes. Switch between them any time. Your progress and mistakes are saved separately for each.',
-  },
-  {
-    question: 'What do I get for free?',
-    answer: 'One full mock test, five practice sub-tests a day across every skill, your mistake bank and your progress. Upgrade when you need more.',
-  },
-  {
-    question: 'Do you work with consultancies and institutes?',
-    answer: 'Yes. Run your whole batch on Prepyo and track their results in one place. Email institutes@prepyo.np.',
-  },
-];
+interface Props {
+  /** Defaults to the landing page set; exam pages pass their own. */
+  faqs?: Faq[];
+  title?: string;
+}
+
+const { faqs = FAQS, title = 'Frequently asked questions' } = Astro.props;
 
 // The first answer is open on arrival so the section never reads as a wall of
 // closed rows.
@@ -35,13 +20,13 @@ const DEFAULT_OPEN = 0;
       section on the page. */}
   <div class="text-center space-y-3 mb-10 sm:mb-14 max-w-3xl mx-auto">
     <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight text-balance px-2">
-      Frequently asked questions
+      {title}
     </h2>
   </div>
 
   <div class="max-w-4xl lg:max-w-5xl mx-auto space-y-3 sm:space-y-4">
     {
-      FAQS.map((faq, idx) => {
+      faqs.map((faq, idx) => {
         const isOpen = idx === DEFAULT_OPEN;
 
         return (
