@@ -1,0 +1,98 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle, { type ExamPageData } from '@/components/ExamArticle.astro';
+
+const IELTS_PAGE: ExamPageData = {
+  slug: '/ielts-academic-preparation/',
+  exam: 'IELTS',
+  name: 'IELTS Academic',
+  courseName: 'IELTS Academic Preparation',
+  title: 'IELTS Academic Preparation in Nepal — Mocks & Band Feedback | Prepyo',
+  metaDescription:
+    'Prepare for IELTS Academic from Nepal with full-length mock tests, Writing and Speaking feedback against the official band descriptors, and a free diagnostic.',
+  h1: 'IELTS Academic preparation, built for students in Nepal',
+  standfirst:
+    'Four skills, nine bands, and public descriptors that say exactly what separates a 6.5 from an 8.0. Practise against them.',
+  intro: [
+    'IELTS Academic is the most widely accepted English test for universities and visas worldwide, and the one most Nepali students meet first. It is marked in bands from 0 to 9, in half-band steps, across Listening, Reading, Writing and Speaking.',
+    'Its great advantage for anyone studying alone is that the marking is public. IELTS publishes the band descriptors examiners work from — four criteria for Writing, four for Speaking — so the difference between the band you have and the band you want is written down.',
+    'Most candidates never read them. Prepyo marks your work against those same criteria and shows which one is holding your band down, because "write better essays" is not a study plan and "your coherence is a band below your vocabulary" is.',
+  ],
+  format: [
+    { label: 'Delivery', value: 'On paper or on a computer, at a test centre' },
+    { label: 'Listening', value: '30 minutes, four recorded parts' },
+    { label: 'Reading', value: '60 minutes, three long passages' },
+    { label: 'Writing', value: '60 minutes — Task 1 and Task 2' },
+    { label: 'Speaking', value: '11–14 minutes with an examiner' },
+    { label: 'Score range', value: 'Bands 0–9, in half bands' },
+  ],
+  scoring: [
+    'Writing is marked on four equally weighted criteria: Task Achievement or Task Response, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy. Speaking uses four of its own: Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation.',
+    'Because the four are averaged, one weak criterion caps the whole skill. A candidate with strong vocabulary and disorganised paragraphs can land on the same band as one with plain vocabulary and a clear structure — and only one of those two problems takes a weekend to fix.',
+    'Task 2 carries twice the weight of Task 1 in the Writing band, which is the single most useful thing to know before deciding where to spend your practice time.',
+  ],
+  taskTypes: [
+    { name: 'Writing Task 1', blurb: 'Describe a chart, map or process in at least 150 words. Selecting and grouping the data is what is being marked.' },
+    { name: 'Writing Task 2', blurb: 'A 250-word essay carrying twice the marks of Task 1. Position, development and structure decide the band.' },
+    { name: 'Speaking Parts 1–3', blurb: 'Introduction, a two-minute long turn from a cue card, then abstract discussion. Fluency is scored across all three.' },
+    { name: 'True / False / Not Given', blurb: 'The reading question type that costs the most marks, almost always for confusing False with Not Given.' },
+    { name: 'Matching Headings', blurb: 'Tests whether you can find a paragraph’s main idea rather than a matching word.' },
+    { name: 'Sentence & summary completion', blurb: 'Word limits are strict and spelling counts, in both Reading and Listening.' },
+    { name: 'Multiple choice', blurb: 'Appears in both Reading and Listening, and rewards eliminating distractors over hunting for keywords.' },
+    { name: 'Map and diagram labelling', blurb: 'A Listening task where losing your place costs several marks at once.' },
+  ],
+  prepBlocks: [
+    {
+      title: 'Feedback against the band descriptors',
+      body: 'Your essay comes back marked on all four Writing criteria, with the sentences responsible for each one highlighted, so you can see which criterion is capping your band.',
+      icon: 'lucide:clipboard-check',
+    },
+    {
+      title: 'Speaking practice you can hear back',
+      body: 'Answer Part 2 cue cards under the real timing, then review your own recording with pace, pauses and per-word pronunciation marked.',
+      icon: 'lucide:mic',
+    },
+    {
+      title: 'Full-length mock tests',
+      body: 'All four skills in one sitting, under exam timing, with a band estimate per skill and every question you lost marks on kept for review.',
+      icon: 'lucide:play-circle',
+    },
+    {
+      title: 'Sentence-level rewrites',
+      body: 'See a stronger version of your own sentence alongside what you wrote, with the grammar or cohesion reason for the change spelled out.',
+      icon: 'lucide:pen-tool',
+    },
+  ],
+  faqs: [
+    {
+      question: 'What is a good IELTS band for universities abroad?',
+      answer:
+        'Most undergraduate and postgraduate courses ask for an overall 6.0 to 7.0 with a minimum in each skill, and competitive programmes ask for more. Check the requirement for your specific course and country — the per-skill minimum is what usually catches applicants out.',
+    },
+    {
+      question: 'Should I take IELTS on paper or on a computer?',
+      answer:
+        'The test content and the band scale are identical. Computer-delivered sittings are offered more often and results come back sooner; paper suits candidates who prefer to annotate the reading passages by hand.',
+    },
+    {
+      question: 'How is IELTS Writing actually marked?',
+      answer:
+        'On four equally weighted criteria — Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy — which are averaged into the Writing band. Task 2 carries twice the weight of Task 1.',
+    },
+    {
+      question: 'Does Prepyo cover IELTS General Training?',
+      answer:
+        'Prepyo’s IELTS track covers IELTS Academic. Listening and Speaking are shared with General Training, so that practice transfers, but the Reading and Writing Task 1 material is Academic.',
+    },
+  ],
+  sibling: {
+    label: 'PTE Academic preparation',
+    href: '/pte-academic-preparation/',
+    blurb: 'Comparing the two? Read how PTE Academic is structured and scored.',
+  },
+};
+---
+
+<Layout title={IELTS_PAGE.title} description={IELTS_PAGE.metaDescription} fullWidth={true}>
+  <ExamArticle page={IELTS_PAGE} />
+</Layout>

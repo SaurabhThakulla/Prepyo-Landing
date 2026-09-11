@@ -1,0 +1,103 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle, { type ExamPageData } from '@/components/ExamArticle.astro';
+
+const PTE_PAGE: ExamPageData = {
+  slug: '/pte-academic-preparation/',
+  exam: 'PTE',
+  name: 'PTE Academic',
+  courseName: 'PTE Academic Preparation',
+  title: 'PTE Academic Preparation in Nepal — Realistic AI Mocks | Prepyo',
+  metaDescription:
+    'Practise PTE Academic from Nepal with full-length mock tests, Pearson-aligned AI scoring, instant pronunciation feedback, and a free diagnostic.',
+  h1: 'PTE Academic preparation, built for students in Nepal',
+  standfirst:
+    'Every task type, the real timings, and a score breakdown that tells you which part of the test is costing you points.',
+  intro: [
+    'PTE Academic is taken on a computer and marked by automated scoring, which is why results usually reach you within 48 hours. It is accepted for study and visa applications in Australia, New Zealand, the UK and Canada.',
+    'The scoring is also what makes it hard to prepare for on paper. Your speaking score depends on things a notebook cannot show you — how fluently you spoke, how clearly you pronounced each word, whether you hesitated. You need to hear the recording back and see where the marks went.',
+    'That is the gap Prepyo fills: you practise the actual task, you get the breakdown straight away, and the tasks you keep losing marks on come back until they stop being weak spots.',
+  ],
+  format: [
+    { label: 'Format', value: '100% computer-delivered' },
+    { label: 'Speaking & Writing', value: '54–67 minutes, 7 task types' },
+    { label: 'Reading', value: '29–30 minutes, 5 task types' },
+    { label: 'Listening', value: '30–43 minutes, 8 task types' },
+    { label: 'Score range', value: '10–90 per skill and overall' },
+    { label: 'Results turnaround', value: 'Typically within 48 hours' },
+  ],
+  scoring: [
+    'PTE uses automated scoring aligned to Pearson’s own models. Every response is assessed against enabling skills — oral fluency and pronunciation in Speaking, grammar, spelling, vocabulary and written discourse in Writing — rather than a single subjective impression.',
+    'Because skills cross over, one weak area hurts multiple sections. A Speaking answer can contribute to your Listening score; a Reading task can move your Writing total. Practising whole sections rather than isolated tasks is the only way to catch where the leakage is happening.',
+    'Prepyo scores your mocks on those same enabling skills, so your score report does not just tell you that you missed 79 — it tells you that pronunciation in Read Aloud cost you 6 marks and pause duration in Repeat Sentence cost you 4.',
+  ],
+  taskTypes: [
+    { name: 'Read Aloud', blurb: 'Read a short passage out loud under exam timing. Fluency and per-word pronunciation are scored.' },
+    { name: 'Repeat Sentence', blurb: 'Listen once and repeat the sentence exactly. The single most heavily weighted speaking task.' },
+    { name: 'Describe Image', blurb: 'Organise and describe a graph, map or chart in 40 seconds. Structure and pace decide the score.' },
+    { name: 'Re-tell Lecture', blurb: 'Summarise an academic lecture after listening once. Content points and oral fluency matter equally.' },
+    { name: 'Summarize Written Text', blurb: 'Condense a multi-paragraph text into a single sentence between 5 and 75 words.' },
+    { name: 'Write Essay', blurb: 'A 20-minute, 200–300 word argumentative essay scored on structure, vocabulary, grammar and spelling.' },
+    { name: 'Fill in the Blanks', blurb: 'Drag-and-drop and dropdown reading blanks that reward collocation knowledge over guessing.' },
+    { name: 'Write from Dictation', blurb: 'Listen to a short sentence and type it accurately. Every correct word counts towards Listening and Writing.' },
+  ],
+  prepBlocks: [
+    {
+      title: 'Scoring in 3 seconds, not next week',
+      body: 'Finish a mock test or a single speaking task and your score report is ready before you take your headphones off.',
+      icon: 'lucide:zap',
+    },
+    {
+      title: 'Pronunciation broken down word by word',
+      body: 'Listen to your own recording with every word highlighted: green where the model was confident, amber where you hesitated, red where the sound was dropped.',
+      icon: 'lucide:mic',
+    },
+    {
+      title: 'Full-length mock exams under real timings',
+      body: 'Sit the whole two-hour test in one sitting, under the same interface and the same countdown clock you will see on test day.',
+      icon: 'lucide:play-circle',
+    },
+    {
+      title: 'Feedback against the real rubrics',
+      body: 'Writing tasks come back with grammar errors flagged and a vocabulary score that tells you whether your word choice was too plain or too ambitious.',
+      icon: 'lucide:clipboard-check',
+    },
+    {
+      title: 'A mistake bank that brings tasks back',
+      body: 'Every question you get wrong is kept and returned to you later, so weak task types get more of your time and the ones you have mastered get less.',
+      icon: 'lucide:book-marked',
+    },
+  ],
+  faqs: [
+    {
+      question: 'How long does PTE Academic preparation usually take?',
+      answer:
+        'It depends on where your English sits now and how far that is from your target. Start with a diagnostic so you are working from your real baseline rather than a guess, then give the weakest skill the largest share of your practice time.',
+    },
+    {
+      question: 'Will my Nepali accent lower my PTE speaking score?',
+      answer:
+        'PTE scores intelligibility, not accent. What costs marks is unclear individual sounds, hesitation and uneven pace — all of which show up in a word-by-word pronunciation breakdown, and all of which are fixable with practice.',
+    },
+    {
+      question: 'Is PTE easier than IELTS?',
+      answer:
+        'Neither is easier — they are different. PTE is entirely computer-marked and returns results faster; IELTS has a speaking test with a human examiner. Choose on which format suits you and what your university or visa route accepts.',
+    },
+    {
+      question: 'Can I practise PTE for free on Prepyo?',
+      answer:
+        'Yes. The free plan includes one full mock test, five practice sub-tests a day across every skill, your mistake bank and your progress.',
+    },
+  ],
+  sibling: {
+    label: 'IELTS Academic preparation',
+    href: '/ielts-academic-preparation/',
+    blurb: 'Still deciding between the two? Read what IELTS Academic asks for and how it is scored.',
+  },
+};
+---
+
+<Layout title={PTE_PAGE.title} description={PTE_PAGE.metaDescription} fullWidth={true}>
+  <ExamArticle page={PTE_PAGE} />
+</Layout>

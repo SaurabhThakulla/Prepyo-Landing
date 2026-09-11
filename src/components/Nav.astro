@@ -9,17 +9,20 @@ import { appUrl, asset, BASE_PATH, type ExamType } from '@/consts';
  * Every in-page link smooth-scrolls to its section; everything that needs an
  * account (login, sign up) leaves for the Next.js app.
  */
+const isHome = Astro.url.pathname === BASE_PATH || Astro.url.pathname === '/';
+
 const NAV_LINKS = [
-  { id: 'features', label: 'Features' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'how-it-works', label: 'How it works' },
-  { id: 'faq', label: 'FAQ' },
+  { id: 'features', label: 'Features', href: isHome ? '#features' : `${BASE_PATH}#features` },
+  { id: 'pricing', label: 'Pricing', href: isHome ? '#pricing' : `${BASE_PATH}#pricing` },
+  { id: 'how-it-works', label: 'How it works', href: isHome ? '#how-it-works' : `${BASE_PATH}#how-it-works` },
+  { id: 'faq', label: 'FAQ', href: isHome ? '#faq' : `${BASE_PATH}#faq` },
+  { id: 'careers', label: 'Careers', href: asset('/careers/') },
 ];
 
-const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string }[] = [
-  { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary' },
-  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400' },
-  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400' },
+const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
+  { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary', href: asset('/pte-academic-preparation/') },
+  { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', href: asset('/ielts-academic-preparation/') },
+  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: isHome ? '#products' : `${BASE_PATH}#products` },
 ];
 
 // PTE is the default, so it is rendered pre-selected and the script only has to
@@ -74,9 +77,9 @@ const DEFAULT_EXAM: ExamType = 'PTE';
             data-products-panel
           >
             {
-              EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
+              EXAM_OPTIONS.map(({ exam, label, target, targetClass, href }) => (
                 <a
-                  href="#products"
+                  href={href}
                   data-exam-option={exam}
                   class:list={[
                     'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer hover:bg-accent hover:text-accent-foreground',
@@ -92,8 +95,8 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         </div>
 
         {
-          NAV_LINKS.map(({ id, label }) => (
-            <a href={`#${id}`} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
+          NAV_LINKS.map(({ href, label }) => (
+            <a href={href} class="hover:text-foreground transition-colors cursor-pointer text-xs xl:text-sm">
               {label}
             </a>
           ))
@@ -159,9 +162,9 @@ const DEFAULT_EXAM: ExamType = 'PTE';
         Select Exam
       </span>
       {
-        EXAM_OPTIONS.map(({ exam, label, target, targetClass }) => (
+        EXAM_OPTIONS.map(({ exam, label, target, targetClass, href }) => (
           <a
-            href="#products"
+            href={href}
             data-exam-option={exam}
             class:list={[
               'w-full p-2.5 rounded-xl text-xs font-bold flex items-center justify-between transition-colors hover:bg-accent hover:text-accent-foreground',
@@ -179,9 +182,9 @@ const DEFAULT_EXAM: ExamType = 'PTE';
           Navigation
         </span>
         {
-          NAV_LINKS.map(({ id, label }) => (
+          NAV_LINKS.map(({ href, label }) => (
             <a
-              href={`#${id}`}
+              href={href}
               class="block p-2.5 rounded-xl text-xs font-bold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
             >
               {label}
@@ -264,8 +267,12 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
   examOptions.forEach(option => {
     option.addEventListener('click', event => {
-      event.preventDefault();
       setActiveExam(option.dataset.examOption as ExamType);
+
+      // Links with real page URLs navigate normally; in-page anchors scroll
+      if (!option.getAttribute('href')!.startsWith('#')) return;
+
+      event.preventDefault();
       setProductsOpen(false);
       setMobileOpen(false);
       scrollToSection('products');

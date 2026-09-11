@@ -7,9 +7,10 @@ import { asset } from '@/consts';
 interface Props {
   title: string;
   description: string;
+  fullWidth?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, fullWidth = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 ---
 
@@ -34,7 +35,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Libre+Franklin:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -54,9 +55,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
       {/* 80vw is a comfortable reading width on a laptop but wastes a third
           of a phone screen, so it only kicks in from lg up — and it is capped
           again on ultra-wide displays where 80vw stops being readable. */}
-      <main class="flex-1 w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <slot />
-      </main>
+      {
+        fullWidth ? (
+          <main class="flex-1 w-full">
+            <slot />
+          </main>
+        ) : (
+          <main class="flex-1 w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <slot />
+          </main>
+        )
+      }
       <Footer />
     </div>
   </body>

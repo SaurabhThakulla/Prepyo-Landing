@@ -2,14 +2,18 @@
 import { Icon } from "astro-icon/components";
 import { appUrl, asset, BASE_PATH } from "@/consts";
 
+const isHome = Astro.url.pathname === BASE_PATH || Astro.url.pathname === '/';
+const sectionHref = (id: string) => (isHome ? `#${id}` : `${BASE_PATH}#${id}`);
+
 const EXPLORE_LINKS = [
-  { id: "products", label: "Exams" },
-  { id: "features", label: "Features" },
-  { id: "pricing", label: "Pricing" },
-  { id: "how-it-works", label: "How it works" },
+  { href: sectionHref('products'), label: 'Exams' },
+  { href: sectionHref('features'), label: 'Features' },
+  { href: sectionHref('pricing'), label: 'Pricing' },
+  { href: sectionHref('how-it-works'), label: 'How it works' },
+  { href: asset('/careers/'), label: 'Careers' },
 ];
 
-const PLATFORM_LINKS = [{ id: "faq", label: "FAQ" }];
+const PLATFORM_LINKS = [{ href: sectionHref('faq'), label: 'FAQ' }];
 
 const year = new Date().getFullYear();
 ---
@@ -63,9 +67,9 @@ const year = new Date().getFullYear();
         </h4>
         <ul class="space-y-1.5 text-xs text-muted-foreground">
           {
-            EXPLORE_LINKS.map(({ id, label }) => (
+            EXPLORE_LINKS.map(({ href, label }) => (
               <li>
-                <a href={`#${id}`} class="hover:text-primary transition-colors">
+                <a href={href} class="hover:text-primary transition-colors">
                   {label}
                 </a>
               </li>
@@ -81,9 +85,9 @@ const year = new Date().getFullYear();
         </h4>
         <ul class="space-y-1.5 text-xs text-muted-foreground">
           {
-            PLATFORM_LINKS.map(({ id, label }) => (
+            PLATFORM_LINKS.map(({ href, label }) => (
               <li>
-                <a href={`#${id}`} class="hover:text-primary transition-colors">
+                <a href={href} class="hover:text-primary transition-colors">
                   {label}
                 </a>
               </li>

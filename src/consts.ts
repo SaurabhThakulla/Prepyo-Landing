@@ -35,3 +35,8 @@ export function asset(path: string): string {
 
 export type ExamType = 'PTE' | 'IELTS' | 'JAPANESE';
 
+/** Resolves a landing-page section hash across pages. */
+export function homeSection(id: string): string {
+  return `${BASE_PATH}#${id.replace(/^#/, '')}`;
+}
+

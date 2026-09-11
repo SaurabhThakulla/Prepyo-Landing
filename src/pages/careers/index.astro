@@ -1,0 +1,231 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+const title = 'Careers at Prepyo — Work on PTE & IELTS prep for Nepal';
+const description =
+  'Join the team building AI-powered PTE, IELTS and Japanese language test preparation for students in Nepal.';
+
+const CAREERS_EMAIL = 'careers@prepyo.np';
+
+interface Role {
+  id: string;
+  title: string;
+  role: string;
+  location: string;
+  type: string;
+  description: string;
+}
+
+const OPEN_ROLES: Role[] = [
+  {
+    id: 'fullstack-engineer',
+    title: 'Senior Full-Stack Product Engineer',
+    role: 'Engineering',
+    location: 'Remote',
+    type: 'Full-time',
+    description: 'Lead web platform architecture, interactive mock exam engines, and real-time student evaluation surfaces.',
+  },
+  {
+    id: 'fullstack-intern',
+    title: 'Full-Stack Developer Intern',
+    role: 'Engineering',
+    location: 'Remote',
+    type: 'Internship',
+    description: 'Work alongside senior engineers building web applications, student practice features, and responsive user interfaces.',
+  },
+  {
+    id: 'devops-intern',
+    title: 'DevOps Developer Intern',
+    role: 'DevOps',
+    location: 'Remote',
+    type: 'Internship',
+    description: 'Help manage CI/CD pipelines, containerized deployments, cloud hosting, and infrastructure monitoring.',
+  },
+  {
+    id: 'content-specialist',
+    title: 'PTE & IELTS Content Specialist',
+    role: 'Academics',
+    location: 'Kathmandu',
+    type: 'Full-time',
+    description: 'Curate official-grade test items, question explanations, and accurate rubrics aligned to Pearson and Cambridge.',
+  },
+  {
+    id: 'social-media-intern',
+    title: 'Social Media Handler Intern',
+    role: 'Social Media Handler',
+    location: 'Remote',
+    type: 'Internship',
+    description: 'Create engaging short-form video content, manage Instagram/TikTok/Facebook, and build community for students in Nepal.',
+  },
+  {
+    id: 'marketing-intern',
+    title: 'Marketing Intern',
+    role: 'Marketing',
+    location: 'Remote',
+    type: 'Internship',
+    description: 'Support growth campaigns, campus ambassador programs, and outreach for PTE and IELTS test candidates.',
+  },
+];
+---
+
+<Layout title={title} description={description}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-16 sm:space-y-20">
+    {/* Header & About */}
+    <header class="text-center max-w-3xl mx-auto space-y-4">
+      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
+        Careers at Prepyo
+      </h1>
+
+      <div class="text-left pt-6 sm:pt-8 space-y-2.5">
+        <span class="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+          About Prepyo
+        </span>
+        <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
+          Prepyo is an AI-powered test preparation platform that lets students in Nepal practice full-length PTE, IELTS and Japanese mock exams with instant 3-second scoring. We are a fast-moving, product-first team operating remotely with our primary base in Kathmandu, Nepal.
+        </p>
+      </div>
+
+      {/* Filter Controls (like Hevy) */}
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6" data-filters>
+        <div>
+          <label for="filter-location" class="sr-only">Filter by location</label>
+          <select
+            id="filter-location"
+            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
+          >
+            <option value="all">All locations</option>
+            <option value="Remote">Remote</option>
+            <option value="Kathmandu">Kathmandu</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filter-role" class="sr-only">Filter by role</label>
+          <select
+            id="filter-role"
+            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
+          >
+            <option value="all">All roles</option>
+            <option value="Engineering">Engineering</option>
+            <option value="DevOps">DevOps</option>
+            <option value="Social Media Handler">Social Media Handler</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Academics">Academics</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filter-type" class="sr-only">Filter by contract type</label>
+          <select
+            id="filter-type"
+            class="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-xs sm:text-sm font-medium text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/20 shadow-xs cursor-pointer"
+          >
+            <option value="all">All contract types</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    {/* Jobs List Section */}
+    <section class="max-w-3xl mx-auto space-y-4">
+      <h2 class="font-display text-xl sm:text-2xl font-bold text-foreground">
+        Kathmandu & Remote
+      </h2>
+
+      <div class="space-y-3" data-roles-list>
+        {
+          OPEN_ROLES.map((role) => {
+            const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(`Application: ${role.title}`)}`;
+            return (
+              <div
+                class="group rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-xs hover:border-primary/40 hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                data-role-item
+                data-location={role.location}
+                data-role={role.role}
+                data-type={role.type}
+              >
+                <div class="space-y-1 sm:max-w-sm">
+                  <h3 class="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                    {role.title}
+                  </h3>
+                  <p class="text-xs text-muted-foreground leading-relaxed">
+                    {role.description}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-3 sm:gap-5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/60 justify-between sm:justify-end text-xs font-medium text-muted-foreground">
+                  <span class="sm:text-center">{role.role}</span>
+                  <span class="sm:text-center">{role.location}</span>
+                  <span class="sm:text-center text-primary/90 font-semibold">{role.type}</span>
+                  <a
+                    href={mailto}
+                    class="rounded-xl border border-border bg-card px-4 py-2 text-xs font-bold text-foreground hover:bg-primary hover:text-white hover:border-primary shadow-2xs transition-all shrink-0 ml-1"
+                  >
+                    Apply now
+                  </a>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+
+      <div id="no-roles" class="hidden rounded-2xl border border-dashed border-border bg-card/60 p-8 text-center space-y-2">
+        <p class="font-display font-bold text-sm text-foreground">No roles matching your filters</p>
+        <p class="text-xs text-muted-foreground">Try selecting different filter options or send an open application below.</p>
+      </div>
+
+      {/* Direct open application note */}
+      <div class="pt-4 text-center">
+        <p class="text-xs sm:text-sm text-muted-foreground">
+          Don't see your specific role? Send an open application with your portfolio or CV to{' '}
+          <a href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open Application')}`} class="text-primary font-semibold hover:underline">
+            {CAREERS_EMAIL}
+          </a>.
+        </p>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // Live filtering matching Hevy's 3-dropdown system
+  const locationSelect = document.getElementById('filter-location') as HTMLSelectElement | null;
+  const roleSelect = document.getElementById('filter-role') as HTMLSelectElement | null;
+  const typeSelect = document.getElementById('filter-type') as HTMLSelectElement | null;
+  const roleItems = document.querySelectorAll<HTMLElement>('[data-role-item]');
+  const noRolesMsg = document.getElementById('no-roles');
+
+  function filterRoles() {
+    const loc = locationSelect?.value || 'all';
+    const role = roleSelect?.value || 'all';
+    const type = typeSelect?.value || 'all';
+
+    let visibleCount = 0;
+
+    roleItems.forEach((item) => {
+      const itemLoc = item.dataset.location || '';
+      const itemRole = item.dataset.role || '';
+      const itemType = item.dataset.type || '';
+
+      const matchLoc = loc === 'all' || itemLoc === loc;
+      const matchRole = role === 'all' || itemRole === role;
+      const matchType = type === 'all' || itemType === type;
+
+      const matches = matchLoc && matchRole && matchType;
+      item.classList.toggle('hidden', !matches);
+      if (matches) visibleCount++;
+    });
+
+    if (noRolesMsg) {
+      noRolesMsg.classList.toggle('hidden', visibleCount > 0);
+    }
+  }
+
+  locationSelect?.addEventListener('change', filterRoles);
+  roleSelect?.addEventListener('change', filterRoles);
+  typeSelect?.addEventListener('change', filterRoles);
+</script>
