@@ -19,7 +19,7 @@ export const FAQS: Faq[] = [
   },
   {
     question: 'How do I pay from Nepal?',
-    answer: 'In rupees, with eSewa, Khalti, Fonepay QR or mobile banking. No dollar card needed.',
+    answer: 'We support the payment methods businesses in Nepal already use day to day. Since auto-recurring billing isnt yet reliable here, payments are confirmed manually by our team after each cycle.',
   },
   {
     question: 'Can I practise both PTE and IELTS?',
