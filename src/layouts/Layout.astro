@@ -14,12 +14,15 @@ interface Props {
   /** Overrides the default social card. Site-relative, e.g. `/images/x.jpg`. */
   ogImage?: string;
   ogImageAlt?: string;
+  /** Drops the centred reading-width container so the page can span the viewport. */
+  fullWidth?: boolean;
 }
 
 const {
   title,
   description,
   schema,
+  fullWidth = false,
   ogImage = '/images/og-cover.jpg',
   ogImageAlt = 'Prepyo — full-length PTE and IELTS mock exams for students in Nepal',
 } = Astro.props;
