@@ -86,7 +86,7 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
  * lifetime, paid allowances reset each calendar month.
  */
 export const FEATURES = [
-  { label: "Practice sub-tests per day", values: ["5", "40", "50", "60"] },
+  { label: "Practice sub-tests per day", values: ["Limited", "High", "Extended", "Extented++"] },
   {
     label: "Full mock exams",
     values: ["1 lifetime", "2", "5 / calendar month", "10 / calendar month"],
