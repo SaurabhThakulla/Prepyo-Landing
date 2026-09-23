@@ -47,7 +47,6 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Abhyas",
     gloss: "Practice",
     priceNPR: 99,
-    originalPriceNPR: 199,
     subtitle: "One-time · 7 days",
     popular: false,
     cta: "Get Started",
@@ -57,9 +56,8 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Taiyari",
     gloss: "Preparation",
     priceNPR: 299,
-    originalPriceNPR: 599,
     subtitle: "One-time · 33 days",
-    popular: false,
+    popular: true,
     cta: "Get Started",
   },
   {
@@ -67,8 +65,7 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
     name: "Udaan",
     gloss: "Take-off",
     priceNPR: 999,
-    originalPriceNPR: 1999,
-    subtitle: "One-time · 97 days",
+    subtitle: "One-time · 33 days",
     popular: false,
     cta: "Get Started",
   },
@@ -77,25 +74,29 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
 /**
  * Values are positional: index 0 is Suru, 3 is Udaan.
  *
- * Every number here is what the backend enforces, not an aspiration. The
- * previous table advertised Pro at 30 evaluations and 5 mocks against an
- * enforced 15 and 3, because a migration changed the quotas and left the
- * marketing copy behind.
- *
+ * Every number here is what the backend enforces, matching the subscription comparison table.
  * Mock periods are stated because the two models differ: the free mock is
  * lifetime, paid allowances reset each calendar month.
  */
-export const FEATURES = [
-  { label: "Practice sub-tests per day", values: ["Limited", "High", "Extended", "Extented++"] },
+export const FEATURES: { label: string; values: (string | boolean)[] }[] = [
+  { label: "Practice sub-tests per day", values: ["5", "40", "50", "Unlimited"] },
+  {
+    label: "Section mock tests",
+    values: [false, "10 / week", "20 / calendar month", "Unlimited"],
+  },
   {
     label: "Full mock exams",
-    values: ["1 lifetime", "2", "5 / calendar month", "10 / calendar month"],
+    values: ["1 lifetime", "2", "5 / calendar month", "Unlimited"],
+  },
+  {
+    label: "AI tutor messages",
+    values: ["10 / day", "100 / day", "100 / day", "Unlimited"],
   },
   { label: "Sentence-level rewrites", values: [false, true, true, true] },
-  { label: "AI score breakdown", values: ["Basic", "High", "High", "High"] },
-  { label: "Bonus prep days", values: [false, false, "+3 days", "+7 days"] },
+  { label: "AI score breakdown", values: ["Basic", "Standard", true, true] },
+  { label: "Bonus prep days", values: [false, false, "+3 days", "+3 days"] },
   {
     label: "Access duration",
-    values: ["Lifetime", "7 days", "33 days", "97 days"],
+    values: ["Lifetime", "7 days", "33 days", "33 days"],
   },
 ];

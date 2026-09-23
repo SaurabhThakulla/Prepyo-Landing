@@ -1,27 +1,21 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import Button from '@/components/Button.astro';
 import { Icon } from 'astro-icon/components';
 import { breadcrumbs, jobPosting, organization, website } from '@/lib/schema';
 import { APPLICATION_STEPS, CAREERS_EMAIL, OPEN_ROLES, WORK_HIGHLIGHTS } from '@/data/careers';
 import { asset, BASE_PATH } from '@/consts';
 
 /**
- * Careers.
- *
- * The listings come from OPEN_ROLES, which is empty until something is
- * genuinely open — an advertised role nobody is hiring for wastes a
- * candidate's afternoon and costs more trust than an empty page does. While it
- * is empty the page makes the open-application case instead.
+ * Careers at Prepyo — Redesigned according to modern executive role board layout.
  */
 const origin = Astro.site ?? new URL(Astro.url.origin);
 const site = new URL(BASE_PATH, origin);
 const url = new URL(Astro.url.pathname, origin);
 
-const title = 'Careers at Prepyo — Work on PTE & IELTS prep for Nepal';
+const title = 'Careers at Prepyo — Our Open Roles';
 const description =
-  'Open roles at Prepyo, and how to send an open application to the team building PTE, IELTS and Japanese language preparation for students in Nepal.';
+  'Join Prepyo to build AI-driven PTE and IELTS preparation for students across Nepal. Explore open roles in engineering, product design, and curriculum.';
 
 const schema = [
   organization(site),
@@ -33,187 +27,257 @@ const schema = [
   ...OPEN_ROLES.map(role => jobPosting(site, url, role)),
 ];
 
-const mailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open application')}`;
+const generalMailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent('Open Application — Prepyo')}`;
 ---
 
 <Layout title={title} description={description} schema={schema}>
-  <article class="w-full space-y-4">
+  <div class="w-full space-y-6 pb-16">
     <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Careers' }]} />
 
-    <header class="pt-6 sm:pt-10 max-w-3xl">
-      <h1
-        class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1]"
-      >
-        Work at Prepyo
-      </h1>
-      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
-        We build the practice that decides whether a student in Nepal gets the score their
-        application depends on. It is a small surface with a lot riding on it.
-      </p>
+    {/* Main Container Card matching the design reference */}
+    <div class="w-full rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 shadow-xl backdrop-blur-sm overflow-hidden p-6 sm:p-10 lg:p-12">
+      
+      {/* 2-Column Split: Left Sticky Heading & Contact, Right Role Cards */}
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+        
+        {/* Left Column: Heading, Contact Link, and Meta info */}
+        <div class="lg:col-span-4 lg:sticky lg:top-24 flex flex-col justify-between self-stretch space-y-8">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              We are hiring
+            </span>
+            <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.08]">
+              Our Open<br class="hidden sm:inline" /> Roles
+            </h1>
 
-      <div class="flex flex-col sm:flex-row gap-3 mt-7">
-        <Button
-          href={OPEN_ROLES.length > 0 ? '#open-roles' : mailto}
-          size="lg"
-          class="group rounded-full font-bold text-sm px-7 h-12 gap-2 shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"
-        >
-          <span>{OPEN_ROLES.length > 0 ? 'See open roles' : 'Send an open application'}</span>
-          <Icon name="lucide:arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </Button>
-      </div>
-    </header>
-
-    {/* Why here */}
-    <section class="py-10 sm:py-14 border-t border-border mt-6">
-      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-        What you would be joining
-      </h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mt-6">
-        {
-          WORK_HIGHLIGHTS.map(item => (
-            <div class="rounded-2xl border border-border bg-card p-5 sm:p-6">
-              <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                <Icon name={item.icon} class="w-5 h-5" />
-              </div>
-              <h3 class="font-display font-bold text-sm text-foreground mt-4">{item.title}</h3>
-              <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    {/* Roles */}
-    <section id="open-roles" class="py-10 sm:py-14 border-t border-border">
-      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-        Open roles
-      </h2>
-
-      {
-        OPEN_ROLES.length === 0 ? (
-          <div class="rounded-2xl border border-dashed border-border bg-card/60 p-6 sm:p-8 mt-6 max-w-3xl">
-            <div class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-xl bg-muted text-muted-foreground flex items-center justify-center shrink-0">
-                <Icon name="lucide:inbox" class="w-5 h-5" />
-              </div>
-              <div>
-                <h3 class="font-display font-bold text-sm text-foreground">
-                  Nothing is open at the moment
-                </h3>
-                <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                  We would rather leave this page empty than advertise a role nobody is hiring for.
-                  Open applications are read, though, and we keep the good ones on file for when
-                  something does open.
-                </p>
-              </div>
+            <div class="mt-8 space-y-1.5">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                Or contact us with
+              </p>
+              <a
+                href={generalMailto}
+                class="inline-block text-base sm:text-lg font-semibold text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300 underline underline-offset-4 decoration-orange-500/40 hover:decoration-orange-500 transition-colors"
+              >
+                {CAREERS_EMAIL}
+              </a>
             </div>
           </div>
-        ) : (
-          <ul class="space-y-3 sm:space-y-4 mt-6">
-            {OPEN_ROLES.map(role => (
-              <li
-                id={role.id}
-                class="rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-primary/40 transition-colors scroll-mt-24"
-              >
-                <div class="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <h3 class="font-display font-bold text-base text-foreground">{role.title}</h3>
-                    <p class="text-xs text-muted-foreground mt-1">
-                      {role.team} · {role.location} · {role.typeLabel}
-                    </p>
-                  </div>
-                  <Button
-                    href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(role.title)}`}
-                    size="sm"
-                    class="rounded-full font-bold text-xs px-5 h-9 shrink-0"
-                  >
-                    Apply
-                  </Button>
-                </div>
 
-                <p class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed">
-                  {role.description}
-                </p>
+          {/* Quick Info & Tags at bottom left */}
+          <div class="pt-6 border-t border-border/60 text-xs text-muted-foreground space-y-3">
+            <p class="leading-relaxed">
+              We build the practice tools that determine whether ambitious students in Nepal achieve their dream university and visa targets.
+            </p>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="px-2.5 py-1 rounded-md bg-muted/80 text-[11px] font-medium text-foreground/80">Kathmandu &amp; Hybrid</span>
+              <span class="px-2.5 py-1 rounded-md bg-muted/80 text-[11px] font-medium text-foreground/80">Competitive Pay</span>
+              <span class="px-2.5 py-1 rounded-md bg-muted/80 text-[11px] font-medium text-foreground/80">Immediate Impact</span>
+            </div>
+          </div>
+        </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-                  <div>
-                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                      What you would do
-                    </h4>
-                    <ul class="space-y-2 mt-3">
-                      {role.responsibilities.map(point => (
-                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
-                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
-                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
-                          </div>
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                      What we are looking for
-                    </h4>
-                    <ul class="space-y-2 mt-3">
-                      {role.requirements.map(point => (
-                        <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
-                          <div class="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
-                            <Icon name="lucide:check" class="w-2.5 h-2.5 stroke-[3]" />
-                          </div>
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </section>
-
-    {/* How to apply */}
-    <section class="py-10 sm:py-14 border-t border-border">
-      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 max-w-3xl">
-        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-          How to apply
-        </h2>
-        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
-          One email to{' '}
-          <a href={mailto} class="text-primary font-medium hover:underline">{CAREERS_EMAIL}</a>. No
-          form, no portal, no account to create.
-        </p>
-
-        <ol class="space-y-3 mt-6">
+        {/* Right Column: Roles List */}
+        <div class="lg:col-span-8 flex flex-col divide-y divide-border/70">
           {
-            APPLICATION_STEPS.map((step, index) => (
-              <li class="flex items-start gap-3">
-                <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-                  {index + 1}
-                </span>
-                <span class="text-xs sm:text-sm text-muted-foreground leading-relaxed">{step}</span>
-              </li>
-            ))
-          }
-        </ol>
+            OPEN_ROLES.map((role) => {
+              const applyMailto = `mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent(`Application for ${role.title}`)}`;
+              
+              return (
+                <div class="py-6 sm:py-8 first:pt-0 last:pb-0 group transition-colors" data-role-card>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1.5 flex-1 pr-2">
+                      <span class="text-[11px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                        {role.team}
+                      </span>
+                      <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        {role.title}
+                      </h2>
+                      <p class="text-xs sm:text-sm text-muted-foreground">
+                        {role.typeLabel}
+                        {role.salary && ` · ${role.salary}`}
+                        {` · ${role.location}`}
+                      </p>
+                    </div>
 
-        <div class="flex flex-wrap gap-3 mt-7">
-          <Button href={mailto} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
-            Email us
-          </Button>
-          <Button
-            href={asset('/how-scoring-works/')}
-            variant="outline"
-            size="lg"
-            class="rounded-full font-bold text-sm px-7 h-12"
-          >
-            See how the product works
-          </Button>
+                    <div class="flex items-center gap-2.5 shrink-0 self-start sm:self-center">
+                      {/* Accordion Toggle Chevron */}
+                      <button
+                        type="button"
+                        class="w-10 h-10 rounded-full border border-border bg-background/80 hover:bg-muted text-foreground/80 hover:text-foreground flex items-center justify-center transition-all duration-200"
+                        aria-label={`Toggle details for ${role.title}`}
+                        data-accordion-toggle
+                      >
+                        <Icon name="lucide:chevron-down" class="w-4 h-4 transition-transform duration-200" />
+                      </button>
+
+                      {/* Orange Pill CTA Button */}
+                      <a
+                        href={applyMailto}
+                        class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-md shadow-orange-500/25 transition-all"
+                      >
+                        <span>Submit Application</span>
+                        <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Expandable Role Details */}
+                  <div class="hidden pt-6 mt-4 border-t border-border/50 space-y-5 text-foreground/90" data-accordion-content>
+                    <p class="text-sm leading-relaxed text-muted-foreground">
+                      {role.description}
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                      <div class="space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-foreground">
+                          What you would do
+                        </h3>
+                        <ul class="space-y-2">
+                          {role.responsibilities.map((resp) => (
+                            <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                              <Icon name="lucide:check" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div class="space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-foreground">
+                          What we are looking for
+                        </h3>
+                        <ul class="space-y-2">
+                          {role.requirements.map((req) => (
+                            <li class="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                              <Icon name="lucide:check" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                              <span>{req}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-between flex-wrap gap-3">
+                      <span class="text-xs text-muted-foreground">
+                        Ready to apply? Send your portfolio or repo directly to <strong class="text-foreground">{CAREERS_EMAIL}</strong>.
+                      </span>
+                      <a
+                        href={applyMailto}
+                        class="text-xs font-bold text-orange-500 hover:text-orange-600 dark:text-orange-400 flex items-center gap-1 hover:underline"
+                      >
+                        <span>Email your application</span>
+                        <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          }
+
+          {/* General Open Application Entry */}
+          <div class="py-6 sm:py-8 last:pb-0 group" data-role-card>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1.5 flex-1 pr-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Open Application
+                </span>
+                <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  Don’t see the exact match?
+                </h2>
+                <p class="text-xs sm:text-sm text-muted-foreground">
+                  Full-time / Part-time · Open to student creators, engineers &amp; tutors · Kathmandu / Remote
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2.5 shrink-0 self-start sm:self-center">
+                <button
+                  type="button"
+                  class="w-10 h-10 rounded-full border border-border bg-background/80 hover:bg-muted text-foreground/80 hover:text-foreground flex items-center justify-center transition-all duration-200"
+                  aria-label="Toggle details for general application"
+                  data-accordion-toggle
+                >
+                  <Icon name="lucide:chevron-down" class="w-4 h-4 transition-transform duration-200" />
+                </button>
+
+                <a
+                  href={generalMailto}
+                  class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-md shadow-orange-500/25 transition-all"
+                >
+                  <span>Submit Application</span>
+                  <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+            <div class="hidden pt-6 mt-4 border-t border-border/50 space-y-4" data-accordion-content>
+              <p class="text-sm leading-relaxed text-muted-foreground">
+                We are always excited to hear from talented people who care about high-stakes education in Nepal. What you should tell us:
+              </p>
+              <ol class="space-y-2">
+                {APPLICATION_STEPS.map((step, idx) => (
+                  <li class="flex items-start gap-3 text-xs sm:text-sm text-muted-foreground">
+                    <span class="w-5 h-5 rounded-full bg-primary/10 text-primary text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {idx + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  </article>
+
+      {/* Bottom 2-Column Info Row matching screenshot reference */}
+      <div class="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-border/70 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <div class="space-y-2">
+          <h3 class="font-display text-sm sm:text-base font-bold text-foreground">
+            How It Works
+          </h3>
+          <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            By integrating automated scoring models with official exam rubrics, we provide instant 3-second evaluation for PTE and IELTS students across Nepal. We build fast, defendable tools without corporate bureaucracy.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-display text-sm sm:text-base font-bold text-foreground">
+            Contact Us
+          </h3>
+          <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            Send your GitHub, live projects, writing sample, or curriculum ideas straight to <a href={generalMailto} class="text-orange-500 font-semibold hover:underline">{CAREERS_EMAIL}</a>. We respond to every thoughtful note.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </Layout>
+
+<script>
+  // Simple accordion expand/collapse script
+  function setupAccordions() {
+    const cards = document.querySelectorAll('[data-role-card]');
+    cards.forEach((card) => {
+      const toggle = card.querySelector('[data-accordion-toggle]');
+      const content = card.querySelector('[data-accordion-content]');
+      const icon = toggle?.querySelector('svg');
+
+      if (toggle && content) {
+        toggle.addEventListener('click', () => {
+          const isHidden = content.classList.contains('hidden');
+          if (isHidden) {
+            content.classList.remove('hidden');
+            icon?.classList.add('rotate-180');
+          } else {
+            content.classList.add('hidden');
+            icon?.classList.remove('rotate-180');
+          }
+        });
+      }
+    });
+  }
+
+  setupAccordions();
+  document.addEventListener('astro:page-load', setupAccordions);
+</script>
