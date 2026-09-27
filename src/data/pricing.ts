@@ -91,7 +91,12 @@ export const FEATURES: FeatureRow[] = [
   },
   {
     label: "AI gradings (speaking & writing)",
+    badge: "NEW",
     values: ["Limited", "Standard", "Extended", "Maximum"],
+  },
+  {
+    label: "Section mock tests",
+    values: [false, true, true, true],
   },
   {
     label: "Full mock exams",
@@ -102,7 +107,23 @@ export const FEATURES: FeatureRow[] = [
     values: ["Limited", "Standard", "Extended", "Maximum"],
   },
   {
+    label: "Sentence-level rewrites",
+    values: [false, true, true, true],
+  },
+  {
+    label: "AI score breakdown",
+    values: ["Basic", "Standard", true, true],
+  },
+  {
+    label: "Bonus prep days",
+    values: [false, false, "+3 days", "+3 days"],
+  },
+  {
     label: "Priority evaluation",
     values: [false, false, false, true],
+  },
+  {
+    label: "Access duration",
+    values: ["Lifetime", "7 days", "33 days", "33 days"],
   },
 ];
