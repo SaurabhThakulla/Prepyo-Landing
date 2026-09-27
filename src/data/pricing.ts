@@ -71,6 +71,12 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
   },
 ];
 
+export interface FeatureRow {
+  label: string;
+  badge?: string;
+  values: (string | boolean)[];
+}
+
 /**
  * Values are positional: index 0 is Suru, 3 is Udaan.
  *
@@ -78,15 +84,20 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
  * Mock periods are stated because the two models differ: the free mock is
  * lifetime, paid allowances reset each calendar month.
  */
-export const FEATURES: { label: string; values: (string | boolean)[] }[] = [
+export const FEATURES: FeatureRow[] = [
   { label: "Practice sub-tests per day", values: ["5", "40", "50", "Unlimited"] },
   {
+    label: "AI gradings",
+    badge: "NEW",
+    values: ["10 / month", "110 / week", "22 / day", "1,100 / 33 days"],
+  },
+  {
     label: "Section mock tests",
-    values: [false, "10 / week", "20 / calendar month", "Unlimited"],
+    values: [false, true, true, true],
   },
   {
     label: "Full mock exams",
-    values: ["1 lifetime", "2", "5 / calendar month", "Unlimited"],
+    values: ["1 lifetime", "2", "5 / calendar month", "20 / calendar month"],
   },
   {
     label: "AI tutor messages",
