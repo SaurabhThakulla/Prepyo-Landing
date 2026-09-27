@@ -85,29 +85,24 @@ export interface FeatureRow {
  * lifetime, paid allowances reset each calendar month.
  */
 export const FEATURES: FeatureRow[] = [
-  { label: "Practice sub-tests per day", values: ["5", "40", "50", "Unlimited"] },
   {
-    label: "AI gradings",
-    badge: "NEW",
-    values: ["10 / month", "110 / week", "22 / day", "1,100 / 33 days"],
+    label: "Practice tasks",
+    values: ["Limited", "Standard", "Extended", "Unlimited"],
   },
   {
-    label: "Section mock tests",
-    values: [false, true, true, true],
+    label: "AI gradings (speaking & writing)",
+    values: ["Limited", "Standard", "Extended", "Maximum"],
   },
   {
     label: "Full mock exams",
-    values: ["1 lifetime", "2", "5 / calendar month", "20 / calendar month"],
+    values: ["Limited", "Standard", "Extended", "Maximum"],
   },
   {
-    label: "AI tutor messages",
-    values: ["10 / day", "100 / day", "100 / day", "Unlimited"],
+    label: "AI tutor",
+    values: ["Limited", "Standard", "Extended", "Maximum"],
   },
-  { label: "Sentence-level rewrites", values: [false, true, true, true] },
-  { label: "AI score breakdown", values: ["Basic", "Standard", true, true] },
-  { label: "Bonus prep days", values: [false, false, "+3 days", "+3 days"] },
   {
-    label: "Access duration",
-    values: ["Lifetime", "7 days", "33 days", "33 days"],
+    label: "Priority evaluation",
+    values: [false, false, false, true],
   },
 ];

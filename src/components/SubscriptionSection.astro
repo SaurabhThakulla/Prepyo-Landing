@@ -112,7 +112,7 @@ import { EXACT_PLANS, FEATURES } from "@/data/pricing";
                           </span>
                         )
                       ) : (
-                        <span>{val}</span>
+                        <span class:list={[val === "Unlimited" && "font-bold text-foreground"]}>{val}</span>
                       )}
                     </div>
                   );
