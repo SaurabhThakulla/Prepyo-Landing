@@ -90,8 +90,7 @@ export const FEATURES: FeatureRow[] = [
     values: ["Limited", "Standard", "Extended", "Unlimited"],
   },
   {
-    label: "AI gradings (speaking & writing)",
-    badge: "NEW",
+    label: "AI gradings",
     values: ["Limited", "Standard", "Extended", "Maximum"],
   },
   {
