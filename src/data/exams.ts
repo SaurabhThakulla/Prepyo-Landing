@@ -48,7 +48,6 @@ const ALL_EXAMS: ExamCard[] = [
     ],
     brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
     dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
-    stats: [{ value: '100+', label: 'Students' }],
   },
   {
     exam: 'IELTS',

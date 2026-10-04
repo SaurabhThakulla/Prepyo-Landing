@@ -4,11 +4,10 @@ import { Icon } from 'astro-icon/components';
 /**
  * The trust row.
  *
- * Only two numbers are claimed here — the student count and the average rating
- * — because those are the two Prepyo can actually stand behind. Invented
- * improvement percentages are what this row exists instead of, and an
- * aggregateRating in the structured data would need reviews Google can verify,
- * so this stays visible text.
+ * No user counts or ratings until they are real and checkable — Prepyo
+ * launched in late September 2026 with its first 20 users. Put a number back
+ * here only when it can be backed (sign-ups from the database, a rating from
+ * public Google reviews), never as an estimate.
  */
 interface Props {
   /** Link to the methodology page, so a claim about scoring can be checked. */
@@ -20,14 +19,14 @@ const { methodologyHref, class: className } = Astro.props;
 
 const POINTS = [
   {
-    icon: 'lucide:users',
-    value: '100+',
-    label: 'students preparing on Prepyo',
+    icon: 'lucide:gift',
+    value: 'Free plan',
+    label: 'start practising without paying',
   },
   {
-    icon: 'lucide:star',
-    value: '4.6 / 5',
-    label: 'average rating from learners',
+    icon: 'lucide:map-pin',
+    value: 'Built in Nepal',
+    label: 'made in Tikapur, Sudurpashchim',
   },
   {
     icon: 'lucide:wallet',

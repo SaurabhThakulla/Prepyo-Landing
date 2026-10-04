@@ -66,7 +66,7 @@ export interface ExamPage {
 }
 
 const PAYMENTS_TRUST = { icon: 'lucide:wallet', label: 'eSewa & Khalti accepted' };
-const STUDENTS_TRUST = { icon: 'lucide:users', label: '100+ students' };
+const FREE_TRUST = { icon: 'lucide:gift', label: 'Free plan to start' };
 
 export const PTE_PAGE: ExamPage = {
   slug: '/pte-academic-preparation/',
@@ -95,7 +95,7 @@ export const PTE_PAGE: ExamPage = {
     { icon: 'lucide:check-circle', label: 'Scored on Pearson’s published criteria' },
     { icon: 'lucide:zap', label: 'Instant AI feedback' },
     PAYMENTS_TRUST,
-    STUDENTS_TRUST,
+    FREE_TRUST,
   ],
   format: [
     { label: 'Delivery', value: 'On a computer, at a test centre' },
@@ -213,7 +213,7 @@ export const IELTS_PAGE: ExamPage = {
     { icon: 'lucide:check-circle', label: 'Marked on the IELTS band descriptors' },
     { icon: 'lucide:zap', label: 'Instant AI feedback' },
     PAYMENTS_TRUST,
-    STUDENTS_TRUST,
+    FREE_TRUST,
   ],
   format: [
     { label: 'Delivery', value: 'On paper or on a computer, at a test centre' },
