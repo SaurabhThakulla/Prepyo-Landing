@@ -75,7 +75,7 @@ export const PTE_PAGE: ExamPage = {
   courseName: 'PTE Academic Preparation',
   title: 'PTE Academic Preparation in Nepal — Mocks & Scoring | Prepyo',
   metaDescription:
-    'Prepare for PTE Academic from Nepal with full-length mock exams, task-by-task practice and scoring against the official criteria. Start free, pay with eSewa or Khalti.',
+    'Prepare for PTE Academic from Nepal with full mock exams, task-by-task practice and scoring on the official criteria. Start free, pay with eSewa or Khalti.',
   ogImage: '/images/og-pte.jpg',
   updated: '2026-10-04',
   eyebrow: 'Free diagnostic test',
@@ -295,7 +295,7 @@ export const EPS_PAGE: ExamPage = {
   courseName: 'EPS-TOPIK Korean Preparation',
   title: 'EPS-TOPIK Preparation in Nepal — Korean Practice | Prepyo',
   metaDescription:
-    'Prepare for EPS-TOPIK from Nepal: practise every reading and listening question type with Korean audio, learn Korean from Hangul up, and get help in English. Start free.',
+    'Prepare for EPS-TOPIK from Nepal: every reading and listening question type with Korean audio, Korean lessons from Hangul up, and help in English.',
   ogImage: '/images/og-eps-topik.jpg',
   updated: '2026-10-04',
   eyebrow: 'Korean for work in South Korea',
