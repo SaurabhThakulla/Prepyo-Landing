@@ -1,0 +1,29 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle from '@/components/ExamArticle.astro';
+import { EPS_PAGE } from '@/data/exam-pages';
+import { examPageGraph } from '@/lib/schema';
+import { BASE_PATH, KOREAN_LIVE } from '@/consts';
+
+/**
+ * The EPS-TOPIK pillar page, for people preparing for the Korean test that
+ * leads to work in South Korea under the Employment Permit System.
+ *
+ * Built before the Korean track is live in the app, so until KOREAN_LIVE is
+ * flipped it is noindex and linked from nowhere — previewable, not findable.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+---
+
+<Layout
+  title={EPS_PAGE.title}
+  description={EPS_PAGE.metaDescription}
+  schema={examPageGraph(site, url, EPS_PAGE)}
+  ogImage={EPS_PAGE.ogImage}
+  ogImageAlt={EPS_PAGE.h1}
+  noindex={!KOREAN_LIVE}
+>
+  <ExamArticle page={EPS_PAGE} />
+</Layout>

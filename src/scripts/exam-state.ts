@@ -13,7 +13,7 @@ const EVENT = 'prepyo:exam-change';
  */
 export function getActiveExam(): ExamType {
   const saved = localStorage.getItem(STORAGE_KEY);
-  return saved === 'IELTS' || saved === 'JAPANESE' ? saved : 'PTE';
+  return saved === 'IELTS' || saved === 'EPS_TOPIK' || saved === 'JAPANESE' ? saved : 'PTE';
 }
 
 export function setActiveExam(exam: ExamType): void {

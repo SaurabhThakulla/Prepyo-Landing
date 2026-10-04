@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
 import sitemap from '@astrojs/sitemap';
+import { readFileSync } from 'node:fs';
 
 // Where the site is served from differs by host: Vercel, Netlify and a custom
 // domain all serve it at the root, while GitHub Pages serves a project repo
@@ -13,6 +14,11 @@ const base = process.env.PUBLIC_BASE_PATH || '/';
 // Open Graph URLs stay correct on preview deploys as well as production.
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
 const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://prepyo.online');
+
+// Pages that are built but not launched yet stay out of the sitemap. Read from
+// the same file consts.ts uses, so there is one switch to flip.
+const { koreanLive } = JSON.parse(readFileSync(new URL('./src/data/launch.json', import.meta.url), 'utf8'));
+const KOREAN_PATHS = ['/eps-topik-preparation/', '/learn-korean/'];
 
 /**
  * Vite plugin that intercepts and suppresses Windows locked-file EBUSY errors
@@ -43,7 +49,7 @@ export default defineConfig({
   integrations: [
     // Needs the resolved `site` above: without it the sitemap has no absolute
     // URLs to write and the integration does nothing.
-    sitemap(),
+    sitemap({ filter: page => koreanLive || !KOREAN_PATHS.some(path => page.includes(path)) }),
     // Renders lucide icons as inline SVG at build time, so no icon library
     // ships to the browser.
     icon({ include: { lucide: ['*'] } }),

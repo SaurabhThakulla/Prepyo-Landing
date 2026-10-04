@@ -11,11 +11,15 @@
  * Prepyo has not measured.
  */
 import type { Faq } from '@/data/faq';
-import type { ExamType } from '@/consts';
+import { appUrl, type ExamType } from '@/consts';
+
+export type Skill = 'speaking' | 'writing' | 'reading' | 'listening';
 
 export interface TaskType {
   name: string;
   blurb: string;
+  /** Which filter tab the task sits under. Guessed from the name when omitted. */
+  skill?: Skill;
 }
 
 export interface PrepBlock {
@@ -33,27 +37,48 @@ export interface ExamPage {
   courseName: string;
   title: string;
   metaDescription: string;
+  /** Social card for this page, site-relative. */
+  ogImage: string;
+  /** ISO date the page's content was last reviewed. Shown on the page and as `dateModified`. */
+  updated: string;
+  eyebrow: string;
+  /** Starts with `name`, which is the part the hero highlights. */
   h1: string;
   standfirst: string;
+  /** The "What is …?" section — the definitional passage answer engines quote. */
   intro: string[];
+  primaryCta: { label: string; href: string };
+  /** Who sets the test, for the "at a glance" caption. */
+  testOwner: string;
   /** The at-a-glance table. */
   format: { label: string; value: string }[];
   scoring: string[];
+  /** Which radar chart to show; omitted for tests with no speaking or writing. */
+  chartMode?: 'pte' | 'ielts';
+  /** The illustrative score card in the hero. */
+  mockup: { tag: string; label: string; value: string; lines: [string, string] };
+  trust: { icon: string; label: string }[];
   taskTypes: TaskType[];
   prepBlocks: PrepBlock[];
   faqs: Faq[];
-  /** Link across to the other exam, for people still deciding. */
-  sibling: { label: string; href: string; blurb: string };
+  /** Link across to a related page, for people still deciding. */
+  sibling: { label: string; href: string; blurb: string; cta: string };
 }
+
+const PAYMENTS_TRUST = { icon: 'lucide:wallet', label: 'eSewa & Khalti accepted' };
+const STUDENTS_TRUST = { icon: 'lucide:users', label: '100+ students' };
 
 export const PTE_PAGE: ExamPage = {
   slug: '/pte-academic-preparation/',
   exam: 'PTE',
   name: 'PTE Academic',
   courseName: 'PTE Academic Preparation',
-  title: 'PTE Academic Preparation in Nepal — Practice, Mocks & Scoring | Prepyo',
+  title: 'PTE Academic Preparation in Nepal — Mocks & Scoring | Prepyo',
   metaDescription:
     'Prepare for PTE Academic from Nepal with full-length mock exams, task-by-task practice and scoring against the official criteria. Start free, pay with eSewa or Khalti.',
+  ogImage: '/images/og-pte.jpg',
+  updated: '2026-10-04',
+  eyebrow: 'Free diagnostic test',
   h1: 'PTE Academic preparation, built for students in Nepal',
   standfirst:
     'Every task type, the real timings, and a score breakdown that tells you which part of the test is costing you points.',
@@ -61,6 +86,16 @@ export const PTE_PAGE: ExamPage = {
     'PTE Academic is taken on a computer and marked by automated scoring, which is why results usually reach you within 48 hours. It is accepted for study and visa applications in Australia, New Zealand, the UK and Canada.',
     'The scoring is also what makes it hard to prepare for on paper. Your speaking score depends on things a notebook cannot show you — how fluently you spoke, how clearly you pronounced each word, whether you hesitated. You need to hear the recording back and see where the marks went.',
     'That is the gap Prepyo fills: you practise the actual task, you get the breakdown straight away, and the tasks you keep losing marks on come back until they stop being weak spots.',
+  ],
+  primaryCta: { label: 'Take the free diagnostic', href: appUrl('/diagnostic') },
+  testOwner: 'Pearson',
+  chartMode: 'pte',
+  mockup: { tag: 'PTE 79+', label: 'Estimated score', value: '86 / 90', lines: ['Fluency: 88', 'Pronunciation: 90'] },
+  trust: [
+    { icon: 'lucide:check-circle', label: 'Scored on Pearson’s published criteria' },
+    { icon: 'lucide:zap', label: 'Instant AI feedback' },
+    PAYMENTS_TRUST,
+    STUDENTS_TRUST,
   ],
   format: [
     { label: 'Delivery', value: 'On a computer, at a test centre' },
@@ -135,6 +170,7 @@ export const PTE_PAGE: ExamPage = {
     label: 'IELTS Academic preparation',
     href: '/ielts-academic-preparation/',
     blurb: 'Still deciding between the two? Read what IELTS Academic asks for and how it is scored.',
+    cta: 'Switch to IELTS',
   },
 };
 
@@ -143,9 +179,12 @@ export const IELTS_PAGE: ExamPage = {
   exam: 'IELTS',
   name: 'IELTS Academic',
   courseName: 'IELTS Academic Preparation',
-  title: 'IELTS Academic Preparation in Nepal — Mocks & Band Feedback | Prepyo',
+  title: 'IELTS Academic Preparation in Nepal — Mocks & Feedback | Prepyo',
   metaDescription:
     'Prepare for IELTS Academic from Nepal with full-length mock tests, Writing and Speaking feedback against the official band descriptors, and a free diagnostic.',
+  ogImage: '/images/og-ielts.jpg',
+  updated: '2026-10-04',
+  eyebrow: 'Free diagnostic test',
   h1: 'IELTS Academic preparation, built for students in Nepal',
   standfirst:
     'Four skills, nine bands, and public descriptors that say exactly what separates a 6.5 from an 8.0. Practise against them.',
@@ -153,6 +192,16 @@ export const IELTS_PAGE: ExamPage = {
     'IELTS Academic is the most widely accepted English test for universities and visas worldwide, and the one most Nepali students meet first. It is marked in bands from 0 to 9, in half-band steps, across Listening, Reading, Writing and Speaking.',
     'Its great advantage for anyone studying alone is that the marking is public. IELTS publishes the band descriptors examiners work from — four criteria for Writing, four for Speaking — so the difference between the band you have and the band you want is written down.',
     'Most candidates never read them. Prepyo marks your work against those same criteria and shows which one is holding your band down, because "write better essays" is not a study plan and "your coherence is a band below your vocabulary" is.',
+  ],
+  primaryCta: { label: 'Take the free diagnostic', href: appUrl('/diagnostic') },
+  testOwner: 'the IELTS partners',
+  chartMode: 'ielts',
+  mockup: { tag: 'Band 8.0', label: 'Estimated band', value: '8.5 / 9.0', lines: ['Task: 8.5', 'Lexical: 8.5'] },
+  trust: [
+    { icon: 'lucide:check-circle', label: 'Marked on the IELTS band descriptors' },
+    { icon: 'lucide:zap', label: 'Instant AI feedback' },
+    PAYMENTS_TRUST,
+    STUDENTS_TRUST,
   ],
   format: [
     { label: 'Delivery', value: 'On paper or on a computer, at a test centre' },
@@ -225,7 +274,139 @@ export const IELTS_PAGE: ExamPage = {
     label: 'PTE Academic preparation',
     href: '/pte-academic-preparation/',
     blurb: 'Comparing the two? Read how PTE Academic is structured and scored.',
+    cta: 'Switch to PTE',
   },
 };
 
-export const EXAM_PAGES: ExamPage[] = [PTE_PAGE, IELTS_PAGE];
+/**
+ * EPS-TOPIK. The question types mirror the app's own syllabus
+ * (syllabus-topics.json in the app repo), so the page never lists a task the
+ * practice bank does not have.
+ *
+ * Deliberately not stated until confirmed against HRD Korea's current notice
+ * for Nepal — each is a number answer engines would quote back:
+ * TODO(confirm): question count per section, test length, score scale,
+ * pass/cut-off rule, exam fee in NPR, test venue, and the skills test.
+ */
+export const EPS_PAGE: ExamPage = {
+  slug: '/eps-topik-preparation/',
+  exam: 'EPS_TOPIK',
+  name: 'EPS-TOPIK',
+  courseName: 'EPS-TOPIK Korean Preparation',
+  title: 'EPS-TOPIK Preparation in Nepal — Korean Practice | Prepyo',
+  metaDescription:
+    'Prepare for EPS-TOPIK from Nepal: practise every reading and listening question type with Korean audio, learn Korean from Hangul up, and get help in English. Start free.',
+  ogImage: '/images/og-eps-topik.jpg',
+  updated: '2026-10-04',
+  eyebrow: 'Korean for work in South Korea',
+  h1: 'EPS-TOPIK preparation, built for workers in Nepal',
+  standfirst:
+    'Every reading and listening question type in the test, Korean audio on listening practice, and a course that starts from the alphabet.',
+  intro: [
+    'EPS-TOPIK — the Employment Permit System Test of Proficiency in Korean — is the language test South Korea uses to hire workers from partner countries, Nepal among them. It is run by the Human Resources Development Service of Korea (HRD Korea), and passing it is the first step towards a job in Korea under the Employment Permit System.',
+    'The test has two sections, reading and listening, and every question is multiple choice. There is no speaking and no writing. That makes it a very learnable test — but only once you have heard enough everyday and workplace Korean to follow a recording you hear just twice.',
+    'Prepyo covers both halves: a Learn Korean course that starts at Hangul and works up to the vocabulary the test uses, and practice for every question type, with Korean audio and help in English when you are stuck.',
+  ],
+  primaryCta: { label: 'Start practising free', href: appUrl('/') },
+  testOwner: 'HRD Korea',
+  mockup: { tag: 'EPS-TOPIK', label: 'Practice score', value: '18 / 20', lines: ['Reading: 9 / 10', 'Listening: 9 / 10'] },
+  trust: [
+    { icon: 'lucide:check-circle', label: 'Every reading & listening question type' },
+    { icon: 'lucide:headphones', label: 'Korean audio' },
+    { icon: 'lucide:languages', label: 'Help in English' },
+    PAYMENTS_TRUST,
+  ],
+  format: [
+    { label: 'Full name', value: 'Employment Permit System Test of Proficiency in Korean' },
+    { label: 'Run by', value: 'HRD Korea (Human Resources Development Service of Korea)' },
+    { label: 'Used for', value: 'Work in South Korea under the Employment Permit System' },
+    { label: 'Sections', value: 'Reading and Listening — no speaking or writing' },
+    { label: 'Question style', value: 'Multiple choice, four options' },
+    { label: 'Listening', value: 'Each recording is played twice' },
+  ],
+  scoring: [
+    'Every question is multiple choice and marked against an answer key, so there is no examiner judgement involved. Your result comes down to how many reading and listening questions you answer correctly.',
+    'That makes the score unusually honest to practise for. A wrong answer is not a matter of style; it is a word you did not know, a grammar ending you misread, or a number you missed in a recording — and each of those can be drilled.',
+    'Listening is the half that self-study most often neglects, because reading Korean can be learned from a book and hearing it at speed cannot. That is why every listening question on Prepyo comes with Korean audio rather than a script to read.',
+  ],
+  taskTypes: [
+    { skill: 'reading', name: 'Picture to word or sentence', blurb: 'Look at a picture and choose the word or sentence that matches it.' },
+    { skill: 'reading', name: 'Correct underlined grammar', blurb: 'Choose the sentence whose underlined part is correct — particles and verb endings decide it.' },
+    { skill: 'reading', name: 'Signs, notices and charts', blurb: 'Read a workplace sign, notice or chart and answer a question about it.' },
+    { skill: 'reading', name: 'Related word', blurb: 'Choose the word or meaning that goes with the one given.' },
+    { skill: 'reading', name: 'Fill in the blank', blurb: 'Choose the word or phrase that best completes the sentence.' },
+    { skill: 'reading', name: 'Word from description', blurb: 'Read a short description and choose the word it describes.' },
+    { skill: 'reading', name: 'Passage topic', blurb: 'Read a short passage and choose what it is about.' },
+    { skill: 'reading', name: 'Matching statement', blurb: 'Read a text and choose the statement that agrees with it.' },
+    { skill: 'reading', name: 'Description to picture', blurb: 'Read a description and choose the picture that matches.' },
+    { skill: 'listening', name: 'Choose what you heard', blurb: 'Listen and choose the word or sentence you heard.' },
+    { skill: 'listening', name: 'Listen and choose the picture', blurb: 'Listen and choose the picture that matches what was said.' },
+    { skill: 'listening', name: 'Choose the right reply', blurb: 'Hear a question and choose the reply that answers it.' },
+    { skill: 'listening', name: 'What comes next', blurb: 'Listen and choose what the speaker says next.' },
+    { skill: 'listening', name: 'Numbers, dates and prices', blurb: 'Catch a number, date or price and match it to a picture.' },
+    { skill: 'listening', name: 'Picture question', blurb: 'Look at a picture, hear a question about it and choose the answer.' },
+    { skill: 'listening', name: 'Dialogue comprehension', blurb: 'Follow a short conversation and answer a question about it.' },
+  ],
+  prepBlocks: [
+    {
+      title: 'Learn Korean from the alphabet',
+      body: 'Short lessons of a few minutes each: Hangul, basic Korean, grammar essentials, EPS vocabulary, daily life, and the words used in construction, agriculture and fishery.',
+      icon: 'lucide:languages',
+    },
+    {
+      title: 'Every question type in the test',
+      body: 'Reading and listening practice for each task type in EPS-TOPIK, written to the test’s format, so nothing on the day is a surprise.',
+      icon: 'lucide:list-checks',
+    },
+    {
+      title: 'Korean audio on listening practice',
+      body: 'Listening questions play Korean audio, so you train your ear on the sound of the language instead of reading a transcript.',
+      icon: 'lucide:headphones',
+    },
+    {
+      title: 'Help in English when you are stuck',
+      body: 'On paid plans, any practice question can be shown in English — what was said or written, the question and all four choices — so a wrong answer becomes a lesson.',
+      icon: 'lucide:book-a',
+    },
+  ],
+  faqs: [
+    {
+      question: 'What is EPS-TOPIK?',
+      answer:
+        'The Employment Permit System Test of Proficiency in Korean. It is the Korean language test that workers from Nepal and other partner countries take to apply for jobs in South Korea under the Employment Permit System. It is run by HRD Korea.',
+    },
+    {
+      question: 'Does EPS-TOPIK have speaking or writing?',
+      answer:
+        'No. It tests reading and listening only, and every question is multiple choice. That is why Prepyo’s EPS-TOPIK practice has no speaking or writing — your time goes on the two skills that are actually scored.',
+    },
+    {
+      question: 'I don’t know any Korean. Where do I start?',
+      answer:
+        'With Hangul, the Korean alphabet. The Learn Korean course starts there — vowels, consonants and syllables — before moving on to basic words, grammar and the workplace vocabulary the test uses.',
+    },
+    {
+      question: 'Can I prepare for EPS-TOPIK without joining an academy?',
+      answer:
+        'Yes. Learn to read Hangul first, then practise each question type and go back over the questions you got wrong. Whether you study alone or alongside an academy, the test only measures what you can read and hear.',
+    },
+    {
+      question: 'Is EPS-TOPIK practice free on Prepyo?',
+      answer:
+        'You can start free with practice questions and the Learn Korean course. Paid plans add Help in English, which shows any practice question in English.',
+    },
+    {
+      question: 'Is there a full EPS-TOPIK mock test?',
+      answer:
+        'Not yet. Full-length EPS-TOPIK mock tests are in development. For now Prepyo covers every question type through practice, alongside the Learn Korean course.',
+    },
+  ],
+  sibling: {
+    label: 'Learn Korean from scratch',
+    href: '/learn-korean/',
+    blurb: 'New to Korean? Start with Hangul and work up to the vocabulary EPS-TOPIK uses.',
+    cta: 'Start with Hangul',
+  },
+};
+
+export const EXAM_PAGES: ExamPage[] = [PTE_PAGE, IELTS_PAGE, EPS_PAGE];

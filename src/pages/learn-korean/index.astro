@@ -1,0 +1,185 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '@/layouts/Layout.astro';
+import Button from '@/components/Button.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import FAQSection from '@/components/FAQSection.astro';
+import { COURSE_UNITS, LEARN_KOREAN_FAQS, LEARN_KOREAN_UPDATED } from '@/data/learn-korean';
+import { breadcrumbs, faqPage, organization, organizationId, webPage, website } from '@/lib/schema';
+import { appUrl, asset, BASE_PATH, KOREAN_LIVE } from '@/consts';
+
+/**
+ * The beginner Korean course, for people searching "learn Korean in Nepal" or
+ * "Hangul" rather than for the test by name. It feeds the EPS-TOPIK page,
+ * which is where the exam-specific detail lives.
+ *
+ * Like that page, it is noindex and unlinked until KOREAN_LIVE is flipped.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const title = 'Learn Korean Free — From Hangul to EPS-TOPIK | Prepyo';
+const description =
+  'Learn Korean from scratch with short lessons: Hangul, basic Korean, grammar, workplace vocabulary and the EPS-TOPIK question types. Free, with listening in every unit.';
+const updatedLabel = new Date(LEARN_KOREAN_UPDATED).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+const schema = [
+  organization(site),
+  website(site),
+  webPage(site, url, { name: title, description, dateModified: LEARN_KOREAN_UPDATED, about: { '@id': `${url.href}#course` } }),
+  {
+    '@type': 'Course',
+    '@id': `${url.href}#course`,
+    name: 'Learn Korean for EPS-TOPIK',
+    description,
+    url: url.href,
+    provider: { '@id': organizationId(site) },
+    inLanguage: 'en',
+    dateModified: LEARN_KOREAN_UPDATED,
+    educationalLevel: 'Beginner',
+    teaches: COURSE_UNITS.map(unit => unit.title),
+    hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'Online', inLanguage: 'en' },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'NPR',
+      category: 'Free',
+      url: url.href,
+      availability: 'https://schema.org/InStock',
+    },
+  },
+  faqPage(url, LEARN_KOREAN_FAQS),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Learn Korean', item: url.href },
+  ]),
+];
+
+const HOW_IT_WORKS = [
+  { icon: 'lucide:timer', title: 'A few minutes a lesson', body: 'Each lesson is short enough to finish on a break, and the path only moves on when you are ready.' },
+  { icon: 'lucide:headphones', title: 'Listening in every unit', body: 'Half of EPS-TOPIK is listening, so you hear the Korean you are learning, not just read it.' },
+  { icon: 'lucide:repeat', title: 'Words come back for review', body: 'Words you have learned return when they are due, so they stay learned instead of fading.' },
+  { icon: 'lucide:flame', title: 'XP and a daily streak', body: 'Small, daily progress you can see — the habit matters more than any single long session.' },
+];
+---
+
+<Layout
+  title={title}
+  description={description}
+  schema={schema}
+  ogImage="/images/og-eps-topik.jpg"
+  ogImageAlt="Learn Korean from Hangul to EPS-TOPIK on Prepyo"
+  noindex={!KOREAN_LIVE}
+>
+  <article class="w-full space-y-4">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Learn Korean' }]} />
+
+    <header class="pt-6 sm:pt-10 max-w-3xl">
+      <p class="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-muted-foreground uppercase">
+        <span class="w-3 h-0.5 bg-primary rounded-full"></span>
+        <span>Free beginner course</span>
+      </p>
+      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1] mt-4">
+        Learn Korean from scratch, from Hangul to EPS-TOPIK
+      </h1>
+      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
+        Short lessons that start with the alphabet and work up to the everyday and workplace Korean the
+        EPS-TOPIK test is built from.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-6">
+        <Button href={appUrl('/learn')} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+          Start the course free
+        </Button>
+        <Button href={asset('/eps-topik-preparation/')} variant="outline" size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+          About EPS-TOPIK
+        </Button>
+      </div>
+    </header>
+
+    <section class="py-10 sm:py-14 border-t border-border mt-6 max-w-3xl space-y-4" aria-labelledby="who-for">
+      <h2 id="who-for" class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        Who the course is for
+      </h2>
+      <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
+        It is written for people in Nepal who want to work in South Korea under the Employment Permit System
+        and are starting with no Korean at all. EPS-TOPIK tests reading and listening only, so the course
+        teaches you to read Hangul and understand spoken Korean — not to write essays or hold a conversation
+        with an examiner.
+      </p>
+      <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">
+        It moves in the order the language builds up: letters, then words, then the grammar that joins them,
+        then the vocabulary of the workplace and the job sectors the permit system covers, and finally the
+        test's own question types.
+      </p>
+      <p class="text-xs text-muted-foreground/80">
+        Updated <time datetime={LEARN_KOREAN_UPDATED}>{updatedLabel}</time>
+      </p>
+    </section>
+
+    <section class="py-10 sm:py-14 border-t border-border" aria-labelledby="units">
+      <h2 id="units" class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        What the course covers
+      </h2>
+      <p class="text-sm text-muted-foreground mt-2 max-w-2xl">Nine units, taught in this order.</p>
+
+      <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
+        {
+          COURSE_UNITS.map((unit, index) => (
+            <li class="rounded-2xl border border-border bg-card p-5 sm:p-6 flex flex-col">
+              <span class="text-[11px] font-mono font-bold text-primary">Unit {index + 1}</span>
+              <h3 class="font-display font-bold text-base text-foreground mt-1">{unit.title}</h3>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">{unit.description}</p>
+              {unit.lessons.length > 0 && (
+                <ul class="flex flex-wrap gap-1.5 mt-4">
+                  {unit.lessons.map(lesson => (
+                    <li class="px-2.5 py-1 rounded-full bg-muted border border-border/80 text-[11px] text-muted-foreground">
+                      {lesson}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="py-10 sm:py-14 border-t border-border" aria-labelledby="how">
+      <h2 id="how" class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        How the lessons work
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6">
+        {
+          HOW_IT_WORKS.map(item => (
+            <div class="rounded-2xl border border-border bg-card p-5 sm:p-6">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Icon name={item.icon} class="w-5 h-5" />
+              </div>
+              <h3 class="font-display font-bold text-sm text-foreground mt-4">{item.title}</h3>
+              <p class="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <FAQSection faqs={LEARN_KOREAN_FAQS} title="Learn Korean: frequently asked questions" />
+
+    <section class="py-10 sm:py-14 border-t border-border">
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8 max-w-3xl">
+        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          Ready for the test itself?
+        </h2>
+        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+          Once you can read Hangul, practise every reading and listening question type EPS-TOPIK uses.
+        </p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <Button href={asset('/eps-topik-preparation/')} size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+            EPS-TOPIK preparation
+          </Button>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>

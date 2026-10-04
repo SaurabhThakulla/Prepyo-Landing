@@ -5,13 +5,16 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import SocialProof from '@/components/SocialProof.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import ProblemSection from '@/components/ProblemSection.astro';
-import { appUrl, asset, homeSection } from '@/consts';
-import type { ExamPage } from '@/data/exam-pages';
+import { asset } from '@/consts';
+import type { ExamPage, Skill, TaskType } from '@/data/exam-pages';
 
 /**
- * High-converting, rich product landing page for PTE Academic & IELTS Academic.
- * Modeled after the modern "Lando" executive hero layout with bold typography,
- * geometric isometric device pedestal showcase, Details Chart radar, and rich drill explorer.
+ * The shared layout for each exam's own page (PTE, IELTS, EPS-TOPIK).
+ *
+ * The H1 and the "What is …?" section come straight from the page data and
+ * carry the exam's name: they are what a search engine reads as the page's
+ * topic and what an answer engine quotes, so they stay plain and factual while
+ * the hero around them does the selling.
  */
 interface Props {
   page: ExamPage;
@@ -19,14 +22,30 @@ interface Props {
 
 const { page } = Astro.props;
 const isPte = page.exam === 'PTE';
-const targetScore = isPte ? '79+' : 'Band 8.0';
-const examSubtitle = isPte
-  ? 'Full-length computer mock exam simulations with instant 3s automated speech & writing scoring, acoustic analysis, and official Pearson rubric alignment.'
-  : 'Full-length computer mock simulations with instant AI essay grading, acoustic speaking evaluation, and Cambridge band prediction.';
+const isEps = page.exam === 'EPS_TOPIK';
 
-function getTaskMeta(name: string, isPte: boolean) {
+// The exam's name is the highlighted half of the H1.
+const h1Rest = page.h1.startsWith(page.name) ? page.h1.slice(page.name.length) : null;
+
+const updatedLabel = new Date(page.updated).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+const SKILL_TABS: { id: Skill; label: string }[] = [
+  { id: 'speaking', label: 'Speaking' },
+  { id: 'writing', label: 'Writing' },
+  { id: 'reading', label: 'Reading' },
+  { id: 'listening', label: 'Listening' },
+];
+
+function getTaskMeta(task: TaskType) {
+  const meta = guessTaskMeta(task.name, task.skill);
+  // EPS-TOPIK is all four-option multiple choice, and the per-task timings
+  // above are PTE and IELTS figures.
+  return isEps ? { ...meta, timing: '', badge: 'Multiple choice' } : meta;
+}
+
+function guessTaskMeta(name: string, skill?: Skill) {
   const n = name.toLowerCase();
-  if (n.includes('speaking') || n.includes('read aloud') || n.includes('repeat') || n.includes('describe image') || n.includes('re-tell')) {
+  if (skill === 'speaking' || (!skill && (n.includes('speaking') || n.includes('read aloud') || n.includes('repeat') || n.includes('describe image') || n.includes('re-tell')))) {
     return {
       category: 'speaking',
       label: 'Speaking',
@@ -38,7 +57,7 @@ function getTaskMeta(name: string, isPte: boolean) {
       badge: isPte ? 'Acoustic Scoring' : 'Parts 1–3',
     };
   }
-  if (n.includes('writing') || n.includes('essay') || n.includes('summarize written')) {
+  if (skill === 'writing' || (!skill && (n.includes('writing') || n.includes('essay') || n.includes('summarize written')))) {
     return {
       category: 'writing',
       label: 'Writing',
@@ -50,7 +69,7 @@ function getTaskMeta(name: string, isPte: boolean) {
       badge: isPte ? 'Rubric Scored' : 'Task 1 & 2',
     };
   }
-  if (n.includes('reading') || n.includes('true') || n.includes('heading') || n.includes('re-order')) {
+  if (skill === 'reading' || (!skill && (n.includes('reading') || n.includes('true') || n.includes('heading') || n.includes('re-order')))) {
     return {
       category: 'reading',
       label: 'Reading',
@@ -81,7 +100,6 @@ function getTaskMeta(name: string, isPte: boolean) {
     <Breadcrumbs
       trail={[
         { name: 'Home', href: asset('/') },
-        { name: 'Exams', href: homeSection('products') },
         { name: page.name },
       ]}
     />
@@ -104,31 +122,33 @@ function getTaskMeta(name: string, isPte: boolean) {
           {/* Eyebrow */}
           <div class="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-muted-foreground uppercase">
             <span class="w-3 h-0.5 bg-primary rounded-full"></span>
-            <span>Free 30-Day Diagnostic Trial</span>
+            <span>{page.eyebrow}</span>
           </div>
 
           {/* Main Headline */}
-          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground leading-[1.08] text-balance">
-            The best way<br />
-            to ace your <br class="hidden sm:inline" />
-            <span class="bg-gradient-to-r from-primary via-[#5865F2] to-sky-500 bg-clip-text text-transparent">
-              {isPte ? 'PTE 79+' : 'IELTS 8.0'}
-            </span>.
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-5xl font-black tracking-tight text-foreground leading-[1.08] text-balance">
+            {h1Rest !== null ? (
+              <>
+                <span class="bg-gradient-to-r from-primary via-[#5865F2] to-sky-500 bg-clip-text text-transparent">{page.name}</span>{h1Rest}
+              </>
+            ) : (
+              page.h1
+            )}
           </h1>
 
           {/* Description */}
           <p class="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg text-balance">
-            {examSubtitle}
+            {page.standfirst}
           </p>
 
           {/* Dual Action Buttons matching Lando reference */}
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
             <Button
-              href={appUrl('/diagnostic')}
+              href={page.primaryCta.href}
               size="lg"
               class="rounded-xl font-bold text-sm px-7 h-12 bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/25 transition-all justify-center"
             >
-              <span>Try for free</span>
+              <span>{page.primaryCta.label}</span>
             </Button>
 
             <Button
@@ -207,19 +227,19 @@ function getTaskMeta(name: string, isPte: boolean) {
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     Prepyo AI
                   </span>
-                  <span class="font-mono text-amber-400 font-bold">{isPte ? 'PTE 79+' : 'Band 8.0'}</span>
+                  <span class="font-mono text-amber-400 font-bold">{page.mockup.tag}</span>
                 </div>
 
                 <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
                   <div>
-                    <div class="text-[8px] uppercase tracking-wider text-slate-400">Predicted Score</div>
+                    <div class="text-[8px] uppercase tracking-wider text-slate-400">{page.mockup.label}</div>
                     <div class="text-lg font-black text-emerald-400 leading-tight">
-                      {isPte ? '86 / 90' : '8.5 / 9.0'}
+                      {page.mockup.value}
                     </div>
                   </div>
                   <div class="text-[8px] text-right space-y-0.5 text-slate-300">
-                    <div>{isPte ? 'Fluency: 88' : 'Task: 8.5'}</div>
-                    <div class="text-emerald-400 font-semibold">{isPte ? 'Pronunciation: 90' : 'Lexical: 8.5'}</div>
+                    <div>{page.mockup.lines[0]}</div>
+                    <div class="text-emerald-400 font-semibold">{page.mockup.lines[1]}</div>
                   </div>
                 </div>
 
@@ -233,7 +253,7 @@ function getTaskMeta(name: string, isPte: boolean) {
                 </div>
 
                 <div class="text-[8px] text-center text-slate-400 font-medium">
-                  Instant 3s Automated Evaluation
+                  Instant automated feedback
                 </div>
               </div>
             </div>
@@ -245,34 +265,35 @@ function getTaskMeta(name: string, isPte: boolean) {
       {/* Bottom Trust Strip */}
       <div class="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-border/60 text-center">
         <p class="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-6">
-          Trusted by test-takers preparing from Kathmandu, Pokhara, Chitwan and across Nepal
+          Built for learners preparing from Kathmandu, Pokhara, Chitwan and across Nepal
         </p>
 
         <div class="flex items-center justify-center gap-6 sm:gap-12 flex-wrap text-xs sm:text-sm font-bold text-muted-foreground/80">
-          <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Icon name="lucide:check-circle" class="w-4 h-4 text-primary" />
-            <span>Pearson PTE Aligned</span>
-          </span>
-          <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Icon name="lucide:check-circle" class="w-4 h-4 text-primary" />
-            <span>Cambridge IELTS Criteria</span>
-          </span>
-          <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Icon name="lucide:zap" class="w-4 h-4 text-amber-500" />
-            <span>3-Second AI Scoring</span>
-          </span>
-          <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Icon name="lucide:wallet" class="w-4 h-4 text-emerald-500" />
-            <span>eSewa &amp; Khalti Accepted</span>
-          </span>
-          <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Icon name="lucide:award" class="w-4 h-4 text-purple-500" />
-            <span>15,000+ Mocks Taken</span>
-          </span>
+          {
+            page.trust.map(({ icon, label }) => (
+              <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
+                <Icon name={icon} class="w-4 h-4 text-primary" />
+                <span>{label}</span>
+              </span>
+            ))
+          }
         </div>
       </div>
 
     </div>
+  </section>
+
+  {/* What is … — plain, factual, and the passage answer engines quote. */}
+  <section class="max-w-3xl space-y-4" aria-labelledby="what-is">
+    <h2 id="what-is" class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
+      What is {page.name}?
+    </h2>
+    {page.intro.map(paragraph => (
+      <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">{paragraph}</p>
+    ))}
+    <p class="text-xs text-muted-foreground/80">
+      Updated <time datetime={page.updated}>{updatedLabel}</time>
+    </p>
   </section>
 
   {/* ========================================================================= */}
@@ -287,7 +308,7 @@ function getTaskMeta(name: string, isPte: boolean) {
         {page.name} at a glance
       </h2>
       <p class="text-sm text-muted-foreground mt-2">
-        Official test parameters, delivery formats, and performance benchmarks for 2026.
+        The test format as published by {page.testOwner}.
       </p>
     </div>
 
@@ -327,7 +348,7 @@ function getTaskMeta(name: string, isPte: boolean) {
   {/* ========================================================================= */}
   {/* DETAILS CHART (RADAR GRAPH CUSTOMIZED FOR THIS EXAM)                     */}
   {/* ========================================================================= */}
-  <ProblemSection mode={isPte ? 'pte' : 'ielts'} />
+  {page.chartMode && <ProblemSection mode={page.chartMode} />}
 
   {/* ========================================================================= */}
   {/* MASTER EVERY SINGLE TASK TYPE (ELEVATED & CATEGORIZED EXPLORER)           */}
@@ -342,7 +363,7 @@ function getTaskMeta(name: string, isPte: boolean) {
           Master every single task type
         </h2>
         <p class="text-sm text-muted-foreground">
-          Each item is an isolated drill with the exact interface, audio player, timer, and AI evaluation used in the real test.
+          Each task type is practised on its own, in the format the real test uses, with feedback the moment you answer.
         </p>
       </div>
 
@@ -355,34 +376,18 @@ function getTaskMeta(name: string, isPte: boolean) {
         >
           All Tasks
         </button>
-        <button
-          type="button"
-          class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
-          data-filter-tab="speaking"
-        >
-          Speaking
-        </button>
-        <button
-          type="button"
-          class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
-          data-filter-tab="writing"
-        >
-          Writing
-        </button>
-        <button
-          type="button"
-          class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
-          data-filter-tab="reading"
-        >
-          Reading
-        </button>
-        <button
-          type="button"
-          class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
-          data-filter-tab="listening"
-        >
-          Listening
-        </button>
+        {/* Only the skills this exam actually tests — EPS-TOPIK has no speaking or writing. */}
+        {
+          SKILL_TABS.filter(tab => page.taskTypes.some(task => getTaskMeta(task).category === tab.id)).map(tab => (
+            <button
+              type="button"
+              class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
+              data-filter-tab={tab.id}
+            >
+              {tab.label}
+            </button>
+          ))
+        }
       </div>
     </div>
 
@@ -390,7 +395,7 @@ function getTaskMeta(name: string, isPte: boolean) {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       {
         page.taskTypes.map((task) => {
-          const meta = getTaskMeta(task.name, isPte);
+          const meta = getTaskMeta(task);
 
           return (
             <div
@@ -416,9 +421,11 @@ function getTaskMeta(name: string, isPte: boolean) {
                     </span>
                   </div>
 
-                  <span class="px-2.5 py-1 rounded-full bg-muted border border-border/80 text-[10px] font-mono font-semibold text-muted-foreground">
-                    {meta.timing}
-                  </span>
+                  {meta.timing && (
+                    <span class="px-2.5 py-1 rounded-full bg-muted border border-border/80 text-[10px] font-mono font-semibold text-muted-foreground">
+                      {meta.timing}
+                    </span>
+                  )}
                 </div>
 
                 {/* Task Title & Description */}
@@ -439,7 +446,7 @@ function getTaskMeta(name: string, isPte: boolean) {
                 </span>
 
                 <a
-                  href={appUrl('/diagnostic')}
+                  href={page.primaryCta.href}
                   class="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:underline"
                 >
                   <span>Practice drill</span>
@@ -465,7 +472,7 @@ function getTaskMeta(name: string, isPte: boolean) {
         Built for serious test-takers
       </h2>
       <p class="text-sm text-muted-foreground mt-2">
-        Everything you need to eliminate weak spots and guarantee your target score.
+        Everything you need to find your weak spots and spend your time where the marks are.
       </p>
     </div>
 
@@ -537,7 +544,7 @@ function getTaskMeta(name: string, isPte: boolean) {
       variant="outline"
       class="rounded-full font-bold text-xs px-6 h-10 shrink-0 self-end sm:self-center"
     >
-      <span>Switch to {isPte ? 'IELTS' : 'PTE'}</span>
+      <span>{page.sibling.cta}</span>
     </Button>
   </section>
 </article>

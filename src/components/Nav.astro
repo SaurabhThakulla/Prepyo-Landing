@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
-import { appUrl, asset, BASE_PATH, homeSection, type ExamType } from '@/consts';
+import { appUrl, asset, BASE_PATH, homeSection, KOREAN_LIVE, type ExamType } from '@/consts';
 
 /**
  * Public navigation for the Prepyo landing page.
@@ -31,6 +31,9 @@ const PAGE_LINKS = [{ href: asset('/careers/'), label: 'Careers' }];
 const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
   { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary', href: asset('/pte-academic-preparation/') },
   { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', href: asset('/ielts-academic-preparation/') },
+  ...(KOREAN_LIVE
+    ? [{ exam: 'EPS_TOPIK' as const, label: 'EPS-TOPIK (Korean)', target: 'Korea', targetClass: 'bg-sky-500/10 text-sky-600 dark:text-sky-400', href: asset('/eps-topik-preparation/') }]
+    : []),
   { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: sectionHref('products') },
 ];
 

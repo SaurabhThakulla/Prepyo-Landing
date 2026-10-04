@@ -5,12 +5,13 @@ import ExamsSection from '@/components/ExamsSection.astro';
 import ProblemSection from '@/components/ProblemSection.astro';
 import FeaturesSection from '@/components/FeaturesSection.astro';
 import SubscriptionSection from '@/components/SubscriptionSection.astro';
+import PriceComparison from '@/components/PriceComparison.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import SocialProof from '@/components/SocialProof.astro';
 import { FAQS } from '@/data/faq';
-import { faqPage, howTo, organization, softwareApplication, website } from '@/lib/schema';
-import { asset, BASE_PATH } from '@/consts';
+import { faqPage, howTo, organization, softwareApplication, webPage, website } from '@/lib/schema';
+import { asset, BASE_PATH, KOREAN_LIVE } from '@/consts';
 
 /**
  * The public landing page for Prepyo.
@@ -24,11 +25,23 @@ const origin = Astro.site ?? new URL(Astro.url.origin);
 const site = new URL(BASE_PATH, origin);
 const url = new URL(Astro.url.pathname, origin);
 
+const title = KOREAN_LIVE
+  ? 'Prepyo — PTE, IELTS & EPS-TOPIK Preparation in Nepal'
+  : 'PTE & IELTS Preparation in Nepal — Mock Tests | Prepyo';
+const description = KOREAN_LIVE
+  ? 'Prepare for PTE, IELTS and EPS-TOPIK from Nepal: full mock exams, instant writing and speaking feedback, Korean practice with audio, and plans priced in rupees.'
+  : 'Prepare for PTE 79+ and IELTS Band 8.0+ from Nepal with full mock exams, instant writing and speaking feedback, and plans priced in rupees via eSewa and Khalti.';
+
+// Bump when the page's content is reviewed — it is the freshness date search
+// and answer engines read.
+const UPDATED = '2026-10-04';
+
 // Built from the same arrays the sections render, so the markup cannot drift
 // away from what a visitor actually sees.
 const schema = [
   organization(site),
   website(site),
+  webPage(site, url, { name: title, description, dateModified: UPDATED, hasBreadcrumbs: false }),
   softwareApplication(site),
   faqPage(url, FAQS),
   howTo(url),
@@ -36,8 +49,8 @@ const schema = [
 ---
 
 <Layout
-  title="Prepyo — Nepal’s Premier PTE & IELTS Prep Platform"
-  description="Master PTE 79+ and IELTS Band 8.0+ with realistic practice, full mock exam simulations, instant writing & speaking feedback, and Nepal leaderboards."
+  title={title}
+  description={description}
   schema={schema}
 >
   <div class="w-full space-y-4">
@@ -47,6 +60,7 @@ const schema = [
     <ProblemSection />
     <FeaturesSection />
     <SubscriptionSection />
+    <PriceComparison />
     <HowItWorksSection />
     <FAQSection />
   </div>

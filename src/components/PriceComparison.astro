@@ -1,0 +1,115 @@
+---
+import { Icon } from 'astro-icon/components';
+import { appUrl } from '@/consts';
+import { PRICE_ROWS, PRICES_CHECKED } from '@/data/price-comparison';
+
+/**
+ * How Prepyo's 7-day plan compares on price with the platforms Nepali
+ * students usually weigh it against. Price and plan length only, each with
+ * its source — see src/data/price-comparison.ts for why.
+ */
+const prepyoPrice = PRICE_ROWS.find(row => row.isPrepyo)!.price;
+
+const checkedLabel = new Date(PRICES_CHECKED).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<section class="py-14 sm:py-20 border-t border-border" aria-labelledby="price-comparison">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center space-y-2.5 mb-8 sm:mb-10">
+      <span class="text-xs font-bold uppercase tracking-wider text-primary">Price comparison</span>
+      <h2
+        id="price-comparison"
+        class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight text-balance"
+      >
+        A week of PTE practice in Nepal, compared
+      </h2>
+      <p class="text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed">
+        Each platform’s 7-day plan, or its nearest one, and what it costs.
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-border bg-card overflow-hidden">
+      {/* Header row, hidden on phones where each row stacks into a card. */}
+      <div
+        class="hidden sm:grid grid-cols-[1.3fr_0.8fr_1fr_2fr] gap-4 px-5 py-3 bg-muted/60 border-b border-border text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+        aria-hidden="true"
+      >
+        <span>Platform</span>
+        <span>Plan compared</span>
+        <span>Price</span>
+        <span>Notes</span>
+      </div>
+
+      <ul role="list">
+        {
+          PRICE_ROWS.map(row => (
+            <li
+              class:list={[
+                'grid grid-cols-2 sm:grid-cols-[1.3fr_0.8fr_1fr_2fr] gap-x-4 gap-y-1.5 px-5 py-4 border-b border-border/70 last:border-b-0 items-center',
+                row.isPrepyo && 'bg-primary/5 sm:border-l-4 sm:border-l-primary',
+              ]}
+            >
+              <span class="col-span-2 sm:col-span-1 font-display font-bold text-sm text-foreground flex items-center gap-2">
+                {row.name}
+                {row.isPrepyo && (
+                  <span class="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
+                    Lowest price
+                  </span>
+                )}
+              </span>
+              <span class="text-xs sm:text-sm text-muted-foreground">
+                <span class="sm:hidden">Plan: </span>
+                {row.plan}
+              </span>
+              <span
+                class:list={[
+                  'text-sm font-bold text-right sm:text-left',
+                  row.isPrepyo ? 'text-primary' : 'text-foreground',
+                ]}
+              >
+                {row.price}
+              </span>
+              <span class="col-span-2 sm:col-span-1 text-xs text-muted-foreground leading-relaxed">
+                {row.note}
+                {row.source && (
+                  <>
+                    {' '}
+                    Source:{' '}
+                    <a
+                      href={row.source.href}
+                      target="_blank"
+                      rel="noopener nofollow"
+                      class="text-primary hover:underline"
+                    >
+                      {row.source.label}
+                    </a>
+                  </>
+                )}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <p class="text-[11px] text-muted-foreground text-center mt-4 leading-relaxed max-w-2xl mx-auto">
+      Prices as listed on each website on <time datetime={PRICES_CHECKED}>{checkedLabel}</time>. Plans
+      differ in what they include, and prices change, so check each provider before you buy. APEUni,
+      Gurully and AlfaPTE are trademarks of their owners; Prepyo is not affiliated with them.
+    </p>
+
+    <div class="flex justify-center mt-6">
+      <a
+        href={appUrl('/')}
+        class="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground font-bold text-sm px-7 h-12 hover:brightness-110 shadow-lg shadow-primary/25 transition-all"
+      >
+        <span>Start free, upgrade for {prepyoPrice}</span>
+        <Icon name="lucide:arrow-right" class="w-4 h-4" />
+      </a>
+    </div>
+  </div>
+</section>

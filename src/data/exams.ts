@@ -1,11 +1,11 @@
 /**
- * The three exam tracks shown on the landing page.
+ * The exam tracks shown on the landing page.
  *
  * Extracted from ExamsSection because the PTE and IELTS pages need the same
  * card data — the skills list, the scoring scale, the target — and a second
  * copy would drift the moment a task list changed.
  */
-import type { ExamType } from '@/consts';
+import { KOREAN_LIVE, type ExamType } from '@/consts';
 
 export interface ExamStat {
   value: string;
@@ -29,7 +29,7 @@ export interface ExamCard {
   stats?: ExamStat[];
 }
 
-export const EXAMS: ExamCard[] = [
+const ALL_EXAMS: ExamCard[] = [
   {
     exam: 'PTE',
     slug: '/pte-academic-preparation/',
@@ -70,6 +70,25 @@ export const EXAMS: ExamCard[] = [
     dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
   },
   {
+    exam: 'EPS_TOPIK',
+    slug: '/eps-topik-preparation/',
+    name: 'EPS-TOPIK (Korean)',
+    heading: 'What you’ll master for EPS-TOPIK',
+    targetLabel: 'Work in Korea',
+    scaleLabel: 'Reading & listening · multiple choice',
+    description: 'The Korean test for jobs in South Korea under the Employment Permit System. Start from Hangul with the Learn Korean course.',
+    moreTasks: '16 reading & listening question types in all',
+    trackLabel: 'INSIDE THIS TRACK',
+    skills: [
+      'Learn Korean from Hangul',
+      'Picture & grammar questions',
+      'Signs, notices and charts',
+      'Listening with Korean audio',
+    ],
+    brandClass: 'text-[#1e4fe8] dark:text-[#1d4ed8]',
+    dotColor: 'bg-[#1e4fe8] dark:bg-blue-400',
+  },
+  {
     exam: 'JAPANESE',
     name: 'Japanese Language',
     heading: 'What you’ll master for JLPT N5–N1',
@@ -88,3 +107,6 @@ export const EXAMS: ExamCard[] = [
     dotColor: 'bg-[#48567e] dark:bg-indigo-400',
   },
 ];
+
+/** The tracks shown on the site — Korean only once it is live in the app. */
+export const EXAMS: ExamCard[] = ALL_EXAMS.filter(card => KOREAN_LIVE || card.exam !== 'EPS_TOPIK');

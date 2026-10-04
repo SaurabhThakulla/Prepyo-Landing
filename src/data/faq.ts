@@ -33,6 +33,6 @@ export const FAQS: Faq[] = [
   {
     question: 'Do you work with consultancies and institutes?',
     answer:
-      'Yes. Run your whole batch on Prepyo and track their results in one place. Email institutes@prepyo.np.',
+      'Yes. Run your whole batch on Prepyo and track their results in one place. Email contact@prepyo.online.',
   },
 ];

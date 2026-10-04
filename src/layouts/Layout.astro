@@ -16,6 +16,8 @@ interface Props {
   ogImageAlt?: string;
   /** Drops the centred reading-width container so the page can span the viewport. */
   fullWidth?: boolean;
+  /** Keeps a built-but-unlaunched page out of search results. */
+  noindex?: boolean;
 }
 
 const {
@@ -23,6 +25,7 @@ const {
   description,
   schema,
   fullWidth = false,
+  noindex = false,
   ogImage = '/images/og-cover.jpg',
   ogImageAlt = 'Prepyo — full-length PTE and IELTS mock exams for students in Nepal',
 } = Astro.props;
@@ -39,6 +42,7 @@ const socialImage = new URL(asset(ogImage), canonical).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/webp" href={asset('/prepyo-mark.webp')} />
     <link rel="sitemap" type="application/xml" href={asset('/sitemap-index.xml')} />
     <meta name="generator" content={Astro.generator} />
@@ -64,10 +68,13 @@ const socialImage = new URL(asset(ogImage), canonical).href;
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
+    {/* Three families: Inter for text, Plus Jakarta Sans for headings, JetBrains
+        Mono for small labels. Every extra family is another render-blocking
+        download, so add one only if it is actually used. */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Libre+Franklin:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
 

@@ -75,7 +75,7 @@ export const OPEN_ROLES: Role[] = [
     typeLabel: 'Full-time',
     salary: 'NPR 50K – 90K / month',
     description:
-      'Design and craft distraction-free, pixel-perfect exam interfaces and practice drills that mirror official Pearson and Cambridge exam software.',
+      'Design and craft distraction-free, pixel-perfect exam interfaces and practice drills that mirror the real test-day experience.',
     responsibilities: [
       'Design clean UI layouts, design systems, and responsive test interfaces for mobile and desktop.',
       'Translate Figma design tokens and component specs directly into semantic HTML and modern CSS/Tailwind.',

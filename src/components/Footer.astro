@@ -1,6 +1,17 @@
 ---
 import { Icon } from "astro-icon/components";
-import { appUrl, asset, BASE_PATH, homeSection } from "@/consts";
+import {
+  appUrl,
+  asset,
+  BASE_PATH,
+  BILLING_EMAIL,
+  CONTACT_EMAIL,
+  FOUNDER_NAME,
+  GOOGLE_BUSINESS_URL,
+  homeSection,
+  KOREAN_LIVE,
+  SOCIAL_LINKS,
+} from "@/consts";
 
 // Bare fragments on the landing page so the smooth-scroll script claims them,
 // full paths everywhere else so they lead back to the right page first.
@@ -20,6 +31,12 @@ const EXPLORE_LINKS = [
 const GUIDE_LINKS = [
   { href: asset("/pte-academic-preparation/"), label: "PTE Academic prep" },
   { href: asset("/ielts-academic-preparation/"), label: "IELTS Academic prep" },
+  ...(KOREAN_LIVE
+    ? [
+        { href: asset("/eps-topik-preparation/"), label: "EPS-TOPIK prep" },
+        { href: asset("/learn-korean/"), label: "Learn Korean" },
+      ]
+    : []),
   { href: asset("/how-scoring-works/"), label: "How scoring works" },
 ];
 
@@ -54,9 +71,40 @@ const year = new Date().getFullYear();
           />
         </a>
         <p class="text-xs text-muted-foreground leading-relaxed">
-          PTE, IELTS and Japanese language practice, built for Nepali
-          students.
+          {KOREAN_LIVE
+            ? "PTE, IELTS and EPS-TOPIK Korean practice, built for learners in Nepal."
+            : "PTE and IELTS practice, built for students in Nepal."}
+          Founded by {FOUNDER_NAME}.
         </p>
+        <ul class="space-y-1 text-xs text-muted-foreground">
+          <li>
+            <a href={`mailto:${CONTACT_EMAIL}`} class="hover:text-primary transition-colors">{CONTACT_EMAIL}</a>
+          </li>
+          <li>
+            <a href={GOOGLE_BUSINESS_URL} target="_blank" rel="noopener" class="hover:text-primary transition-colors">
+              Tikapur, Kailali, Nepal
+            </a>
+          </li>
+          <li>
+            Billing:{" "}
+            <a href={`mailto:${BILLING_EMAIL}`} class="hover:text-primary transition-colors">{BILLING_EMAIL}</a>
+          </li>
+        </ul>
+        <div class="flex items-center gap-2">
+          {
+            SOCIAL_LINKS.map(({ label, icon, href }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener me"
+                aria-label={`Prepyo on ${label}`}
+                class="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+              >
+                <Icon name={icon} class="w-4 h-4" />
+              </a>
+            ))
+          }
+        </div>
         <div
           class="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1"
         >

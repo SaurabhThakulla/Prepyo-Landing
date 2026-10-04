@@ -1,3 +1,5 @@
+import launch from '@/data/launch.json';
+
 /**
  * Where the marketing site points people once they want to actually use Prepyo.
  *
@@ -33,7 +35,50 @@ export function asset(path: string): string {
   return `${BASE_PATH}${path.replace(/^\//, '')}`;
 }
 
-export type ExamType = 'PTE' | 'IELTS' | 'JAPANESE';
+export type ExamType = 'PTE' | 'IELTS' | 'EPS_TOPIK' | 'JAPANESE';
+
+/**
+ * Whether the Korean track (EPS-TOPIK practice and the Learn Korean course) is
+ * live in the app at dashboard.prepyo.online.
+ *
+ * While it is false the Korean pages still build, so they can be previewed,
+ * but they are marked noindex, left out of the sitemap and llms.txt, and not
+ * linked from the nav, footer or exam cards — advertising a course people
+ * cannot open is worse for search than not mentioning it. Flip it to true on
+ * the day the app ships Korean to production.
+ *
+ * It lives in src/data/launch.json because astro.config.mjs reads it too, to
+ * keep the pages out of the sitemap.
+ */
+export const KOREAN_LIVE: boolean = launch.koreanLive;
+
+/** Public inboxes. Both are forwarded; never publish the address behind them. */
+export const CONTACT_EMAIL = 'contact@prepyo.online';
+export const BILLING_EMAIL = 'billing@prepyo.online';
+
+/** Prepyo's own profiles, used for the footer and the Organization `sameAs`. */
+export const SOCIAL_LINKS = [
+  { label: 'Instagram', icon: 'lucide:instagram', href: 'https://www.instagram.com/tryprepyo.online/' },
+  { label: 'Facebook', icon: 'lucide:facebook', href: 'https://www.facebook.com/profile.php?id=61594471394788' },
+];
+
+export const FOUNDER_NAME = 'Saurabh Thakulla';
+
+/**
+ * The Google Business Profile. A `cid` link rather than the share.google short
+ * link, because the cid is the listing's permanent id and resolves without a
+ * redirect chain.
+ */
+export const GOOGLE_BUSINESS_URL = 'https://maps.google.com/?cid=9715452498547421698';
+
+/** Must match the Google Business Profile word for word — search engines compare the two. */
+export const BUSINESS_ADDRESS = {
+  streetAddress: 'Ward no 1',
+  addressLocality: 'Tikapur',
+  addressRegion: 'Sudurpashchim Province',
+  postalCode: '10901',
+  addressCountry: 'NP',
+};
 
 
 /**

@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import Button from '@/components/Button.astro';
 import { Icon } from 'astro-icon/components';
-import { breadcrumbs, organization, website } from '@/lib/schema';
+import { breadcrumbs, organization, webPage, website } from '@/lib/schema';
 import { appUrl, asset, BASE_PATH } from '@/consts';
 
 /**
@@ -30,6 +30,7 @@ const description =
 const schema = [
   organization(site),
   website(site),
+  webPage(site, url, { name: title, description, dateModified: '2026-10-04' }),
   breadcrumbs(url, [
     { name: 'Home', item: site.href },
     { name: 'How scoring works', item: url.href },

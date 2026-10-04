@@ -30,8 +30,8 @@ const SOLUTION_ITEMS: SolutionItem[] = [
   {
     iconBg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
     iconColor: 'text-emerald-500',
-    title: 'Official-Grade AI Scoring',
-    desc: 'Scored against Pearson and Cambridge rubrics so you know your exact band before test day.',
+    title: 'Criteria-Based AI Scoring',
+    desc: 'Scored against the criteria Pearson and IELTS publish, so you have a close estimate of your band before test day.',
   },
 ];
 ---
@@ -44,7 +44,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
         Diagnostic Visualizer
       </span>
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight text-balance">
-        Details Chart
+        See where you gain and lose marks in {mode === 'pte' ? 'PTE' : mode === 'ielts' ? 'IELTS' : 'PTE and IELTS'}
       </h2>
       <p class="text-sm text-muted-foreground max-w-xl mx-auto">
         Multi-skill radar analysis that pinpoints exactly where you gain and lose marks across all 4 communicative skills.

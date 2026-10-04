@@ -14,7 +14,16 @@ import type { ExamPage } from '@/data/exam-pages';
 import type { Role } from '@/data/careers';
 import { EXACT_PLANS } from '@/data/pricing';
 import { STEPS } from '@/data/steps';
-import { asset } from '@/consts';
+import {
+  asset,
+  BILLING_EMAIL,
+  BUSINESS_ADDRESS,
+  CONTACT_EMAIL,
+  FOUNDER_NAME,
+  GOOGLE_BUSINESS_URL,
+  KOREAN_LIVE,
+  SOCIAL_LINKS,
+} from '@/consts';
 
 export type JsonLdNode = Record<string, unknown>;
 
@@ -36,15 +45,28 @@ export function organization(site: URL): JsonLdNode {
       width: 545,
       height: 176,
     },
-    description:
-      'PTE Academic, IELTS Academic and Japanese language test preparation built for students in Nepal, with full-length mock exams marked against the official band descriptors.',
+    description: KOREAN_LIVE
+      ? 'PTE Academic, IELTS Academic and EPS-TOPIK Korean test preparation built for learners in Nepal, with full-length mock exams and practice marked against the published criteria.'
+      : 'PTE Academic and IELTS Academic test preparation built for students in Nepal, with full-length mock exams marked against the published band descriptors.',
+    email: CONTACT_EMAIL,
+    founder: { '@type': 'Person', name: FOUNDER_NAME, jobTitle: 'Founder' },
+    sameAs: [...SOCIAL_LINKS.map(link => link.href), GOOGLE_BUSINESS_URL],
+    address: { '@type': 'PostalAddress', ...BUSINESS_ADDRESS },
+    hasMap: GOOGLE_BUSINESS_URL,
     areaServed: { '@type': 'Country', name: 'Nepal' },
-    knowsLanguage: ['en', 'ne'],
+    knowsLanguage: KOREAN_LIVE ? ['en', 'ne', 'ko'] : ['en', 'ne'],
     contactPoint: [
       {
         '@type': 'ContactPoint',
-        contactType: 'Institutions and consultancies',
-        email: 'institutes@prepyo.np',
+        contactType: 'customer support',
+        email: CONTACT_EMAIL,
+        areaServed: 'NP',
+        availableLanguage: ['English', 'Nepali'],
+      },
+      {
+        '@type': 'ContactPoint',
+        contactType: 'billing support',
+        email: BILLING_EMAIL,
         areaServed: 'NP',
         availableLanguage: ['English', 'Nepali'],
       },
@@ -93,6 +115,30 @@ export function softwareApplication(site: URL): JsonLdNode {
   };
 }
 
+/**
+ * The page itself, carrying the date its content was last reviewed — the
+ * freshness signal answer engines weigh when two sources disagree.
+ */
+export function webPage(
+  site: URL,
+  url: URL,
+  page: { name: string; description: string; dateModified: string; about?: JsonLdNode; hasBreadcrumbs?: boolean },
+): JsonLdNode {
+  return {
+    '@type': 'WebPage',
+    '@id': `${url.href}#webpage`,
+    url: url.href,
+    name: page.name,
+    description: page.description,
+    inLanguage: 'en',
+    dateModified: page.dateModified,
+    isPartOf: { '@id': websiteId(site) },
+    publisher: { '@id': organizationId(site) },
+    ...(page.hasBreadcrumbs === false ? {} : { breadcrumb: { '@id': `${url.href}#breadcrumbs` } }),
+    ...(page.about ? { about: page.about } : {}),
+  };
+}
+
 export function faqPage(url: URL, faqs: Faq[]): JsonLdNode {
   return {
     '@type': 'FAQPage',
@@ -131,6 +177,7 @@ export function course(site: URL, url: URL, page: ExamPage): JsonLdNode {
     url: url.href,
     provider: { '@id': organizationId(site) },
     inLanguage: 'en',
+    dateModified: page.updated,
     teaches: page.taskTypes.map(task => task.name),
     hasCourseInstance: {
       '@type': 'CourseInstance',
@@ -200,4 +247,24 @@ export function jobPosting(site: URL, url: URL, role: Role): JsonLdNode {
           },
         }),
   };
+}
+
+/** Everything an exam page (PTE, IELTS, EPS-TOPIK) emits, in one place. */
+export function examPageGraph(site: URL, url: URL, page: ExamPage): JsonLdNode[] {
+  return [
+    organization(site),
+    website(site),
+    webPage(site, url, {
+      name: page.title,
+      description: page.metaDescription,
+      dateModified: page.updated,
+      about: { '@id': `${url.href}#course` },
+    }),
+    course(site, url, page),
+    faqPage(url, page.faqs),
+    breadcrumbs(url, [
+      { name: 'Home', item: site.href },
+      { name: page.name, item: url.href },
+    ]),
+  ];
 }
