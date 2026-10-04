@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { asset, CONTACT_EMAIL, GOOGLE_BUSINESS_URL, KOREAN_LIVE, SOCIAL_LINKS } from '@/consts';
+import { getCollection } from 'astro:content';
 import { EPS_PAGE, IELTS_PAGE, PTE_PAGE } from '@/data/exam-pages';
 
 /**
@@ -10,7 +11,7 @@ import { EPS_PAGE, IELTS_PAGE, PTE_PAGE } from '@/data/exam-pages';
  * and the origin differs per deploy — and so it follows KOREAN_LIVE instead of
  * advertising pages that are not launched.
  */
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = async ({ site }) => {
   const origin = site ?? new URL('https://prepyo.online');
   const link = (path: string) => new URL(asset(path), origin).href;
 
@@ -30,6 +31,9 @@ export const GET: APIRoute = ({ site }) => {
     `- [Careers](${link('/careers/')}): open roles at Prepyo.`,
   ];
 
+  const posts = (await getCollection('blog')).sort((a, b) => b.data.published.localeCompare(a.data.published));
+  const guides = posts.map(post => `- [${post.data.title}](${link(`/blog/${post.id}/`)}): ${post.data.description}`);
+
   const body = [
     '# Prepyo',
     '',
@@ -40,6 +44,10 @@ export const GET: APIRoute = ({ site }) => {
     '## Pages',
     '',
     ...pages,
+    '',
+    '## Guides',
+    '',
+    ...guides,
     '',
     '## Contact',
     '',

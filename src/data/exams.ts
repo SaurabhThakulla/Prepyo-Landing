@@ -36,9 +36,9 @@ const ALL_EXAMS: ExamCard[] = [
     name: 'PTE Academic',
     heading: 'What you’ll master for PTE 79+',
     targetLabel: '79+ goal',
-    scaleLabel: 'Computer-marked · scored 10–90',
-    description: 'Taken on a computer and marked by AI. Results usually arrive within 48 hours.',
-    moreTasks: '+ 16 more task types',
+    scaleLabel: 'AI-scored · scored 10–90',
+    description: 'Taken on a computer and scored by AI with human oversight. Results usually arrive within 48 hours.',
+    moreTasks: '+ 18 more task types',
     trackLabel: 'INSIDE THIS TRACK',
     skills: [
       'Read Aloud',

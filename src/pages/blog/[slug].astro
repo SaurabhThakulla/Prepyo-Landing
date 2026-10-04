@@ -1,0 +1,134 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Button from '@/components/Button.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import FAQSection from '@/components/FAQSection.astro';
+import { blogPosting, breadcrumbs, faqPage, organization, website } from '@/lib/schema';
+import { appUrl, asset, BASE_PATH, FOUNDER_NAME } from '@/consts';
+
+/**
+ * One blog post. The Markdown body renders inside `.article`, styled below,
+ * and the post's `faqs` render as the FAQ accordion and FAQPage markup — so a
+ * question answered at the foot of a post is answered for search too.
+ */
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, published, updated, exam, ogImage, faqs } = post.data;
+
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+const blogUrl = new URL(asset('/blog/'), origin).href;
+
+const fmt = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const schema = [
+  organization(site),
+  website(site),
+  blogPosting(site, url, { title, description, published, updated, image: ogImage }),
+  ...(faqs.length ? [faqPage(url, faqs)] : []),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Blog', item: blogUrl },
+    { name: title, item: url.href },
+  ]),
+];
+
+const cta =
+  exam === 'EPS-TOPIK'
+    ? { label: 'Start learning Korean free', href: appUrl('/') }
+    : { label: 'Take the free diagnostic', href: appUrl('/diagnostic') };
+---
+
+<Layout title={`${title} | Prepyo`} description={description} schema={schema} ogImage={ogImage} ogImageAlt={title}>
+  <article class="w-full max-w-3xl mx-auto">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Blog', href: asset('/blog/') }, { name: title }]} />
+
+    <header class="pt-6 sm:pt-10">
+      <span class="text-xs font-bold uppercase tracking-wider text-primary">{exam}</span>
+      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1] mt-3">
+        {title}
+      </h1>
+      <p class="text-sm text-muted-foreground mt-5">
+        By {FOUNDER_NAME} · Published <time datetime={published}>{fmt(published)}</time>
+        {updated !== published && <> · Updated <time datetime={updated}>{fmt(updated)}</time></>}
+      </p>
+    </header>
+
+    <div class="article mt-8 pb-10 border-b border-border">
+      <Content />
+    </div>
+
+    {faqs.length > 0 && <FAQSection faqs={faqs} title="Frequently asked questions" />}
+
+    <section class="py-10 sm:py-14">
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">Practise on Prepyo</h2>
+        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+          Start free, see where your marks go, and upgrade from NPR 99 when you need more.
+        </p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <Button href={cta.href} size="lg" class="rounded-full font-bold text-sm px-7 h-12">{cta.label}</Button>
+          <Button href={asset('/blog/')} variant="outline" size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+            More guides
+          </Button>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<style is:global>
+  .article {
+    color: hsl(var(--foreground) / 0.9);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .article > * + * { margin-top: 1.1em; }
+  .article h2 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: hsl(var(--foreground));
+    margin-top: 2em;
+  }
+  .article h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin-top: 1.6em;
+  }
+  .article strong { color: hsl(var(--foreground)); font-weight: 600; }
+  .article a { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 2px; }
+  .article ul, .article ol { padding-left: 1.4em; }
+  .article ul { list-style: disc; }
+  .article ol { list-style: decimal; }
+  .article li + li { margin-top: 0.4em; }
+  .article table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .article th, .article td {
+    border: 1px solid hsl(var(--border));
+    padding: 0.6em 0.8em;
+    text-align: left;
+    vertical-align: top;
+  }
+  .article th { background: hsl(var(--muted)); color: hsl(var(--foreground)); font-weight: 600; }
+  @media (min-width: 640px) {
+    .article { font-size: 1.0625rem; }
+    .article h2 { font-size: 1.75rem; }
+    .article table { display: table; }
+  }
+</style>

@@ -83,7 +83,7 @@ export const PTE_PAGE: ExamPage = {
   standfirst:
     'Every task type, the real timings, and a score breakdown that tells you which part of the test is costing you points.',
   intro: [
-    'PTE Academic is taken on a computer and marked by automated scoring, which is why results usually reach you within 48 hours. It is accepted for study and visa applications in Australia, New Zealand, the UK and Canada.',
+    'PTE Academic is taken on a computer and scored by AI with human oversight, which is why results usually reach you within 48 hours. It is accepted for study and visa applications in Australia, New Zealand, the UK and Canada.',
     'The scoring is also what makes it hard to prepare for on paper. Your speaking score depends on things a notebook cannot show you — how fluently you spoke, how clearly you pronounced each word, whether you hesitated. You need to hear the recording back and see where the marks went.',
     'That is the gap Prepyo fills: you practise the actual task, you get the breakdown straight away, and the tasks you keep losing marks on come back until they stop being weak spots.',
   ],
@@ -100,13 +100,13 @@ export const PTE_PAGE: ExamPage = {
   format: [
     { label: 'Delivery', value: 'On a computer, at a test centre' },
     { label: 'Structure', value: 'Speaking & Writing, Reading, Listening — one sitting' },
-    { label: 'Length', value: 'About two hours' },
+    { label: 'Length', value: 'About 2 hours 15 minutes, 22 task types' },
     { label: 'Score range', value: '10–90, on the Global Scale of English' },
     { label: 'Results', value: 'Usually within 48 hours' },
     { label: 'Common target', value: '79+ in each communicative skill' },
   ],
   scoring: [
-    'PTE reports one overall score from 10 to 90, four communicative skills — listening, reading, speaking, writing — and a set of enabling skills covering grammar, oral fluency, pronunciation, spelling, vocabulary and written discourse.',
+    'PTE reports one overall score from 10 to 90 and a score for each of the four communicative skills — listening, reading, speaking and writing. Since August 2025, AI scoring works alongside human review, and memorised templates are detected and penalised.',
     'Most tasks are integrated, meaning one task feeds more than one score. Read Aloud counts towards both reading and speaking; Write from Dictation counts towards both listening and writing. This is why a single weak skill drags down parts of the report you were not expecting, and why practising each section in isolation misleads you.',
     'The 79 target is not arbitrary. Australia’s skilled-migration points test treats 79 in each of the four communicative skills as superior English, which is the band most applicants mean when they say "PTE 79+".',
   ],
@@ -115,6 +115,8 @@ export const PTE_PAGE: ExamPage = {
     { name: 'Repeat Sentence', blurb: 'Short memory and fluency task. Marks come from how much of the sentence you reproduce, not a perfect accent.' },
     { name: 'Describe Image', blurb: 'Forty seconds to turn a chart into fluent speech. A repeatable structure beats improvising every time.' },
     { name: 'Re-tell Lecture', blurb: 'Listening and speaking in one task. Your note-taking method matters more here than your vocabulary.' },
+    { name: 'Respond to a Situation', skill: 'speaking', blurb: 'New in August 2025: speak a natural reply to an everyday situation, with the right tone for who you are talking to.' },
+    { name: 'Summarize Group Discussion', skill: 'speaking', blurb: 'New in August 2025: hear several speakers discuss a topic, then summarise the main points and views aloud.' },
     { name: 'Summarize Written Text', blurb: 'One sentence, strict word count. Grammar and form are scored as heavily as content.' },
     { name: 'Write Essay', blurb: 'Twenty minutes, a set structure, and marks for development, coherence and range.' },
     { name: 'Re-order Paragraphs', blurb: 'Pure logic and cohesion. The fastest reading marks to recover once you see the pattern.' },
@@ -159,6 +161,16 @@ export const PTE_PAGE: ExamPage = {
       question: 'Is PTE easier than IELTS?',
       answer:
         'Neither is easier — they are different. PTE is entirely computer-marked and returns results faster; IELTS has a speaking test with a human examiner. Choose on which format suits you and what your university or visa route accepts.',
+    },
+    {
+      question: 'How much does the PTE Academic exam cost in Nepal?',
+      answer:
+        'As of October 2026, PTE Academic costs USD 220 plus 13% VAT (about USD 248.60), which works out at roughly NPR 32,000–33,000 depending on the exchange rate. Check the current price on Pearson’s booking page before you pay.',
+    },
+    {
+      question: 'Where can I take PTE Academic in Nepal?',
+      answer:
+        'Pearson runs test centres in Kathmandu and several other Nepali cities. Book through Pearson’s official site, where you can see every centre and its open dates.',
     },
     {
       question: 'Can I practise PTE for free on Prepyo?',
@@ -265,6 +277,16 @@ export const IELTS_PAGE: ExamPage = {
         'On four equally weighted criteria — Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy — which are averaged into the Writing band. Task 2 carries twice the weight of Task 1.',
     },
     {
+      question: 'How much does the IELTS exam cost in Nepal?',
+      answer:
+        'As of October 2026, IELTS Academic and General Training cost NPR 36,000 at both the British Council and IDP in Nepal, and IELTS for UKVI costs NPR 36,400. Fees change, so confirm on the British Council or IDP site when you book.',
+    },
+    {
+      question: 'Where can I take IELTS in Nepal?',
+      answer:
+        'The British Council and IDP both run IELTS in Kathmandu, with test locations in other cities including Pokhara, Chitwan, Butwal and Biratnagar.',
+    },
+    {
       question: 'Does Prepyo cover IELTS General Training?',
       answer:
         'Prepyo’s IELTS track covers IELTS Academic. Listening and Speaking are shared with General Training, so that practice transfers, but the Reading and Writing Task 1 material is Academic.',
@@ -283,10 +305,12 @@ export const IELTS_PAGE: ExamPage = {
  * (syllabus-topics.json in the app repo), so the page never lists a task the
  * practice bank does not have.
  *
- * Deliberately not stated until confirmed against HRD Korea's current notice
- * for Nepal — each is a number answer engines would quote back:
- * TODO(confirm): question count per section, test length, score scale,
- * pass/cut-off rule, exam fee in NPR, test venue, and the skills test.
+ * Test composition and the selection rule are from HRD Korea's own EPS-TOPIK
+ * page (epstopik.hrdkorea.or.kr), checked October 2026.
+ *
+ * Deliberately not stated until confirmed against the current notice for
+ * Nepal — sources disagree, and answer engines would quote it back:
+ * TODO(confirm): exam fee in NPR, test venue, and the skills test.
  */
 export const EPS_PAGE: ExamPage = {
   slug: '/eps-topik-preparation/',
@@ -320,12 +344,14 @@ export const EPS_PAGE: ExamPage = {
     { label: 'Full name', value: 'Employment Permit System Test of Proficiency in Korean' },
     { label: 'Run by', value: 'HRD Korea (Human Resources Development Service of Korea)' },
     { label: 'Used for', value: 'Work in South Korea under the Employment Permit System' },
-    { label: 'Sections', value: 'Reading and Listening — no speaking or writing' },
-    { label: 'Question style', value: 'Multiple choice, four options' },
-    { label: 'Listening', value: 'Each recording is played twice' },
+    { label: 'Questions', value: '40 — 20 reading, 20 listening, multiple choice' },
+    { label: 'Length', value: '50 minutes — 25 reading, 25 listening' },
+    { label: 'Score', value: 'Out of 100 — 50 reading, 50 listening' },
+    { label: 'Selection', value: 'Ranked by score within each industry’s quota' },
   ],
   scoring: [
-    'Every question is multiple choice and marked against an answer key, so there is no examiner judgement involved. Your result comes down to how many reading and listening questions you answer correctly.',
+    'EPS-TOPIK has 40 multiple-choice questions — 20 reading and 20 listening — worth 50 points each section, 100 in total. Every answer is marked against a key, so there is no examiner judgement involved.',
+    'There is no single pass mark. HRD Korea uses relative evaluation: candidates must score above the lowest score set for their industry, and are then selected in order of merit until that industry’s quota for the round is filled. Every extra point moves you up the list.',
     'That makes the score unusually honest to practise for. A wrong answer is not a matter of style; it is a word you did not know, a grammar ending you misread, or a number you missed in a recording — and each of those can be drilled.',
     'Listening is the half that self-study most often neglects, because reading Korean can be learned from a book and hearing it at speed cannot. That is why every listening question on Prepyo comes with Korean audio rather than a script to read.',
   ],
@@ -379,6 +405,11 @@ export const EPS_PAGE: ExamPage = {
       question: 'Does EPS-TOPIK have speaking or writing?',
       answer:
         'No. It tests reading and listening only, and every question is multiple choice. That is why Prepyo’s EPS-TOPIK practice has no speaking or writing — your time goes on the two skills that are actually scored.',
+    },
+    {
+      question: 'How is EPS-TOPIK scored, and what is the pass mark?',
+      answer:
+        'The test has 40 questions — 20 reading, 20 listening — scored out of 100. There is no fixed pass mark: HRD Korea ranks candidates by score within each industry, and those above the industry’s lowest score are selected in order of merit until the quota is filled.',
     },
     {
       question: 'I don’t know any Korean. Where do I start?',

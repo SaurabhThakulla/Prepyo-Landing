@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { breadcrumbs, organization, website } from '@/lib/schema';
+import { asset, BASE_PATH } from '@/consts';
+
+/** The guides index: every post, newest first. */
+const posts = (await getCollection('blog')).sort((a, b) => b.data.published.localeCompare(a.data.published));
+
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const title = 'PTE, IELTS & EPS-TOPIK Guides for Nepal | Prepyo Blog';
+const description =
+  'Practical guides for students and workers in Nepal preparing for PTE Academic, IELTS Academic and EPS-TOPIK: formats, fees, scoring and study plans.';
+
+const schema = [
+  organization(site),
+  website(site),
+  {
+    '@type': 'Blog',
+    '@id': `${url.href}#blog`,
+    name: 'Prepyo Blog',
+    description,
+    url: url.href,
+    publisher: { '@id': `${site.href}#organization` },
+    blogPost: posts.map(post => ({
+      '@type': 'BlogPosting',
+      headline: post.data.title,
+      url: new URL(asset(`/blog/${post.id}/`), origin).href,
+      datePublished: post.data.published,
+    })),
+  },
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'Blog', item: url.href },
+  ]),
+];
+
+const fmt = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Layout title={title} description={description} schema={schema}>
+  <div class="w-full">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Blog' }]} />
+
+    <header class="pt-6 sm:pt-10 max-w-3xl">
+      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1]">
+        Guides for PTE, IELTS and EPS-TOPIK
+      </h1>
+      <p class="text-base sm:text-lg text-muted-foreground leading-relaxed mt-5 text-balance">
+        Straight answers on test formats, fees in Nepal, scoring and how to prepare.
+      </p>
+    </header>
+
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 py-10 sm:py-14" role="list">
+      {
+        posts.map(post => (
+          <li>
+            <a
+              href={asset(`/blog/${post.id}/`)}
+              class="group h-full rounded-2xl border border-border bg-card p-6 flex flex-col hover:border-primary/40 hover:shadow-md transition-all"
+            >
+              <span class="text-[11px] font-bold uppercase tracking-wider text-primary">{post.data.exam}</span>
+              <h2 class="font-display font-bold text-lg text-foreground mt-2 leading-snug group-hover:text-primary transition-colors">
+                {post.data.title}
+              </h2>
+              <p class="text-sm text-muted-foreground mt-3 leading-relaxed flex-1">{post.data.description}</p>
+              <time datetime={post.data.published} class="text-xs text-muted-foreground/80 mt-4">
+                {fmt(post.data.published)}
+              </time>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Layout>

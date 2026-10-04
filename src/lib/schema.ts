@@ -20,6 +20,7 @@ import {
   BUSINESS_ADDRESS,
   CONTACT_EMAIL,
   FOUNDER_NAME,
+  FOUNDER_URL,
   GOOGLE_BUSINESS_URL,
   KOREAN_LIVE,
   SOCIAL_LINKS,
@@ -49,7 +50,7 @@ export function organization(site: URL): JsonLdNode {
       ? 'PTE Academic, IELTS Academic and EPS-TOPIK Korean test preparation built for learners in Nepal, with full-length mock exams and practice marked against the published criteria.'
       : 'PTE Academic and IELTS Academic test preparation built for students in Nepal, with full-length mock exams marked against the published band descriptors.',
     email: CONTACT_EMAIL,
-    founder: { '@type': 'Person', name: FOUNDER_NAME, jobTitle: 'Founder' },
+    founder: founder(site),
     sameAs: [...SOCIAL_LINKS.map(link => link.href), GOOGLE_BUSINESS_URL],
     address: { '@type': 'PostalAddress', ...BUSINESS_ADDRESS },
     hasMap: GOOGLE_BUSINESS_URL,
@@ -71,6 +72,18 @@ export function organization(site: URL): JsonLdNode {
         availableLanguage: ['English', 'Nepali'],
       },
     ],
+  };
+}
+
+export const founderId = (site: URL) => `${site.href}#founder`;
+
+export function founder(site: URL): JsonLdNode {
+  return {
+    '@type': 'Person',
+    '@id': founderId(site),
+    name: FOUNDER_NAME,
+    jobTitle: 'Founder',
+    sameAs: [FOUNDER_URL],
   };
 }
 
@@ -277,4 +290,27 @@ export function examPageGraph(site: URL, url: URL, page: ExamPage): JsonLdNode[]
       { name: page.name, item: url.href },
     ]),
   ];
+}
+
+/** One blog post, authored by the founder. */
+export function blogPosting(
+  site: URL,
+  url: URL,
+  post: { title: string; description: string; published: string; updated: string; image: string },
+): JsonLdNode {
+  return {
+    '@type': 'BlogPosting',
+    '@id': `${url.href}#article`,
+    headline: post.title,
+    description: post.description,
+    url: url.href,
+    mainEntityOfPage: url.href,
+    datePublished: post.published,
+    dateModified: post.updated,
+    inLanguage: 'en',
+    image: abs(site, post.image),
+    author: founder(site),
+    publisher: { '@id': organizationId(site) },
+    isPartOf: { '@id': websiteId(site) },
+  };
 }

@@ -63,6 +63,8 @@ export const SOCIAL_LINKS = [
 ];
 
 export const FOUNDER_NAME = 'Saurabh Thakulla';
+/** The founder's public profile, for the Person `sameAs` on authored posts. */
+export const FOUNDER_URL = 'https://github.com/SaurabhThakulla';
 
 /**
  * The Google Business Profile. A `cid` link rather than the share.google short

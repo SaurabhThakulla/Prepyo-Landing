@@ -24,7 +24,10 @@ const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
 
 // Links to pages rather than to sections, so they are never rewritten as
 // fragments and never claimed by the smooth-scroll handler.
-const PAGE_LINKS = [{ href: asset('/careers/'), label: 'Careers' }];
+const PAGE_LINKS = [
+  { href: asset('/blog/'), label: 'Blog' },
+  { href: asset('/careers/'), label: 'Careers' },
+];
 
 // PTE and IELTS have pages of their own now, so the dropdown is a real
 // navigation menu rather than three ways of scrolling to the same section.
