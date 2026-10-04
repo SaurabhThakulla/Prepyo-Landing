@@ -17,13 +17,14 @@ const checkedLabel = new Date(PRICES_CHECKED).toLocaleDateString('en-GB', {
 });
 ---
 
-<section class="py-14 sm:py-20 border-t border-border" aria-labelledby="price-comparison">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center space-y-2.5 mb-8 sm:mb-10">
+<section class="py-16 sm:py-24 border-t border-border" aria-labelledby="price-comparison">
+  {/* Same width, heading and row scale as the pricing table directly above it. */}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center space-y-2 mb-12 sm:mb-16">
       <span class="text-xs font-bold uppercase tracking-wider text-primary">Price comparison</span>
       <h2
         id="price-comparison"
-        class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight text-balance"
+        class="font-display text-3xl sm:text-4xl font-black text-foreground tracking-tight text-balance"
       >
         A week of PTE practice in Nepal, compared
       </h2>
@@ -35,7 +36,7 @@ const checkedLabel = new Date(PRICES_CHECKED).toLocaleDateString('en-GB', {
     <div class="rounded-2xl border border-border bg-card overflow-hidden">
       {/* Header row, hidden on phones where each row stacks into a card. */}
       <div
-        class="hidden sm:grid grid-cols-[1.3fr_0.8fr_1fr_2fr] gap-4 px-5 py-3 bg-muted/60 border-b border-border text-[11px] font-bold uppercase tracking-wider text-muted-foreground"
+        class="hidden sm:grid grid-cols-[1.4fr_1fr_1fr_2.2fr] gap-6 px-6 lg:px-8 py-5 bg-muted/60 border-b border-border text-xs font-bold uppercase tracking-wider text-muted-foreground"
         aria-hidden="true"
       >
         <span>Platform</span>
@@ -49,31 +50,31 @@ const checkedLabel = new Date(PRICES_CHECKED).toLocaleDateString('en-GB', {
           PRICE_ROWS.map(row => (
             <li
               class:list={[
-                'grid grid-cols-2 sm:grid-cols-[1.3fr_0.8fr_1fr_2fr] gap-x-4 gap-y-1.5 px-5 py-4 border-b border-border/70 last:border-b-0 items-center',
+                'grid grid-cols-2 sm:grid-cols-[1.4fr_1fr_1fr_2.2fr] gap-x-6 gap-y-2 px-5 sm:px-6 lg:px-8 py-5 sm:py-6 border-b border-border/70 last:border-b-0 items-center',
                 row.isPrepyo && 'bg-primary/5 sm:border-l-4 sm:border-l-primary',
               ]}
             >
-              <span class="col-span-2 sm:col-span-1 font-display font-bold text-sm text-foreground flex items-center gap-2">
+              <span class="col-span-2 sm:col-span-1 font-display font-bold text-base sm:text-lg text-foreground flex items-center gap-2 flex-wrap">
                 {row.name}
                 {row.isPrepyo && (
-                  <span class="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
+                  <span class="px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider">
                     Lowest price
                   </span>
                 )}
               </span>
-              <span class="text-xs sm:text-sm text-muted-foreground">
-                <span class="sm:hidden">Plan: </span>
+              <span class="text-sm sm:text-base font-medium text-foreground/85">
+                <span class="sm:hidden text-muted-foreground">Plan: </span>
                 {row.plan}
               </span>
               <span
                 class:list={[
-                  'text-sm font-bold text-right sm:text-left',
+                  'text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-right sm:text-left',
                   row.isPrepyo ? 'text-primary' : 'text-foreground',
                 ]}
               >
                 {row.price}
               </span>
-              <span class="col-span-2 sm:col-span-1 text-xs text-muted-foreground leading-relaxed">
+              <span class="col-span-2 sm:col-span-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {row.note}
                 {row.source && (
                   <>
@@ -96,13 +97,13 @@ const checkedLabel = new Date(PRICES_CHECKED).toLocaleDateString('en-GB', {
       </ul>
     </div>
 
-    <p class="text-[11px] text-muted-foreground text-center mt-4 leading-relaxed max-w-2xl mx-auto">
+    <p class="mt-8 text-center text-xs text-muted-foreground leading-relaxed max-w-2xl mx-auto">
       Prices as listed on each website on <time datetime={PRICES_CHECKED}>{checkedLabel}</time>. Plans
       differ in what they include, and prices change, so check each provider before you buy. APEUni,
       Gurully and AlfaPTE are trademarks of their owners; Prepyo is not affiliated with them.
     </p>
 
-    <div class="flex justify-center mt-6">
+    <div class="flex justify-center mt-8">
       <a
         href={appUrl('/')}
         class="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground font-bold text-sm px-7 h-12 hover:brightness-110 shadow-lg shadow-primary/25 transition-all"
