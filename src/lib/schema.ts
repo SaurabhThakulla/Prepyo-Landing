@@ -229,7 +229,16 @@ export function jobPosting(site: URL, url: URL, role: Role): JsonLdNode {
     datePosted: role.datePosted,
     validThrough: role.validThrough,
     employmentType: role.type,
-    hiringOrganization: { '@id': organizationId(site) },
+    // Spelled out rather than a bare @id: Google's job-posting check does not
+    // follow references for required fields, and flags a posting with no
+    // hiringOrganization.name as invalid.
+    hiringOrganization: {
+      '@type': 'Organization',
+      '@id': organizationId(site),
+      name: 'Prepyo',
+      sameAs: site.href,
+      logo: abs(site, '/prepyo-logo.webp'),
+    },
     directApply: true,
     ...(remote
       ? {
@@ -241,7 +250,8 @@ export function jobPosting(site: URL, url: URL, role: Role): JsonLdNode {
             '@type': 'Place',
             address: {
               '@type': 'PostalAddress',
-              addressLocality: role.location,
+              // "Kathmandu / Hybrid" is display text; the address wants the place.
+              addressLocality: role.location.split('/')[0].trim(),
               addressCountry: 'NP',
             },
           },
