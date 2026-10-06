@@ -46,6 +46,14 @@ const socialImage = new URL(asset(ogImage), canonical).href;
     <link rel="icon" type="image/webp" href={asset('/prepyo-mark.webp')} />
     <link rel="sitemap" type="application/xml" href={asset('/sitemap-index.xml')} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="google-adsense-account" content="ca-pub-9781911673673523" />
+    {/* Google AdSense. is:inline keeps Astro from bundling Google's script. */}
+    <script
+      is:inline
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9781911673673523"
+      crossorigin="anonymous"
+    ></script>
 
     {schema && <JsonLd nodes={schema} />}
 
