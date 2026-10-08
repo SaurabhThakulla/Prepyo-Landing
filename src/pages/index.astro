@@ -9,6 +9,7 @@ import PriceComparison from '@/components/PriceComparison.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import SocialProof from '@/components/SocialProof.astro';
+import Testimonials from '@/components/Testimonials.astro';
 import { FAQS } from '@/data/faq';
 import { faqPage, howTo, organization, softwareApplication, webPage, website } from '@/lib/schema';
 import { asset, BASE_PATH, KOREAN_LIVE } from '@/consts';
@@ -59,6 +60,7 @@ const schema = [
     <SocialProof methodologyHref={asset('/how-scoring-works/')} />
     <ProblemSection />
     <FeaturesSection />
+    <Testimonials />
     <SubscriptionSection />
     <PriceComparison />
     <HowItWorksSection />

@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { TESTIMONIALS } from '@/data/testimonials';
+
+/**
+ * Real student quotes, rendered only once at least one exists.
+ *
+ * No Review structured data: Google does not show review stars a business
+ * publishes about itself, and the quotes are already readable as text.
+ */
+---
+
+{
+  TESTIMONIALS.length > 0 && (
+    <section id="testimonials" class="py-16 sm:py-24 px-4 sm:px-6">
+      <div class="max-w-6xl mx-auto">
+        <SectionHeading
+          eyebrow="From our students"
+          eyebrowIcon="lucide:message-square-quote"
+          title="What Prepyo students say"
+          description="In their own words, shared with their permission."
+        />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {TESTIMONIALS.map(({ quote, name, exam, detail }) => (
+            <figure class="flex flex-col rounded-2xl border border-border bg-card/70 p-5 sm:p-6">
+              <Icon name="lucide:quote" class="w-5 h-5 text-primary/60" />
+              <blockquote class="mt-3 text-sm sm:text-base text-foreground leading-relaxed flex-1">
+                {quote}
+              </blockquote>
+              <figcaption class="mt-4 pt-4 border-t border-border/60">
+                <div class="font-display font-bold text-sm text-foreground">{name}</div>
+                <div class="text-xs text-muted-foreground">
+                  {exam}
+                  {detail && <> · {detail}</>}
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
