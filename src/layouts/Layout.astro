@@ -1,5 +1,14 @@
 ---
+// Self-hosted variable fonts: same origin as the page, so there is no
+// render-blocking request to Google before first paint. Each file carries
+// unicode-range subsets, so the browser only downloads the scripts it needs.
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/plus-jakarta-sans/wght.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import jakartaLatin from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 import '@/styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import JsonLd from '@/components/JsonLd.astro';
@@ -77,14 +86,10 @@ const socialImage = new URL(asset(ogImage), canonical).href;
     <meta name="twitter:image:alt" content={ogImageAlt} />
 
     {/* Three families: Inter for text, Plus Jakarta Sans for headings, JetBrains
-        Mono for small labels. Every extra family is another render-blocking
-        download, so add one only if it is actually used. */}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
-      rel="stylesheet"
-    />
+        Mono for small labels, all self-hosted (imported above). The two that
+        paint above the fold are preloaded so text does not swap late. */}
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin="anonymous" />
 
     {/* Applied before first paint so a dark-mode visitor never sees a white flash. */}
     <script is:inline>
@@ -115,5 +120,7 @@ const socialImage = new URL(asset(ogImage), canonical).href;
       }
       <Footer />
     </div>
+    {/* Vercel Web Analytics: cookieless page views, served from /_vercel/insights. */}
+    <Analytics />
   </body>
 </html>
