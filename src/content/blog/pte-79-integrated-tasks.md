@@ -2,19 +2,23 @@
 title: 'PTE 79+: integrated tasks that lift two scores at once'
 description: 'Why some PTE Academic tasks count towards two skills, which ones they are, and how to practise them to raise your score towards 79 in every skill.'
 published: '2026-10-04'
-updated: '2026-10-04'
+updated: '2026-10-08'
 exam: 'PTE'
 ogImage: '/images/og-pte.jpg'
 faqs:
   - question: 'What does PTE 79+ mean?'
-    answer: 'It means scoring at least 79 in each of the four communicative skills: listening, reading, speaking and writing. Australia’s skilled-migration points test treats this as superior English, which is why it is such a common target.'
+    answer: 'It usually means scoring at least 79 in each of the four communicative skills. It became a common target because Australia treated it as superior English, but that rule applies only to tests taken on or before 6 August 2025. For tests taken from 7 August 2025, Home Affairs asks for at least 69 listening, 70 reading, 85 writing and 88 speaking.'
+  - question: 'Is PTE 79 still superior English for Australia?'
+    answer: 'Only for tests taken on or before 6 August 2025, and those results can be used until 6 August 2028 at the latest, depending on the visa. For tests taken from 7 August 2025, the minimums are 69 listening, 70 reading, 85 writing and 88 speaking. Check the Department of Home Affairs superior English page before you set your target.'
   - question: 'Which PTE tasks count towards more than one skill?'
     answer: 'Several do, including Read Aloud (reading and speaking), Repeat Sentence (listening and speaking), Write from Dictation (listening and writing), Summarize Written Text (reading and writing) and Summarize Spoken Text (listening and writing).'
   - question: 'Do templates still work in PTE?'
     answer: 'Not the way they used to. Since August 2025, PTE scoring combines AI with human review, and memorised templates are detected and penalised. Learn a structure, but put the content in your own words.'
 ---
 
-"PTE 79+" means scoring at least **79 in each of the four communicative skills**: listening, reading, speaking and writing. One weak skill is enough to miss the target, even if your overall score is high.
+"PTE 79+" usually means scoring at least **79 in each of the four communicative skills**: listening, reading, speaking and writing. One weak skill is enough to miss the target, even if your overall score is high.
+
+> **Australia changed its PTE requirements on 7 August 2025.** The old "79 in every skill" rule for superior English applies only to tests taken on or before 6 August 2025. For tests taken from 7 August 2025, the [Department of Home Affairs](https://immi.homeaffairs.gov.au/help-support/meeting-our-requirements/english-language/superior-english) asks for at least **69 listening, 70 reading, 85 writing and 88 speaking** (checked 8 October 2026). Writing and speaking now need more than 79, so the integrated tasks below matter even more.
 
 The fastest way to lift all four is to understand **integrated tasks**. In PTE Academic, many tasks count towards more than one skill. Get one of them right and two scores go up. Get it wrong and two go down.
 

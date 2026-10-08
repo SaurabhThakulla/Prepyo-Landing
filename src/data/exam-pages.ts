@@ -103,12 +103,12 @@ export const PTE_PAGE: ExamPage = {
     { label: 'Length', value: 'About 2 hours 15 minutes, 22 task types' },
     { label: 'Score range', value: '10–90, on the Global Scale of English' },
     { label: 'Results', value: 'Usually within 48 hours' },
-    { label: 'Common target', value: '79+ in each communicative skill' },
+    { label: 'Common target', value: '79+ overall (about IELTS 8.0)' },
   ],
   scoring: [
     'PTE reports one overall score from 10 to 90 and a score for each of the four communicative skills — listening, reading, speaking and writing. Since August 2025, AI scoring works alongside human review, and memorised templates are detected and penalised.',
     'Most tasks are integrated, meaning one task feeds more than one score. Read Aloud counts towards both reading and speaking; Write from Dictation counts towards both listening and writing. This is why a single weak skill drags down parts of the report you were not expecting, and why practising each section in isolation misleads you.',
-    'The 79 target is not arbitrary. Australia’s skilled-migration points test treats 79 in each of the four communicative skills as superior English, which is the band most applicants mean when they say "PTE 79+".',
+    'The 79 target comes from Australia’s old rules, which treated 79 in each skill as superior English. For PTE tests taken from 7 August 2025, the Department of Home Affairs instead asks for at least 69 in listening, 70 in reading, 85 in writing and 88 in speaking. 79 overall is still a useful goal: Pearson’s July 2025 concordance places PTE 79–85 at IELTS 8.0.',
   ],
   taskTypes: [
     { name: 'Read Aloud', blurb: 'Scored for both content and how clearly you say it — the task where pronunciation and pace show up first.' },
