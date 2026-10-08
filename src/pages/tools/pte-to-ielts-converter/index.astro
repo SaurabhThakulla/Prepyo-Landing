@@ -1,0 +1,277 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Button from '@/components/Button.astro';
+import FAQSection from '@/components/FAQSection.astro';
+import { Icon } from 'astro-icon/components';
+import { breadcrumbs, faqPage, organization, webPage, website } from '@/lib/schema';
+import { appUrl, asset, BASE_PATH } from '@/consts';
+import { CONCORDANCE, CONCORDANCE_SOURCE, SKILLS } from '@/data/score-tools';
+
+/**
+ * PTE ↔ IELTS converter, built only from Pearson's July 2025 concordance
+ * table (see score-tools.ts). The full table is rendered as HTML so it works
+ * without JavaScript and can be read by search engines; the converter on top
+ * is a lookup into the same rows.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const title = 'PTE to IELTS Score Converter & Chart (2025 Concordance) | Prepyo';
+const description =
+  'Convert PTE Academic scores to IELTS bands and back, overall and for each skill, using Pearson’s official July 2025 concordance table.';
+
+const checked = new Date(CONCORDANCE_SOURCE.checked).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const range = (r: [number, number] | null) => (r === null ? '—' : r[0] === r[1] ? `${r[0]}` : `${r[0]}–${r[1]}`);
+
+const faqs = [
+  {
+    question: 'What IELTS band is PTE 65?',
+    answer:
+      'In Pearson’s July 2025 concordance, an overall PTE score of 63–70 corresponds to IELTS 7.0, so PTE 65 overall is about IELTS 7.0. Skill scores convert differently, so check each skill in the table.',
+  },
+  {
+    question: 'What PTE score equals IELTS 6.5?',
+    answer: 'An overall PTE score of 55–62 corresponds to IELTS 6.5 in Pearson’s July 2025 concordance.',
+  },
+  {
+    question: 'Why does a PTE speaking score convert lower than the same listening score?',
+    answer:
+      'Each skill has its own table. For example, IELTS 7.0 corresponds to PTE 58–63 in listening but 76–82 in speaking. Convert each skill separately rather than using the overall table.',
+  },
+  {
+    question: 'Will my university or visa accept this conversion?',
+    answer:
+      'Not automatically. A concordance is an approximate comparison, and every university, employer and visa authority sets its own PTE and IELTS requirements. Always check the requirement for the test you are taking.',
+  },
+];
+
+const schema = [
+  organization(site),
+  website(site),
+  webPage(site, url, { name: title, description, dateModified: '2026-10-08' }),
+  faqPage(url, faqs),
+  breadcrumbs(url, [
+    { name: 'Home', item: site.href },
+    { name: 'PTE to IELTS converter', item: url.href },
+  ]),
+];
+---
+
+<Layout title={title} description={description} schema={schema}>
+  <article class="w-full max-w-3xl mx-auto">
+    <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'PTE to IELTS converter' }]} />
+
+    <header class="pt-6 sm:pt-10">
+      <span class="text-xs font-bold uppercase tracking-wider text-primary">Free tool</span>
+      <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1] mt-3">
+        PTE to IELTS score converter
+      </h1>
+      <p class="text-base text-muted-foreground leading-relaxed mt-5">
+        Convert a PTE Academic score to an IELTS band, or an IELTS band to a PTE range, using Pearson’s official
+        concordance for the updated PTE test (July 2025).
+      </p>
+    </header>
+
+    <section class="mt-8 rounded-2xl border border-border bg-card p-5 sm:p-7" aria-labelledby="convert-heading">
+      <h2 id="convert-heading" class="sr-only">Converter</h2>
+      <form class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" data-converter>
+        <label class="flex flex-col gap-1.5 text-xs font-semibold text-foreground">
+          Convert
+          <select
+            name="direction"
+            class="h-11 rounded-xl border border-input bg-background px-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+          >
+            <option value="pte">PTE score → IELTS band</option>
+            <option value="ielts">IELTS band → PTE score</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-1.5 text-xs font-semibold text-foreground">
+          Score type
+          <select
+            name="skill"
+            class="h-11 rounded-xl border border-input bg-background px-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+          >
+            {SKILLS.map(skill => <option value={skill.id}>{skill.label}</option>)}
+          </select>
+        </label>
+        <label class="flex flex-col gap-1.5 text-xs font-semibold text-foreground" data-pte-field>
+          PTE score (10–90)
+          <input
+            name="pte"
+            type="number"
+            inputmode="numeric"
+            min="10"
+            max="90"
+            step="1"
+            value="65"
+            class="h-11 rounded-xl border border-input bg-background px-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+        </label>
+        <label class="flex-col gap-1.5 text-xs font-semibold text-foreground hidden" data-ielts-field>
+          IELTS band
+          <select
+            name="ielts"
+            class="h-11 rounded-xl border border-input bg-background px-3 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+          >
+            {CONCORDANCE.map(row => <option value={row.ielts} selected={row.ielts === 7}>{row.ielts.toFixed(1)}</option>)}
+          </select>
+        </label>
+      </form>
+
+      <div class="mt-6 pt-6 border-t border-border/60" aria-live="polite">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground" data-result-label>IELTS band</p>
+        <p class="font-display text-4xl sm:text-5xl font-bold text-primary mt-1" data-result>7.0</p>
+        <p class="text-sm text-muted-foreground mt-2" data-result-note>Overall PTE 63–70 corresponds to IELTS 7.0.</p>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-foreground">PTE to IELTS conversion chart</h2>
+      <p class="text-sm text-muted-foreground leading-relaxed mt-3">
+        PTE Academic scores for each IELTS Academic band, overall and for each skill. A dash means the study reports no
+        PTE range for that band.
+      </p>
+
+      <div class="overflow-x-auto mt-4 rounded-2xl border border-border">
+        <table class="w-full text-sm whitespace-nowrap">
+          <thead class="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
+            <tr>
+              <th class="px-4 py-3 font-semibold">IELTS</th>
+              {SKILLS.map(skill => <th class="px-4 py-3 font-semibold">{skill.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              CONCORDANCE.map(row => (
+                <tr class="border-t border-border">
+                  <td class="px-4 py-3 font-bold text-foreground">{row.ielts.toFixed(1)}</td>
+                  {SKILLS.map(skill => (
+                    <td class="px-4 py-3">{range(row.pte[skill.id])}</td>
+                  ))}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-xs text-muted-foreground mt-3">
+        Source: Table 8 of the
+        <a href={CONCORDANCE_SOURCE.url} target="_blank" rel="noopener" class="text-primary hover:underline">{CONCORDANCE_SOURCE.name}</a>
+        (see also <a href={CONCORDANCE_SOURCE.scoringPage} target="_blank" rel="noopener" class="text-primary hover:underline">Pearson’s scoring page</a>),
+        checked {checked}. Prepyo is not affiliated with Pearson or IELTS.
+      </p>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-foreground">Before you rely on a conversion</h2>
+      <ul class="space-y-3 mt-4">
+        {
+          [
+            'A concordance is approximate. Pearson says so itself: the two tests use different scales, so a one-to-one mapping is never exact.',
+            'Universities, employers and visa authorities set their own PTE and IELTS requirements. Check the requirement for the test you are taking rather than converting.',
+            'This table is for the updated PTE Academic used from August 2025. Older PTE results were compared with IELTS using an earlier study, so older charts online give different numbers.',
+            'Convert each skill separately. The skill tables differ from the overall one, especially for speaking and writing.',
+          ].map(point => (
+            <li class="flex items-start gap-3 rounded-2xl border border-border bg-card p-4">
+              <div class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                <Icon name="lucide:alert-triangle" class="w-3 h-3" />
+              </div>
+              <p class="text-sm text-muted-foreground leading-relaxed">{point}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="text-sm text-muted-foreground mt-4">
+        Need your IELTS overall band from four section scores? Use the
+        <a href={asset('/tools/ielts-band-calculator/')} class="text-primary font-medium hover:underline">IELTS band calculator</a>.
+        Deciding between the tests? Read <a href={asset('/blog/pte-vs-ielts-nepal/')} class="text-primary font-medium hover:underline">PTE vs IELTS for Nepali students</a>.
+      </p>
+    </section>
+
+    <FAQSection faqs={faqs} title="Frequently asked questions" />
+
+    <section class="py-10 sm:py-14">
+      <div class="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">Know your score before test day</h2>
+        <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
+          Take a free diagnostic on Prepyo for an estimated PTE or IELTS score and see where your marks go.
+        </p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <Button href={appUrl('/diagnostic')} size="lg" class="rounded-full font-bold text-sm px-7 h-12">Take the free diagnostic</Button>
+          <Button href={asset('/pte-academic-preparation/')} variant="outline" size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+            PTE preparation
+          </Button>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<script>
+  import { CONCORDANCE, SKILLS, type Skill } from '@/data/score-tools';
+
+  const form = document.querySelector<HTMLFormElement>('[data-converter]');
+  const pteField = document.querySelector<HTMLElement>('[data-pte-field]');
+  const ieltsField = document.querySelector<HTMLElement>('[data-ielts-field]');
+  const label = document.querySelector('[data-result-label]');
+  const result = document.querySelector('[data-result]');
+  const note = document.querySelector('[data-result-note]');
+
+  const show = (el: HTMLElement | null, visible: boolean) => {
+    el?.classList.toggle('hidden', !visible);
+    el?.classList.toggle('flex', visible);
+  };
+
+  function update() {
+    if (!form || !label || !result || !note) return;
+    const data = new FormData(form);
+    const direction = data.get('direction');
+    const skill = data.get('skill') as Skill;
+    const skillName = SKILLS.find(s => s.id === skill)?.label ?? 'Overall';
+    const pteLabel = skill === 'overall' ? 'Overall PTE' : `PTE ${skillName.toLowerCase()}`;
+    const pteLower = skill === 'overall' ? 'overall PTE' : pteLabel;
+
+    show(pteField, direction === 'pte');
+    show(ieltsField, direction === 'ielts');
+
+    if (direction === 'pte') {
+      label.textContent = skill === 'overall' ? 'IELTS band' : `IELTS ${skillName.toLowerCase()} band`;
+      const score = Math.round(Number(data.get('pte')));
+      if (!Number.isFinite(score) || score < 10 || score > 90) {
+        result.textContent = '—';
+        note.textContent = 'Enter a PTE score from 10 to 90.';
+        return;
+      }
+      const row = CONCORDANCE.find(r => {
+        const range = r.pte[skill];
+        return range !== null && score >= range[0] && score <= range[1];
+      });
+      if (row) {
+        const range = row.pte[skill]!;
+        result.textContent = row.ielts.toFixed(1);
+        note.textContent = `${pteLabel} ${range[0] === range[1] ? range[0] : `${range[0]}–${range[1]}`} corresponds to IELTS ${row.ielts.toFixed(1)}.`;
+      } else {
+        result.textContent = 'Below 4.5';
+        note.textContent = `The concordance starts at IELTS 4.5, so it does not cover ${pteLower} ${score}.`;
+      }
+    } else {
+      const band = Number(data.get('ielts'));
+      label.textContent = `${pteLabel} score`;
+      const range = CONCORDANCE.find(r => r.ielts === band)?.pte[skill] ?? null;
+      if (range) {
+        result.textContent = range[0] === range[1] ? `${range[0]}` : `${range[0]}–${range[1]}`;
+        note.textContent = `IELTS ${band.toFixed(1)} corresponds to ${pteLower} ${result.textContent}.`;
+      } else {
+        result.textContent = '—';
+        note.textContent = `Pearson’s study reports no ${pteLower} range for IELTS ${band.toFixed(1)}.`;
+      }
+    }
+  }
+
+  form?.addEventListener('input', update);
+  form?.addEventListener('change', update);
+  update();
+</script>

@@ -28,6 +28,8 @@ export const GET: APIRoute = async ({ site }) => {
         ]
       : []),
     `- [How scoring works](${link('/how-scoring-works/')}): the criteria Prepyo marks answers against, and what an estimated score cannot tell you.`,
+    `- [IELTS band calculator](${link('/tools/ielts-band-calculator/')}): works out the IELTS overall band from four section bands with the official rounding rule.`,
+    `- [PTE to IELTS converter](${link('/tools/pte-to-ielts-converter/')}): PTE Academic to IELTS Academic conversion, overall and per skill, from Pearson's July 2025 concordance.`,
     `- [Careers](${link('/careers/')}): open roles at Prepyo.`,
   ];
 
