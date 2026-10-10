@@ -8,7 +8,7 @@ import { asset } from '@/consts';
  * A hand-written file would point previews at production.
  */
 export const GET: APIRoute = ({ site }) => {
-  const origin = site ?? new URL('https://prepyo.online');
+  const origin = site ?? new URL('https://www.prepyo.online');
   const sitemap = new URL(asset('/sitemap-index.xml'), origin).href;
 
   const body = [

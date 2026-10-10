@@ -39,7 +39,7 @@ Copy `.env.example` to `.env` and adjust:
 |---|---|---|
 | `PUBLIC_APP_URL` | `https://dashboard.prepyo.online` | Where the Next.js app lives. Every sign-up / login / dashboard link is an absolute URL into it. |
 | `PUBLIC_API_BASE_URL` | `https://dashboard.prepyo.online/api/v1` | The API, via the app's proxy. Used for the single public request this site makes. |
-| `PUBLIC_SITE_URL` | Vercel's deploy URL, else `https://prepyo.online` | Origin used for canonical and Open Graph URLs. |
+| `PUBLIC_SITE_URL` | Vercel's deploy URL, else `https://www.prepyo.online` | Origin used for canonical and Open Graph URLs. |
 | `PUBLIC_BASE_PATH` | `/` | Sub-path the site is served from. Only GitHub Pages needs this changed. |
 
 All are `PUBLIC_` prefixed because they are inlined into the built output.

@@ -12,8 +12,12 @@ const base = process.env.PUBLIC_BASE_PATH || '/';
 
 // Vercel exposes the deployment's own hostname at build time, so canonical and
 // Open Graph URLs stay correct on preview deploys as well as production.
+//
+// The fallback is the www host because that is the one that answers: the apex
+// 308s to it, and a canonical that points at a redirect is one search engines
+// have to second-guess.
 const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
-const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://prepyo.online');
+const site = process.env.PUBLIC_SITE_URL || (vercelHost ? `https://${vercelHost}` : 'https://www.prepyo.online');
 
 // Pages that are built but not launched yet stay out of the sitemap. Read from
 // the same file consts.ts uses, so there is one switch to flip.

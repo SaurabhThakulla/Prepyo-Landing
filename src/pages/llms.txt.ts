@@ -12,7 +12,7 @@ import { EPS_PAGE, IELTS_PAGE, PTE_PAGE } from '@/data/exam-pages';
  * advertising pages that are not launched.
  */
 export const GET: APIRoute = async ({ site }) => {
-  const origin = site ?? new URL('https://prepyo.online');
+  const origin = site ?? new URL('https://www.prepyo.online');
   const link = (path: string) => new URL(asset(path), origin).href;
 
   const exams = KOREAN_LIVE ? 'PTE Academic, IELTS Academic and EPS-TOPIK (Korean)' : 'PTE Academic and IELTS Academic';
