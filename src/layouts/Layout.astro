@@ -27,6 +27,8 @@ interface Props {
   fullWidth?: boolean;
   /** Keeps a built-but-unlaunched page out of search results. */
   noindex?: boolean;
+  /** Marks the page as an article for social cards. ISO dates. */
+  article?: { published: string; updated: string };
 }
 
 const {
@@ -35,6 +37,7 @@ const {
   schema,
   fullWidth = false,
   noindex = false,
+  article,
   ogImage = '/images/og-cover.jpg',
   ogImageAlt = 'Prepyo — full-length PTE and IELTS mock exams for students in Nepal',
 } = Astro.props;
@@ -63,10 +66,14 @@ const socialImage = new URL(asset(ogImage), canonical).href;
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9781911673673523"
       crossorigin="anonymous"
     ></script>
+    {/* WeBotApp Signal analytics and behavioural tag. */}
+    <script is:inline defer src="https://signal.webotapp.com/tracker.js" data-site-id="prepyo.online"></script>
 
     {schema && <JsonLd nodes={schema} />}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.published} />}
+    {article && <meta property="article:modified_time" content={article.updated} />}
     <meta property="og:site_name" content="Prepyo" />
     <meta property="og:locale" content="en_NP" />
     <meta property="og:title" content={title} />

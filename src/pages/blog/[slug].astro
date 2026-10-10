@@ -46,7 +46,14 @@ const cta =
     : { label: 'Take the free diagnostic', href: appUrl('/diagnostic') };
 ---
 
-<Layout title={`${title} | Prepyo`} description={description} schema={schema} ogImage={ogImage} ogImageAlt={title}>
+<Layout
+  title={`${title} | Prepyo`}
+  description={description}
+  schema={schema}
+  ogImage={ogImage}
+  ogImageAlt={title}
+  article={{ published, updated }}
+>
   <article class="w-full max-w-3xl mx-auto">
     <Breadcrumbs trail={[{ name: 'Home', href: asset('/') }, { name: 'Blog', href: asset('/blog/') }, { name: title }]} />
 

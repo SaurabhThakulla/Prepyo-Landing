@@ -1,0 +1,56 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Button from '@/components/Button.astro';
+import { asset, BASE_PATH, KOREAN_LIVE } from '@/consts';
+
+/**
+ * The not-found page.
+ *
+ * Without it the host answers a mistyped or stale URL with a bare line of
+ * text and no way back into the site. The status is still 404 — the host
+ * serves this file for any path it cannot match — and the page is noindex so
+ * it never shows up in search under its own address.
+ */
+const LINKS = [
+  { href: asset('/pte-academic-preparation/'), label: 'PTE Academic preparation' },
+  { href: asset('/ielts-academic-preparation/'), label: 'IELTS Academic preparation' },
+  ...(KOREAN_LIVE ? [{ href: asset('/eps-topik-preparation/'), label: 'EPS-TOPIK preparation' }] : []),
+  { href: asset('/tools/ielts-band-calculator/'), label: 'IELTS band calculator' },
+  { href: asset('/tools/pte-to-ielts-converter/'), label: 'PTE to IELTS converter' },
+];
+---
+
+<Layout
+  title="Page not found | Prepyo"
+  description="This page does not exist or has moved. Head back to the Prepyo home page or browse the PTE, IELTS and EPS-TOPIK guides."
+  noindex
+>
+  <section class="w-full max-w-3xl mx-auto py-16 sm:py-24">
+    <span class="text-xs font-bold uppercase tracking-wider text-primary">Error 404</span>
+    <h1 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground text-balance leading-[1.1] mt-3">
+      We could not find that page
+    </h1>
+    <p class="text-sm sm:text-base text-muted-foreground mt-5 leading-relaxed">
+      The link may be out of date, or the address may have a typo in it. These will get you back on track.
+    </p>
+
+    <div class="flex flex-wrap gap-3 mt-8">
+      <Button href={BASE_PATH} size="lg" class="rounded-full font-bold text-sm px-7 h-12">Go to the home page</Button>
+      <Button href={asset('/blog/')} variant="outline" size="lg" class="rounded-full font-bold text-sm px-7 h-12">
+        Browse the guides
+      </Button>
+    </div>
+
+    <ul class="mt-10 space-y-2 text-sm">
+      {
+        LINKS.map(({ href, label }) => (
+          <li>
+            <a href={href} class="text-primary underline underline-offset-2">
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
