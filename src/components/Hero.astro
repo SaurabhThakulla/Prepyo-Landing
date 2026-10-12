@@ -1,97 +1,343 @@
 ---
 import { Icon } from 'astro-icon/components';
-import Button from '@/components/Button.astro';
-import { appUrl } from '@/consts';
+import { appUrl, asset } from '@/consts';
+import { EXACT_PLANS } from '@/data/pricing';
 
-// Floating animated skill pills arranged in a circular orbit (Ring 2: R~440px, Ring 3: R~620px)
-const ORBITS = [
-  { icon: 'lucide:mic', label: 'Speaking AI', color: 'text-[#5865F2]', bg: 'bg-[#5865F2]/10', x: -370, y: -240, anim: 'animate-float' },
-  { icon: 'lucide:sparkles', label: 'Instant Scoring', color: 'text-amber-500', bg: 'bg-amber-500/10', x: 370, y: -240, anim: 'animate-float-delay' },
-  { icon: 'lucide:pen-tool', label: 'Writing Rewrites', color: 'text-teal-500', bg: 'bg-teal-500/10', x: -370, y: 240, anim: 'animate-float' },
-  { icon: 'lucide:headphones', label: 'Listening Mock', color: 'text-indigo-500', bg: 'bg-indigo-500/10', x: 370, y: 240, anim: 'animate-float-delay' },
-  { icon: 'lucide:book-open', label: 'Reading Practice', color: 'text-sky-500', bg: 'bg-sky-500/10', x: -610, y: 0, anim: 'animate-float' },
-  { icon: 'lucide:award', label: 'PTE 79+ Goal', color: 'text-[#5865F2]', bg: 'bg-[#5865F2]/10', x: 610, y: 0, anim: 'animate-float-delay' },
-  { icon: 'lucide:shield-check', label: 'Pearson Criteria', color: 'text-emerald-500', bg: 'bg-emerald-500/10', x: -310, y: -535, anim: 'animate-float' },
-  { icon: 'lucide:graduation-cap', label: 'IELTS Band 8.0', color: 'text-purple-500', bg: 'bg-purple-500/10', x: 310, y: -535, anim: 'animate-float-delay' },
-];
+/**
+ * The landing hero: a dune sky behind the headline, and a laptop showing the
+ * dashboard that tips flat as the visitor scrolls towards it.
+ *
+ * The section is full-bleed, so the page that renders it has to use the
+ * `fullWidth` layout and put its remaining sections back in a container.
+ */
+
+// Read from the pricing table so the line under the buttons cannot drift away
+// from what the plans section charges.
+const cheapestPaid = Math.min(...EXACT_PLANS.filter(plan => plan.priceNPR > 0).map(plan => plan.priceNPR));
+
+// The real dashboard, captured at 1913x910. The lid takes its proportions from
+// these, so a replacement screenshot only needs the two numbers updated.
+const SHOT = { width: 1913, height: 910 };
 ---
 
-<section
-  class="relative w-full overflow-hidden min-h-[580px] sm:min-h-[720px] lg:min-h-[780px] flex items-center justify-center py-16 sm:py-28 border-b border-border/40"
-  data-hero
->
-  {/* Ambient lights */}
-  <div class="absolute inset-0 pointer-events-none overflow-hidden -z-10" aria-hidden="true">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/10 dark:bg-primary/15 blur-[140px] rounded-full animate-pulse"></div>
-  </div>
-
-  {/* Concentric floating message capsules (hidden on mobile, shown on tablet/desktop) */}
-  <div class="hidden sm:flex absolute inset-0 pointer-events-none items-center justify-center z-10 overflow-hidden" aria-hidden="true">
-    <div class="relative w-[1500px] h-[1500px] flex items-center justify-center sm:scale-[0.68] md:scale-[0.80] lg:scale-[0.92] xl:scale-100 transition-transform origin-center">
-      {
-        ORBITS.map(({ icon, color, bg, label, x, y, anim }) => (
-          <div
-            class="absolute pointer-events-auto select-none"
-            style={`left: calc(50% + ${x}px); top: calc(50% + ${y}px); transform: translate(-50%, -50%);`}
-          >
-            <div
-              class:list={[
-                'group flex items-center gap-2.5 px-4 py-2 rounded-full bg-card/95 dark:bg-card/90 border border-border/80 dark:border-white/15 shadow-xl shadow-black/5 dark:shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:border-[#5865F2] hover:shadow-2xl hover:shadow-[#5865F2]/20 cursor-pointer whitespace-nowrap',
-                anim,
-              ]}
-            >
-              <div class={`w-6 h-6 rounded-full ${bg} flex items-center justify-center shrink-0`}>
-                <Icon name={icon} class={`w-3.5 h-3.5 ${color}`} />
-              </div>
-              <span class="text-xs sm:text-sm font-bold text-foreground/90">{label}</span>
-            </div>
-          </div>
-        ))
-      }
+<section class="hero-ground" data-hero>
+  <div class="relative">
+    <div class="hero-sky" aria-hidden="true">
+      <canvas data-hero-sky></canvas>
     </div>
+
+    <div class="mx-auto flex max-w-[72rem] flex-col items-center px-5 pt-8 text-center sm:px-6 md:pt-14 lg:pt-16">
+      <a
+        href={asset('/how-scoring-works/')}
+        class="rise inline-flex items-center gap-2 rounded-full bg-card/70 py-1.5 pl-4 pr-3 text-sm font-semibold text-foreground ring-1 ring-foreground/10 transition-colors hover:bg-card sm:text-[0.9375rem]"
+        style="--i:0"
+      >
+        See how the AI scoring works
+        <Icon name="lucide:arrow-right" class="h-4 w-4 text-muted-foreground" />
+      </a>
+
+      <h1 class="hero-display rise mt-7 font-display text-foreground sm:mt-8" style="--i:1">
+        <span class="lg:block">Prepare for <span class="whitespace-nowrap">PTE 79+</span> &amp; <span class="whitespace-nowrap">IELTS 8.0</span>{' '}</span>
+        <span class="text-primary lg:block">with full mock exams.</span>
+      </h1>
+
+      <p class="hero-lead rise mt-6 max-w-[34ch] text-pretty text-foreground/70 sm:mt-7 sm:max-w-[58ch] sm:text-balance" style="--i:2">
+        Full-length mock exams scored by AI against the official marking criteria in seconds. Get instant pronunciation analysis, AI writing rewrites, and an estimated band before test day.
+      </p>
+
+      <div class="rise mt-9 flex w-full flex-col items-center sm:mt-10" style="--i:3">
+        <div class="flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
+          <a href={appUrl('/')} class="hero-btn hero-btn-primary group">
+            Get started free
+            <Icon name="lucide:arrow-right" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </a>
+          <a href="#pricing" class="hero-btn hero-btn-quiet">Explore plans</a>
+        </div>
+        <p class="mt-4 text-sm text-foreground/70 sm:text-base">Your first full mock test is free.</p>
+        <p class="mt-1 text-balance text-sm text-foreground/70 sm:text-base">
+          Paid plans start at NPR {cheapestPaid}, paid with eSewa or Khalti.
+        </p>
+      </div>
+    </div>
+
+    {/* Room for the dunes to show before the laptop rises over them. */}
+    <div class="h-32 sm:h-52 lg:h-64" aria-hidden="true"></div>
   </div>
 
-  {/* Centered Hero Content */}
-  <div class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-balance max-w-4xl leading-[1.1] sm:leading-[1.08]">
-      Prepare for PTE 79+ &amp; IELTS 8.0{' '}
-      <span class="bg-gradient-to-r from-primary via-[#5865F2] to-sky-400 bg-clip-text text-transparent">
-        with full mock exams.
-      </span>
-    </h1>
+  {/* The negative margin pulls the laptop up over that spacer by however much
+      it takes for its lid to peek above the fold, on a short screen or a tall one. */}
+  <div
+    class="rise relative -mt-20 px-4 sm:mt-[calc(clamp(4rem,82svh_-_41rem,13rem)_-_13rem)] sm:px-6 lg:mt-[calc(clamp(4rem,82svh_-_43rem,16rem)_-_16rem)]"
+    style="--i:4; perspective:90rem"
+  >
+    <div class="tilt-in" style="transform-origin:50% 0; transform:scale(0.9475) rotateX(14deg)" data-tilt>
+      <div class="laptop">
+        <span class="laptop-shadow" aria-hidden="true"></span>
 
-    <p class="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mt-6 text-balance font-normal">
-      Full-length mock exams scored by AI against the official marking criteria in seconds. Get instant pronunciation analysis, AI writing rewrites, and an estimated band before test day.
-    </p>
+        <div class="laptop-lid">
+          <div class="laptop-screen" style={`aspect-ratio:${SHOT.width} / ${SHOT.height}`}>
+            <img
+              src={asset('/images/hero-dashboard.webp')}
+              srcset={`${asset('/images/hero-dashboard-960.webp')} 960w, ${asset('/images/hero-dashboard.webp')} ${SHOT.width}w`}
+              sizes="(min-width: 1100px) 800px, 80vw"
+              alt="The Prepyo dashboard on a laptop: questions practised in each skill, the active plan with its daily limits, and the latest practice scores."
+              width={SHOT.width}
+              height={SHOT.height}
+              decoding="async"
+            />
+          </div>
+        </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-10 w-full sm:w-auto">
-      <Button
-        href={appUrl('/')}
-        size="lg"
-        class="group w-full sm:w-auto rounded-full font-bold text-sm px-8 h-12 bg-foreground text-background hover:bg-foreground/90 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 shadow-lg shadow-foreground/10 transition-all gap-2 hover:-translate-y-0.5"
-      >
-        <span>Get started free</span>
-        <Icon name="lucide:arrow-right" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
-      </Button>
-
-      <Button
-        href="#pricing"
-        variant="outline"
-        size="lg"
-        class="w-full sm:w-auto rounded-full font-bold text-sm px-7 h-12 border-border/80 bg-card/80 hover:bg-card text-foreground transition-all shadow-sm hover:-translate-y-0.5"
-      >
-        <span>Explore plans</span>
-      </Button>
+        <div class="laptop-base" aria-hidden="true"><span></span></div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .animate-float:hover, .animate-float-delay:hover { animation-play-state: paused; }
+  .hero-ground {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-ground {
+      padding-bottom: 3rem;
+    }
+  }
+
+  /* Reaches up behind the nav, and down behind the laptop, where the mask
+     dissolves it into whatever the page background is in this theme. */
+  .hero-sky {
+    position: absolute;
+    inset: -12rem 0 -9rem;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, #bcd6ee 0%, #edf4fa 50%, #fbe2cf 64%, #a9c8e6 78%, #6f9bcb 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  }
+
+  :global(.dark) .hero-sky {
+    background: linear-gradient(180deg, #050818 0%, #0f1738 50%, #3b2f66 66%, #1a2152 80%, #0b1030 100%);
+  }
+
+  .hero-sky canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.9s;
+  }
+
+  .hero-sky canvas[data-ready='true'] {
+    opacity: 1;
+  }
+
+  .hero-display {
+    font-size: clamp(2.375rem, 5vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .hero-lead {
+    font-size: clamp(1.0625rem, 1.7vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.012em;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+    padding-inline: 1.75rem;
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition:
+      background-color 0.12s,
+      border-color 0.12s,
+      transform 0.12s;
+  }
+
+  .hero-btn:focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  .hero-btn:active {
+    transform: translateY(1px);
+  }
+
+  .hero-btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      0 10px 22px -10px rgb(71 82 196 / 0.75);
+  }
+
+  .hero-btn-primary:hover {
+    background: #4752c4;
+  }
+
+  .hero-btn-quiet {
+    background: hsl(var(--card) / 0.8);
+    border-color: hsl(var(--foreground) / 0.12);
+    color: hsl(var(--foreground));
+  }
+
+  .hero-btn-quiet:hover {
+    background: hsl(var(--card));
+    border-color: hsl(var(--foreground) / 0.5);
+  }
+
+  /* Staggered entrance: each block sets --i to its place in the order. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .rise {
+    animation: rise 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms + 0.16s);
+  }
+
+  /* ----- Laptop --------------------------------------------------------- */
+
+  .tilt-in {
+    will-change: transform;
+  }
+
+  .laptop {
+    position: relative;
+    max-width: 62rem;
+    margin-inline: auto;
+  }
+
+  .laptop-shadow {
+    position: absolute;
+    inset-inline: 4%;
+    bottom: 0;
+    height: 9%;
+    border-radius: 50%;
+    background: rgb(11 27 58 / 0.4);
+    filter: blur(40px);
+    transform: translateY(50%);
+  }
+
+  .laptop-lid {
+    position: relative;
+    width: 83%;
+    margin-inline: auto;
+    padding: clamp(0.3rem, 1vw, 0.7rem) clamp(0.3rem, 1vw, 0.7rem) clamp(0.45rem, 1.5vw, 1rem);
+    border-radius: clamp(0.5rem, 1.8vw, 1.25rem) clamp(0.5rem, 1.8vw, 1.25rem) 0 0;
+    background: #0a0b0f;
+    box-shadow:
+      inset 0 0 0 1px #2c2e36,
+      inset 0 0 0 2px #000;
+  }
+
+  .laptop-screen {
+    overflow: hidden;
+    border-radius: clamp(0.15rem, 0.5vw, 0.35rem);
+    background: #fff;
+  }
+
+  .laptop-screen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .laptop-base {
+    position: relative;
+    height: clamp(0.5rem, 1.7vw, 1.05rem);
+    border-radius: 0.15rem 0.15rem clamp(0.5rem, 1.6vw, 1.1rem) clamp(0.5rem, 1.6vw, 1.1rem);
+    background: linear-gradient(180deg, #eceef2 0%, #cfd2d8 38%, #a4a8b0 82%, #7e828a 100%);
+  }
+
+  .laptop-base span {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 15%;
+    height: 38%;
+    border-radius: 0 0 0.5rem 0.5rem;
+    background: linear-gradient(180deg, #9a9ea6, #c3c6cc);
+    transform: translateX(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise {
+      animation: none;
+    }
+
+    .tilt-in {
+      transform: none !important;
+    }
+  }
 </style>
 
 <script>
   import { bindSectionLinks } from '@/scripts/scroll-to';
-  const heroEl = document.querySelector('[data-hero]');
-  if (heroEl) bindSectionLinks(heroEl);
+  import { initHeroSky } from '@/scripts/hero-sky';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) bindSectionLinks(hero);
+
+  const sky = document.querySelector<HTMLCanvasElement>('[data-hero-sky]');
+  if (sky) initHeroSky(sky);
+
+  // --- Laptop tilt -----------------------------------------------------------
+  // The lid starts tipped back and settles flat as it climbs the viewport, so
+  // the transform is a function of where the laptop is on screen rather than a
+  // timed animation.
+  const tilt = document.querySelector<HTMLElement>('[data-tilt]');
+  const stage = tilt?.parentElement;
+
+  if (tilt && stage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const MAX_TILT = 14;
+    const MIN_SCALE = 0.9475;
+    let queued = false;
+
+    const apply = () => {
+      queued = false;
+      // Measured on the wrapper, which is never transformed, so the tilt does
+      // not feed back into its own input.
+      const top = stage.getBoundingClientRect().top;
+      const height = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (top - height * 0.4) / (height * 0.525)));
+      tilt.style.transform = progress
+        ? `scale(${1 - (1 - MIN_SCALE) * progress}) rotateX(${MAX_TILT * progress}deg)`
+        : 'none';
+    };
+
+    const request = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(apply);
+    };
+
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    apply();
+  }
 </script>
