@@ -1,0 +1,442 @@
+---
+import { Icon } from 'astro-icon/components';
+import { asset, CONTACT_EMAIL } from '@/consts';
+import { DANFE_ANSWERS, DANFE_FALLBACK } from '@/data/danfe';
+
+/**
+ * Danfe, the helper in the bottom corner: a launcher, a nudge that floats up
+ * beside it, and a chat panel.
+ *
+ * Named for the danfe, the Himalayan monal and Nepal's national bird. The
+ * artwork is the app's own mascot, copied from its public/ folder, so the two
+ * have to be updated together. There is
+ * no model behind it; the script below matches a question against
+ * src/data/danfe.ts, and the panel says so.
+ */
+
+// The nudge opens the chat already asking this, so it has to be one of the
+// questions Danfe can answer.
+const NUDGE_QUESTION = 'Should I take PTE or IELTS?';
+
+const suggestions = DANFE_ANSWERS.filter(entry => entry.suggested);
+
+// `<` is escaped for the same reason as in JsonLd.astro: a "</script>" inside
+// an answer would otherwise end the element early.
+const data = JSON.stringify({ answers: DANFE_ANSWERS, fallback: DANFE_FALLBACK }).replace(/</g, '\\u003c');
+---
+
+<div data-danfe>
+  <script type="application/json" is:inline set:html={data} data-danfe-data />
+
+  <div
+    class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 flex flex-col items-end gap-2 sm:right-6 sm:bottom-6"
+    data-danfe-launcher
+  >
+    <div
+      class="danfe-up relative hidden max-w-[17rem] items-start rounded-2xl rounded-br-md border border-border bg-card shadow-[0_18px_40px_-24px_rgb(11_27_58/0.45)]"
+      data-danfe-nudge
+    >
+      <button
+        type="button"
+        class="py-3 pl-4 text-left text-[0.9375rem] font-semibold leading-snug text-foreground"
+        data-danfe-ask={NUDGE_QUESTION}
+      >
+        Not sure whether to take PTE or IELTS?
+      </button>
+      <button
+        type="button"
+        aria-label="Dismiss"
+        class="flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+        data-danfe-dismiss
+      >
+        <Icon name="lucide:x" class="h-4 w-4" />
+      </button>
+    </div>
+
+    <button
+      type="button"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      class="flex items-center gap-2.5 rounded-full border border-border bg-card p-1.5 text-base font-bold text-foreground shadow-[0_18px_40px_-20px_rgb(11_27_58/0.5)] transition-transform hover:-translate-y-0.5 sm:pr-5"
+      data-danfe-open
+    >
+      <img src={asset('/images/danfe-face.svg')} alt="" width="48" height="48" class="size-12 rounded-full bg-accent" />
+      <span class="sr-only sm:not-sr-only">Ask Danfe</span>
+    </button>
+  </div>
+
+  <div
+    role="dialog"
+    aria-label="Chat with Danfe"
+    class="danfe-up fixed inset-0 z-[60] hidden flex-col bg-card text-base text-foreground sm:inset-auto sm:right-6 sm:bottom-6 sm:h-[min(40rem,calc(100dvh-3rem))] sm:w-[25rem] sm:overflow-hidden sm:rounded-3xl sm:border sm:border-border sm:shadow-[0_30px_70px_-30px_rgb(11_27_58/0.55)]"
+    data-danfe-dialog
+  >
+    <header class="flex items-center gap-3 border-b border-border px-4 py-3">
+      <img
+        src={asset('/images/danfe-face.svg')}
+        alt=""
+        width="44"
+        height="44"
+        loading="lazy"
+        class="size-11 shrink-0 rounded-full bg-accent"
+      />
+      <div class="min-w-0 flex-1">
+        <p class="font-display text-lg font-bold leading-tight">Danfe</p>
+        <p class="text-sm text-muted-foreground">Prepyo’s guide</p>
+      </div>
+      <a
+        href={`mailto:${CONTACT_EMAIL}`}
+        aria-label="Email the Prepyo team"
+        title={CONTACT_EMAIL}
+        class="flex size-11 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+      >
+        <Icon name="lucide:mail" class="h-5 w-5" />
+      </a>
+      <button
+        type="button"
+        aria-label="Close chat"
+        class="flex size-11 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+        data-danfe-close
+      >
+        <Icon name="lucide:x" class="h-5 w-5" />
+      </button>
+    </header>
+
+    <div
+      class="flex flex-1 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4"
+      aria-live="polite"
+      aria-busy="false"
+      data-danfe-log
+    >
+      <div class="flex items-start gap-2">
+        <img
+          src={asset('/images/danfe.svg')}
+          alt=""
+          width="360"
+          height="510"
+          loading="lazy"
+          class="h-32 w-auto shrink-0"
+        />
+        <p
+          class="relative mt-4 rounded-2xl border border-border bg-secondary px-3.5 py-2.5 before:absolute before:top-8 before:-left-[7px] before:size-3.5 before:rotate-45 before:rounded-[3px] before:border-b before:border-l before:border-border before:bg-secondary"
+        >
+          Namaste, I am Danfe. Ask me about Prepyo: the price, the free plan, how scoring works, or which exam to take.
+        </p>
+      </div>
+
+      <div class="mt-1 flex flex-col gap-2" data-danfe-suggestions>
+        {
+          suggestions.map(({ question }) => (
+            <button
+              type="button"
+              class="rounded-2xl border border-border bg-card px-4 py-3 text-left font-medium hover:border-foreground"
+              data-danfe-ask={question}
+            >
+              {question}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <form class="border-t border-border px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]" data-danfe-form>
+      <div
+        class="flex items-center gap-2 rounded-full border border-border bg-card p-1.5 focus-within:outline focus-within:outline-[3px] focus-within:outline-offset-[3px] focus-within:outline-ring"
+      >
+        <label for="danfe-input" class="sr-only">Your question</label>
+        <input
+          id="danfe-input"
+          maxlength="300"
+          autocomplete="off"
+          enterkeyhint="send"
+          placeholder="Type your question"
+          class="min-h-11 w-full min-w-0 bg-transparent px-3 placeholder:text-muted-foreground/70 focus-visible:outline-none"
+          data-danfe-input
+        />
+        <button
+          type="submit"
+          disabled
+          aria-label="Send"
+          class="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-40"
+          data-danfe-send
+        >
+          <Icon name="lucide:arrow-up" class="h-5 w-5" />
+        </button>
+      </div>
+      <p class="mt-2 text-center text-xs text-muted-foreground">
+        Danfe answers from Prepyo’s help pages. It is not a live chat.
+      </p>
+    </form>
+  </div>
+</div>
+
+{/* Global because the script builds the typing dots, and an element created
+    at runtime never carries this component's scope attribute. */}
+<style is:global>
+  @keyframes danfe-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  .danfe-up {
+    animation: danfe-up 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes danfe-dot {
+    0%,
+    60%,
+    100% {
+      opacity: 0.4;
+      transform: none;
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  .danfe-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background: currentColor;
+    animation: danfe-dot 1.2s ease-in-out infinite;
+  }
+
+  .danfe-dot:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .danfe-dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .danfe-up,
+    .danfe-dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  interface Answer {
+    question?: string;
+    answer: string;
+    keywords?: string[];
+    link?: { href: string; label: string };
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-danfe]');
+
+  if (root) {
+    const { answers, fallback } = JSON.parse(root.querySelector('[data-danfe-data]')!.textContent!) as {
+      answers: Answer[];
+      fallback: Answer;
+    };
+
+    const launcher = root.querySelector<HTMLElement>('[data-danfe-launcher]')!;
+    const nudge = root.querySelector<HTMLElement>('[data-danfe-nudge]')!;
+    const opener = root.querySelector<HTMLButtonElement>('[data-danfe-open]')!;
+    const dialog = root.querySelector<HTMLElement>('[data-danfe-dialog]')!;
+    const closer = root.querySelector<HTMLButtonElement>('[data-danfe-close]')!;
+    const log = root.querySelector<HTMLElement>('[data-danfe-log]')!;
+    const suggestions = root.querySelector<HTMLElement>('[data-danfe-suggestions]')!;
+    const form = root.querySelector<HTMLFormElement>('[data-danfe-form]')!;
+    const input = root.querySelector<HTMLInputElement>('[data-danfe-input]')!;
+    const send = root.querySelector<HTMLButtonElement>('[data-danfe-send]')!;
+
+    // --- Matching ------------------------------------------------------------
+    const STOP_WORDS = new Set(
+      'a about an and are be can do does for from get have how i in is it me my of on or so that the this to what when with you your'.split(' '),
+    );
+
+    /** Lower-cased content words, with a plural "s" dropped so "plans" finds "plan". */
+    const words = (text: string) =>
+      (text.toLowerCase().match(/[a-z0-9]+/g) ?? [])
+        .filter(word => !STOP_WORDS.has(word))
+        .map(word => (word.length > 3 && word.endsWith('s') ? word.slice(0, -1) : word));
+
+    const index = answers.map(entry => ({
+      entry,
+      keywords: new Set(words((entry.keywords ?? []).join(' '))),
+      question: new Set(words(entry.question ?? '')),
+    }));
+
+    // A keyword hit is worth two question-word hits, and a lone question word is
+    // not enough: one shared word like "test" says nothing about the topic.
+    const MIN_SCORE = 2;
+
+    function findAnswer(text: string): Answer {
+      const exact = answers.find(entry => entry.question === text);
+      if (exact) return exact;
+
+      let best = fallback;
+      let bestScore = MIN_SCORE - 1;
+      for (const { entry, keywords, question } of index) {
+        let score = 0;
+        for (const word of new Set(words(text))) {
+          if (keywords.has(word)) score += 2;
+          else if (question.has(word)) score += 1;
+        }
+        if (score > bestScore) {
+          best = entry;
+          bestScore = score;
+        }
+      }
+      return best;
+    }
+
+    // --- Conversation --------------------------------------------------------
+    const USER_BUBBLE = 'ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-primary px-3.5 py-2.5 text-primary-foreground';
+    const DANFE_BUBBLE = 'mr-auto max-w-[85%] rounded-2xl rounded-bl-md border border-border bg-secondary px-3.5 py-2.5';
+
+    function addBubble(className: string): HTMLElement {
+      const bubble = document.createElement('div');
+      bubble.className = className;
+      log.append(bubble);
+      return bubble;
+    }
+
+    const scrollToEnd = () => log.scrollTo({ top: log.scrollHeight });
+
+    let pending = 0;
+
+    function ask(text: string): void {
+      const question = text.trim();
+      if (!question || pending) return;
+
+      addBubble(USER_BUBBLE).textContent = question;
+      suggestions.classList.add('hidden');
+
+      const reply = addBubble(`${DANFE_BUBBLE} flex items-center gap-1 text-muted-foreground`);
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'danfe-dot';
+        reply.append(dot);
+      }
+      log.setAttribute('aria-busy', 'true');
+      scrollToEnd();
+
+      // A beat of "typing" so the answer does not land before the question has
+      // finished appearing.
+      pending = window.setTimeout(() => {
+        pending = 0;
+        const { answer, link } = findAnswer(question);
+
+        reply.className = DANFE_BUBBLE;
+        reply.textContent = answer;
+        if (link) {
+          const anchor = document.createElement('a');
+          anchor.href = link.href;
+          anchor.textContent = link.label;
+          anchor.className = 'mt-1.5 block font-semibold text-primary underline underline-offset-2';
+          reply.append(anchor);
+        }
+
+        // Offer whatever has not been asked yet, below the newest answer.
+        suggestions.querySelectorAll<HTMLElement>('[data-danfe-ask]').forEach(button => {
+          if (button.dataset.danfeAsk === question) button.remove();
+        });
+        if (suggestions.childElementCount) {
+          suggestions.classList.remove('hidden');
+          log.append(suggestions);
+        }
+
+        log.setAttribute('aria-busy', 'false');
+        // Keep the top of the answer in view rather than its last line.
+        reply.scrollIntoView({ block: 'nearest' });
+      }, 650);
+    }
+
+    // --- Opening and closing -------------------------------------------------
+    const NUDGE_KEY = 'prepyo-danfe-nudge';
+    const isOpen = () => !dialog.classList.contains('hidden');
+
+    function hideNudge(): void {
+      nudge.classList.add('hidden');
+      nudge.classList.remove('flex');
+      try {
+        sessionStorage.setItem(NUDGE_KEY, 'seen');
+      } catch {
+        // Storage can be blocked; the nudge then simply returns next visit.
+      }
+    }
+
+    function open(question?: string): void {
+      hideNudge();
+      launcher.classList.add('hidden');
+      dialog.classList.remove('hidden');
+      dialog.classList.add('flex');
+      opener.setAttribute('aria-expanded', 'true');
+      // On a phone the panel is full screen, and focusing the field would raise
+      // the keyboard over the suggested questions.
+      (window.matchMedia('(min-width: 640px)').matches ? input : closer).focus();
+      if (question) ask(question);
+    }
+
+    function close(): void {
+      dialog.classList.add('hidden');
+      dialog.classList.remove('flex');
+      launcher.classList.remove('hidden');
+      opener.setAttribute('aria-expanded', 'false');
+      opener.focus();
+    }
+
+    opener.addEventListener('click', () => open());
+    closer.addEventListener('click', close);
+    root.querySelector('[data-danfe-dismiss]')!.addEventListener('click', hideNudge);
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && isOpen()) close();
+    });
+
+    // One listener for every question button: the nudge, and the suggestions,
+    // which move around inside the log.
+    root.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+
+      const button = target.closest<HTMLElement>('[data-danfe-ask]');
+      if (button) {
+        const question = button.dataset.danfeAsk!;
+        if (isOpen()) ask(question);
+        else open(question);
+        return;
+      }
+
+      // An answer that links to a section of this page should get out of the
+      // way so the section can be seen.
+      if (target.closest('a[href^="#"]')) close();
+    });
+
+    input.addEventListener('input', () => {
+      send.disabled = !input.value.trim();
+    });
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (pending) return;
+      ask(input.value);
+      input.value = '';
+      send.disabled = true;
+    });
+
+    // --- Nudge ---------------------------------------------------------------
+    let nudged = false;
+    try {
+      nudged = sessionStorage.getItem(NUDGE_KEY) === 'seen';
+    } catch {
+      // Treated as not seen.
+    }
+
+    if (!nudged) {
+      window.setTimeout(() => {
+        if (isOpen()) return;
+        nudge.classList.remove('hidden');
+        nudge.classList.add('flex');
+      }, 3500);
+    }
+  }
+</script>
