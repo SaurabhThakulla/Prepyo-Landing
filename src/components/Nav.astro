@@ -45,13 +45,16 @@ const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass
 const DEFAULT_EXAM: ExamType = 'PTE';
 ---
 
-<div class="sticky top-0 z-50 w-full pt-3 sm:pt-4 px-3 sm:px-6 lg:px-8">
+{/* At the top of a page the bar is open and transparent, so the hero sky runs
+    behind it; once the page scrolls it draws in to a floating glass pill. The
+    scroll state lives on <html data-scrolled>, set by the script below. */}
+<div class="site-bar sticky top-0 z-50 w-full pt-3 sm:pt-4 px-3 sm:px-6 lg:px-8">
   <header
-    class="w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto rounded-[22px] border border-border/80 bg-card/90 backdrop-blur-xl shadow-md transition-all"
+    class="bar-pill w-full mx-auto rounded-[22px] border border-border/80 bg-card/90 backdrop-blur-xl shadow-md"
     data-nav
   >
     <div
-      class="flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 px-3 sm:px-6 py-2.5"
+      class="bar-row flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 px-3 sm:px-6 py-2.5"
     >
       {/* Logo */}
       <a href={BASE_PATH} class="flex items-center group lg:justify-self-start" data-logo>
@@ -62,7 +65,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
           alt="Prepyo"
           width="545"
           height="176"
-          class="h-7 sm:h-8 w-auto object-contain group-hover:scale-105 transition-transform dark:hidden"
+          class="bar-logo h-7 sm:h-8 w-auto object-contain group-hover:scale-105 dark:hidden"
         />
         <img
           src={asset('/prepyo-logo-dark.webp')}
@@ -70,7 +73,7 @@ const DEFAULT_EXAM: ExamType = 'PTE';
           width="545"
           height="176"
           loading="lazy"
-          class="h-7 sm:h-8 w-auto object-contain group-hover:scale-105 transition-transform hidden dark:block"
+          class="bar-logo h-7 sm:h-8 w-auto object-contain group-hover:scale-105 hidden dark:block"
         />
       </a>
 
@@ -240,11 +243,82 @@ const DEFAULT_EXAM: ExamType = 'PTE';
   </header>
 </div>
 
+<style>
+  .bar-pill {
+    max-width: 72rem;
+    transition:
+      max-width 0.52s cubic-bezier(0.32, 0.72, 0, 1),
+      background-color 0.32s,
+      border-color 0.32s,
+      box-shadow 0.32s;
+  }
+
+  .bar-row,
+  .bar-logo {
+    transition:
+      padding 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+      height 0.42s cubic-bezier(0.32, 0.72, 0, 1),
+      transform 0.15s;
+  }
+
+  /* Below md the bar is always the pill: the menu opens inside it and needs
+     the surface, and there is no room for it to grow anyway. */
+  @media (min-width: 768px) {
+    :global(html:not([data-scrolled='true'])) .bar-pill {
+      max-width: 90rem;
+    }
+
+    :global(html:not([data-scrolled='true'])) .bar-pill:not([data-menu-open]) {
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    :global(html:not([data-scrolled='true'])) .bar-row {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    :global(html:not([data-scrolled='true'])) .bar-logo {
+      height: 2.375rem;
+    }
+  }
+
+  /* Set for the first frame only, so a page restored halfway down does not
+     animate the bar from its open state to the pill on arrival. */
+  :global(html.bar-settling) .bar-pill,
+  :global(html.bar-settling) .bar-row,
+  :global(html.bar-settling) .bar-logo {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar-pill,
+    .bar-row,
+    .bar-logo {
+      transition: none;
+    }
+  }
+</style>
+
 <script>
   import { getActiveExam, setActiveExam, onExamChange, type ExamType } from '@/scripts/exam-state';
   import { bindSectionLinks, scrollToSection } from '@/scripts/scroll-to';
 
   const nav = document.querySelector<HTMLElement>('[data-nav]')!;
+
+  // --- Scroll state ---------------------------------------------------------
+  const root = document.documentElement;
+  const syncScrolled = () => {
+    root.dataset.scrolled = String(window.scrollY > 8);
+  };
+
+  root.classList.add('bar-settling');
+  syncScrolled();
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('bar-settling')));
+  window.addEventListener('scroll', syncScrolled, { passive: true });
 
   // --- Exams dropdown -------------------------------------------------------
   const productsMenu = nav.querySelector<HTMLElement>('[data-products-menu]')!;
@@ -279,6 +353,8 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
   function setMobileOpen(open: boolean) {
     mobileMenu.classList.toggle('hidden', !open);
+    // The open menu needs the pill's surface behind it even at the top of the page.
+    nav.toggleAttribute('data-menu-open', open);
     iconMenu.classList.toggle('hidden', open);
     iconClose.classList.toggle('hidden', !open);
     mobileToggle.setAttribute('aria-expanded', String(open));
