@@ -1,0 +1,300 @@
+---
+import { Icon } from 'astro-icon/components';
+import { asset } from '@/consts';
+
+/**
+ * Prepyo on a phone: a tilted handset showing the app's home screen, with two
+ * points either side of it.
+ *
+ * Full-bleed like the hero, because the turned handset needs more room than
+ * the page's reading-width container leaves the columns beside it.
+ *
+ * It took the place of the exam cards and keeps their `products` id, which the
+ * footer's "Exams" link and the nav's exam menu still scroll to.
+ */
+
+const HEADLINE = 'Your exam prep, in your pocket.';
+
+// Order is left column then right column; `delay` staggers each one's entrance.
+const LEFT = [
+  {
+    icon: 'lucide:layout-grid',
+    title: 'All four skills',
+    body: 'Speaking, writing, reading and listening, each with its own question bank.',
+    delay: 100,
+  },
+  {
+    icon: 'lucide:timer',
+    title: 'Full mock tests',
+    body: 'Real exam timing and question order. Scored when you finish.',
+    delay: 200,
+  },
+];
+
+const RIGHT = [
+  {
+    icon: 'lucide:book-marked',
+    title: 'A mistake bank',
+    body: 'Every question you miss is saved, ready to try again.',
+    delay: 150,
+  },
+  {
+    icon: 'lucide:sparkles',
+    title: 'Danfe, your AI coach',
+    body: 'Stuck on a task? Ask for a template, a tip or an explanation.',
+    delay: 250,
+  },
+];
+
+// The capture is 780x1688, the shape of the phone's screen.
+const SHOT = { width: 780, height: 1688 };
+
+// How many slices the handset's metal edge is built from; more is smoother.
+const EDGE_SLICES = 12;
+---
+
+{/* Runs before the section is parsed, so the hidden starting state of the
+    entrance animations only ever applies when a script is there to undo it. */}
+<script is:inline>
+  document.documentElement.classList.add('js');
+</script>
+
+{/* Extra room on top: the laptop's shadow above reaches down into this
+    section, and the headline needs to clear it. */}
+<section id="products" class="pt-24 pb-14 sm:pt-32 sm:pb-20 lg:pt-44" aria-labelledby="mobile-heading" data-mobile>
+  <div class="mx-auto max-w-[84rem] px-5 sm:px-6 lg:px-10">
+    <div class="text-center">
+      <h2 id="mobile-heading" class="mobile-display font-display text-foreground" aria-label={HEADLINE} data-reveal-words>
+        {
+          HEADLINE.split(' ').map((word, index) => (
+            <span class="word" aria-hidden="true">
+              <span style={`--d:${index * 55}ms`}>{word}&nbsp;</span>
+            </span>
+          ))
+        }
+      </h2>
+      <p class="mobile-lead mx-auto mt-5 max-w-[30ch] text-balance text-muted-foreground sm:max-w-[44ch]" style="--d:150ms" data-reveal>
+        Prepyo works on your phone as well as your laptop, so practice fits wherever you have ten minutes.
+      </p>
+    </div>
+
+    <div class="mt-12 grid items-center gap-12 md:mt-20 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-8 xl:gap-14">
+      <ul class="order-2 grid list-none gap-10 lg:order-1 lg:justify-items-end lg:gap-24">
+        {
+          LEFT.map(({ icon, title, body, delay }) => (
+            <li class="flex items-start gap-4 lg:flex-row-reverse lg:text-right" style={`--d:${delay}ms`} data-reveal>
+              <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-card text-foreground ring-1 ring-border">
+                <Icon name={icon} class="h-6 w-6" />
+              </span>
+              <div>
+                <h3 class="font-display text-2xl font-bold leading-tight tracking-tight text-foreground xl:text-[1.75rem]">{title}</h3>
+                <p class="mt-2 max-w-[26ch] text-[1.0625rem] leading-normal text-muted-foreground lg:text-lg">{body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="phone-stage order-1 mx-auto lg:order-2" style="--y:48px" data-reveal>
+        <div class="phone">
+          <span class="phone-shadow" aria-hidden="true"></span>
+          {Array.from({ length: EDGE_SLICES }, (_, slice) => <span class="phone-edge" style={`--z:${slice + 1}`} aria-hidden="true" />)}
+          <div class="phone-face">
+            <img
+              src={asset('/images/app-phone-home.webp')}
+              alt="The Prepyo home screen on a phone: questions practised in each skill, the active plan, the practice studio and the Danfe coach button."
+              width={SHOT.width}
+              height={SHOT.height}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+
+      <ul class="order-3 grid list-none gap-10 lg:gap-24">
+        {
+          RIGHT.map(({ icon, title, body, delay }) => (
+            <li class="flex items-start gap-4" style={`--d:${delay}ms`} data-reveal>
+              <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-card text-foreground ring-1 ring-border">
+                <Icon name={icon} class="h-6 w-6" />
+              </span>
+              <div>
+                <h3 class="font-display text-2xl font-bold leading-tight tracking-tight text-foreground xl:text-[1.75rem]">{title}</h3>
+                <p class="mt-2 max-w-[26ch] text-[1.0625rem] leading-normal text-muted-foreground lg:text-lg">{body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mobile-display {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+
+  .mobile-lead {
+    font-size: clamp(1.0625rem, 1.7vw, 1.375rem);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.012em;
+  }
+
+  /* ----- Entrances --------------------------------------------------------
+     Each block fades up when it scrolls into view; the headline's words rise
+     out from behind their own baseline instead. The hidden state hangs off
+     `html.js`, so without scripts everything is simply there. */
+
+  .word {
+    display: inline-flex;
+    overflow: hidden;
+    /* Room for descenders, taken back so the line height is unchanged. */
+    margin-bottom: -0.16em;
+    padding-bottom: 0.16em;
+    vertical-align: bottom;
+  }
+
+  .word > span {
+    display: inline-block;
+  }
+
+  :global(html.js) [data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--y, 24px));
+  }
+
+  :global(html.js) [data-reveal-words] .word > span {
+    transform: translateY(110%);
+  }
+
+  :global(html.js) [data-reveal],
+  :global(html.js) [data-reveal-words] .word > span {
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  }
+
+  :global(html.js) [data-reveal].is-in,
+  :global(html.js) [data-reveal-words].is-in .word > span {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ----- Handset ------------------------------------------------------------
+     A flat face tipped back and turned in 3D. The metal edge is a stack of
+     copies of its outline stepping away behind it, which reads as a solid
+     side from this angle without needing a model. */
+
+  .phone-stage {
+    /* The handset's width; its corner radius, edge and clearance scale off it. */
+    --w: 12rem;
+    perspective: 1800px;
+    /* The turn swings the corners well outside the box, so the stage reserves
+       the room they need rather than letting them cross the columns. */
+    padding: 0 calc(var(--w) * 0.37) 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .phone-stage {
+      --w: 14rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .phone-stage {
+      --w: 12.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .phone-stage {
+      --w: 16.5rem;
+    }
+  }
+
+  .phone {
+    --radius: calc(var(--w) * 0.168);
+    position: relative;
+    width: var(--w);
+    aspect-ratio: 780 / 1688;
+    transform: rotateX(34deg) rotateY(-4deg) rotateZ(22deg);
+    transform-style: preserve-3d;
+  }
+
+  .phone-face,
+  .phone-edge,
+  .phone-shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
+
+  .phone-face {
+    padding: calc(var(--w) * 0.032);
+    background: #0b0c10;
+    box-shadow:
+      inset 0 0 0 2px #d9dce2,
+      inset 0 0 0 3px #7c8088;
+  }
+
+  .phone-face img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: calc(var(--radius) - var(--w) * 0.032);
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .phone-edge {
+    background: #c9ccd3;
+    transform: translateZ(calc(var(--z) * var(--w) * -0.005));
+  }
+
+  /* The slices furthest back catch less light. */
+  .phone-edge:nth-of-type(n + 8) {
+    background: #a9adb5;
+  }
+
+  .phone-shadow {
+    background: rgb(11 27 58 / 0.34);
+    filter: blur(26px);
+    transform: translateZ(-90px) translate(-6%, 4%) scale(0.94);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) [data-reveal],
+    :global(html.js) [data-reveal-words] .word > span {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-mobile]');
+
+  if (section) {
+    // Each block reveals itself once, as it arrives, rather than the section
+    // revealing everything the moment its first pixel shows.
+    const observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-in');
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px' },
+    );
+
+    section.querySelectorAll('[data-reveal], [data-reveal-words]').forEach(element => observer.observe(element));
+  }
+</script>

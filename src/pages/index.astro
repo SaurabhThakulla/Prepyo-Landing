@@ -1,18 +1,18 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import Hero from '@/components/Hero.astro';
-import ExamsSection from '@/components/ExamsSection.astro';
+import MobileSection from '@/components/MobileSection.astro';
 import ProblemSection from '@/components/ProblemSection.astro';
 import FeaturesSection from '@/components/FeaturesSection.astro';
 import SubscriptionSection from '@/components/SubscriptionSection.astro';
 import PriceComparison from '@/components/PriceComparison.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
-import SocialProof from '@/components/SocialProof.astro';
 import Testimonials from '@/components/Testimonials.astro';
+import AskDanfe from '@/components/AskDanfe.astro';
 import { FAQS } from '@/data/faq';
 import { faqPage, howTo, organization, softwareApplication, webPage, website } from '@/lib/schema';
-import { asset, BASE_PATH, KOREAN_LIVE } from '@/consts';
+import { BASE_PATH, KOREAN_LIVE } from '@/consts';
 
 /**
  * The public landing page for Prepyo.
@@ -53,11 +53,13 @@ const schema = [
   title={title}
   description={description}
   schema={schema}
+  fullWidth
 >
-  <div class="w-full space-y-4">
-    <Hero />
-    <ExamsSection />
-    <SocialProof methodologyHref={asset('/how-scoring-works/')} />
+  {/* The hero and the phone section run edge to edge; everything after them
+      sits in the reading-width container the layout would otherwise provide. */}
+  <Hero />
+  <MobileSection />
+  <div class="w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4">
     <ProblemSection />
     <FeaturesSection />
     <Testimonials />
@@ -66,4 +68,5 @@ const schema = [
     <HowItWorksSection />
     <FAQSection />
   </div>
+  <AskDanfe />
 </Layout>
