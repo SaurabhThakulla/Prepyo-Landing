@@ -34,15 +34,35 @@ const SOLUTION_ITEMS: SolutionItem[] = [
     desc: 'Scored against the criteria Pearson and IELTS publish, so you have a close estimate of your band before test day.',
   },
 ];
+
+// The four scores each chart plots, clockwise from the top, in the colour of
+// the point that marks them. On a phone these are listed under the chart: the
+// badges that sit around it on a wider screen do not fit beside it there.
+const CHART_SCORES = {
+  pte: [
+    { label: 'Speaking', score: '86', dot: 'bg-emerald-500' },
+    { label: 'Writing', score: '74', dot: 'bg-amber-500' },
+    { label: 'Reading', score: '78', dot: 'bg-sky-500' },
+    { label: 'Listening', score: '82', dot: 'bg-violet-500' },
+  ],
+  ielts: [
+    { label: 'Speaking', score: '8.5', dot: 'bg-emerald-500' },
+    { label: 'Writing', score: '7.5', dot: 'bg-amber-500' },
+    { label: 'Reading', score: '8.0', dot: 'bg-sky-500' },
+    { label: 'Listening', score: '8.0', dot: 'bg-violet-500' },
+  ],
+};
 ---
 
 <section id="details-chart" class="py-14 sm:py-20 border-t border-border" data-details-chart data-mode={mode}>
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     {/* Main Section Header */}
     <div class="text-center mb-8 sm:mb-12 space-y-2">
-      <span class="text-xs font-bold uppercase tracking-wider text-primary">
-        Diagnostic Visualizer
-      </span>
+      {
+        mode !== 'home' && (
+          <span class="text-xs font-bold uppercase tracking-wider text-primary">Diagnostic Visualizer</span>
+        )
+      }
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight text-balance">
         See where you gain and lose marks in {mode === 'pte' ? 'PTE' : mode === 'ielts' ? 'IELTS' : 'PTE and IELTS'}
       </h2>
@@ -56,17 +76,17 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           <div class="inline-flex items-center p-1 rounded-full bg-muted/80 border border-border text-xs font-bold shadow-inner">
             <button
               type="button"
-              class="px-4 py-1.5 rounded-full transition-all duration-300 bg-background text-foreground shadow-sm"
+              class="px-4 py-1.5 rounded-full whitespace-nowrap transition-all duration-300 bg-background text-foreground shadow-sm"
               data-exam-toggle="pte"
             >
-              PTE Academic (10–90)
+              PTE Academic<span class="hidden sm:inline"> (10–90)</span>
             </button>
             <button
               type="button"
-              class="px-4 py-1.5 rounded-full transition-all duration-300 text-muted-foreground hover:text-foreground"
+              class="px-4 py-1.5 rounded-full whitespace-nowrap transition-all duration-300 text-muted-foreground hover:text-foreground"
               data-exam-toggle="ielts"
             >
-              IELTS Academic (Band 0–9)
+              IELTS Academic<span class="hidden sm:inline"> (Band 0–9)</span>
             </button>
           </div>
         </div>
@@ -104,8 +124,10 @@ const SOLUTION_ITEMS: SolutionItem[] = [
         </div>
       </div>
 
-      {/* Right Column: Radar Graph Container with smooth cross-fade */}
-      <div class="lg:col-span-7 flex flex-col items-center py-2 sm:py-5 relative min-h-[460px] justify-center">
+      {/* Right Column: Radar Graph Container with smooth cross-fade.
+          Comes first when the columns stack, so the PTE / IELTS toggle sits
+          directly above the chart it switches instead of a screen away from it. */}
+      <div class="order-first lg:order-none lg:col-span-7 flex flex-col items-center py-2 sm:py-5 relative min-h-[460px] justify-center">
         
         {/* ================================================================= */}
         {/* VIEW A: PTE ACADEMIC DETAILS CHART                                */}
@@ -118,7 +140,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           data-chart-view="pte"
         >
           {/* Top: Speaking Badge */}
-          <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mb-3 z-10 whitespace-nowrap">
+          <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mb-3 z-10 whitespace-nowrap">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
             <Icon name="lucide:mic" class="w-3.5 h-3.5 text-[#5865F2] shrink-0" />
             <span>Speaking</span>
@@ -128,7 +150,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           {/* Middle Row: Left Badge + SVG Graph + Right Badge */}
           <div class="flex items-center justify-center gap-2 sm:gap-3.5 w-full">
             {/* Left: Listening Badge */}
-            <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
+            <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-purple-500"></span>
               <Icon name="lucide:headphones" class="w-3.5 h-3.5 text-purple-500 shrink-0" />
               <span>Listening</span>
@@ -136,7 +158,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
             </div>
 
             {/* SVG Radar Canvas */}
-            <div class="relative shrink-0 w-[210px] h-[210px] sm:w-[260px] sm:h-[260px] md:w-[290px] md:h-[290px]">
+            <div class="relative shrink-0 w-[min(280px,76vw)] h-[min(280px,76vw)] sm:w-[260px] sm:h-[260px] md:w-[290px] md:h-[290px]">
               <svg viewBox="0 0 320 320" class="w-full h-full overflow-visible">
                 <defs>
                   <linearGradient id="pte-radar-fill" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -194,7 +216,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
             </div>
 
             {/* Right: Writing Badge */}
-            <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
+            <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-amber-500"></span>
               <Icon name="lucide:file-edit" class="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Writing</span>
@@ -203,12 +225,27 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           </div>
 
           {/* Bottom: Reading Badge */}
-          <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mt-3 z-10 whitespace-nowrap">
+          <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mt-3 z-10 whitespace-nowrap">
             <span class="w-2 h-2 rounded-full bg-sky-500"></span>
             <Icon name="lucide:book-open" class="w-3.5 h-3.5 text-sky-500 shrink-0" />
             <span>Reading</span>
             <span class="font-extrabold text-sky-500 font-mono ml-0.5">78</span>
           </div>
+
+          {/* Phone: the four scores, listed in place of the badges around the chart. */}
+          <ul class="sm:hidden mt-5 grid w-full max-w-md list-none grid-cols-4 gap-2">
+            {
+              CHART_SCORES.pte.map(({ label, score, dot }) => (
+                <li class="flex flex-col items-center gap-0.5 rounded-xl border border-border/70 bg-card px-1 py-2 shadow-sm">
+                  <span class="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                    <span class={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                    {label}
+                  </span>
+                  <span class="font-mono text-base font-extrabold text-foreground">{score}</span>
+                </li>
+              ))
+            }
+          </ul>
 
           {/* Metrics Summary */}
           <div class="w-full max-w-md mt-6 sm:mt-8 flex flex-col items-center gap-3.5">
@@ -247,7 +284,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           data-chart-view="ielts"
         >
           {/* Top: Speaking Badge */}
-          <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mb-3 z-10 whitespace-nowrap">
+          <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mb-3 z-10 whitespace-nowrap">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
             <Icon name="lucide:mic" class="w-3.5 h-3.5 text-emerald-500 shrink-0" />
             <span>Speaking</span>
@@ -257,7 +294,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           {/* Middle Row: Left Badge + SVG Graph + Right Badge */}
           <div class="flex items-center justify-center gap-2 sm:gap-3.5 w-full">
             {/* Left: Listening Badge */}
-            <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
+            <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-purple-500"></span>
               <Icon name="lucide:headphones" class="w-3.5 h-3.5 text-purple-500 shrink-0" />
               <span>Listening</span>
@@ -265,7 +302,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
             </div>
 
             {/* SVG Radar Canvas */}
-            <div class="relative shrink-0 w-[210px] h-[210px] sm:w-[260px] sm:h-[260px] md:w-[290px] md:h-[290px]">
+            <div class="relative shrink-0 w-[min(280px,76vw)] h-[min(280px,76vw)] sm:w-[260px] sm:h-[260px] md:w-[290px] md:h-[290px]">
               <svg viewBox="0 0 320 320" class="w-full h-full overflow-visible">
                 <defs>
                   <linearGradient id="ielts-radar-fill" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -323,7 +360,7 @@ const SOLUTION_ITEMS: SolutionItem[] = [
             </div>
 
             {/* Right: Writing Badge */}
-            <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
+            <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold text-foreground shadow-sm shrink-0 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-amber-500"></span>
               <Icon name="lucide:file-edit" class="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Writing</span>
@@ -332,12 +369,27 @@ const SOLUTION_ITEMS: SolutionItem[] = [
           </div>
 
           {/* Bottom: Reading Badge */}
-          <div class="flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mt-3 z-10 whitespace-nowrap">
+          <div class="hidden sm:flex items-center gap-1.5 rounded-full bg-card dark:bg-slate-900 border border-border/80 px-3.5 py-1.5 text-xs font-bold text-foreground shadow-sm mt-3 z-10 whitespace-nowrap">
             <span class="w-2 h-2 rounded-full bg-sky-500"></span>
             <Icon name="lucide:book-open" class="w-3.5 h-3.5 text-sky-500 shrink-0" />
             <span>Reading</span>
             <span class="font-extrabold text-sky-500 font-mono ml-0.5">8.0</span>
           </div>
+
+          {/* Phone: the four scores, listed in place of the badges around the chart. */}
+          <ul class="sm:hidden mt-5 grid w-full max-w-md list-none grid-cols-4 gap-2">
+            {
+              CHART_SCORES.ielts.map(({ label, score, dot }) => (
+                <li class="flex flex-col items-center gap-0.5 rounded-xl border border-border/70 bg-card px-1 py-2 shadow-sm">
+                  <span class="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                    <span class={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                    {label}
+                  </span>
+                  <span class="font-mono text-base font-extrabold text-foreground">{score}</span>
+                </li>
+              ))
+            }
+          </ul>
 
           {/* Metrics Summary */}
           <div class="w-full max-w-md mt-6 sm:mt-8 flex flex-col items-center gap-3.5">

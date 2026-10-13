@@ -26,26 +26,17 @@ const SHOT = { width: 1913, height: 910 };
       <canvas data-hero-sky></canvas>
     </div>
 
-    <div class="mx-auto flex max-w-[72rem] flex-col items-center px-5 pt-8 text-center sm:px-6 md:pt-14 lg:pt-16">
-      <a
-        href={asset('/how-scoring-works/')}
-        class="rise inline-flex items-center gap-2 rounded-full bg-card/70 py-1.5 pl-4 pr-3 text-sm font-semibold text-foreground ring-1 ring-foreground/10 transition-colors hover:bg-card sm:text-[0.9375rem]"
-        style="--i:0"
-      >
-        See how the AI scoring works
-        <Icon name="lucide:arrow-right" class="h-4 w-4 text-muted-foreground" />
-      </a>
-
-      <h1 class="hero-display rise mt-7 font-display text-foreground sm:mt-8" style="--i:1">
+    <div class="mx-auto flex max-w-[72rem] flex-col items-center px-5 pt-10 text-center sm:px-6 md:pt-16 lg:pt-20">
+      <h1 class="hero-display rise font-display text-foreground" style="--i:0">
         <span class="lg:block">Prepare for <span class="whitespace-nowrap">PTE 79+</span> &amp; <span class="whitespace-nowrap">IELTS 8.0</span>{' '}</span>
         <span class="text-primary lg:block">with full mock exams.</span>
       </h1>
 
-      <p class="hero-lead rise mt-6 max-w-[34ch] text-pretty text-foreground/70 sm:mt-7 sm:max-w-[58ch] sm:text-balance" style="--i:2">
+      <p class="hero-lead rise mt-6 max-w-[34ch] text-pretty text-foreground/70 sm:mt-7 sm:max-w-[58ch] sm:text-balance" style="--i:1">
         Full-length mock exams scored by AI against the official marking criteria in seconds. Get instant pronunciation analysis, AI writing rewrites, and an estimated band before test day.
       </p>
 
-      <div class="rise mt-9 flex w-full flex-col items-center sm:mt-10" style="--i:3">
+      <div class="rise mt-9 flex w-full flex-col items-center sm:mt-10" style="--i:2">
         <div class="flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
           <a href={appUrl('/')} class="hero-btn hero-btn-primary group">
             Get started free
@@ -68,7 +59,7 @@ const SHOT = { width: 1913, height: 910 };
       it takes for its lid to peek above the fold, on a short screen or a tall one. */}
   <div
     class="rise relative -mt-20 px-4 sm:mt-[calc(clamp(4rem,82svh_-_41rem,13rem)_-_13rem)] sm:px-6 lg:mt-[calc(clamp(4rem,82svh_-_43rem,16rem)_-_16rem)]"
-    style="--i:4; perspective:90rem"
+    style="--i:3; perspective:90rem"
   >
     <div class="tilt-in" style="transform-origin:50% 0; transform:scale(0.9475) rotateX(14deg)" data-tilt>
       <div class="laptop">
