@@ -1,5 +1,6 @@
 /**
- * The drifting dune field behind the landing hero.
+ * The Himalayan skyline behind the landing hero: snow peaks at the back,
+ * rounded foothills in front.
  *
  * One full-screen fragment shader on a bare WebGL context rather than a 3D
  * library: the scene is a handful of layered ridgelines, and a library would
@@ -23,7 +24,6 @@ precision mediump float;
 #endif
 
 uniform vec2 uRes;
-uniform float uTime;
 uniform float uBand;
 uniform vec3 uSkyTop;
 uniform vec3 uSkyMid;
@@ -31,6 +31,9 @@ uniform vec3 uGlow;
 uniform vec3 uFar;
 uniform vec3 uNear;
 uniform vec3 uRim;
+uniform vec3 uRock;
+uniform vec3 uSnow;
+uniform vec3 uSnowShade;
 
 float hash(float n) {
   return fract(sin(n * 127.1) * 43758.5453);
@@ -43,54 +46,139 @@ float noise(float x) {
   return mix(hash(i), hash(i + 1.0), u);
 }
 
-// Mostly one long swell with a little detail on top, so the ridges read as
-// wind-shaped dunes rather than a mountain skyline.
-float ridge(float x) {
+float hash2(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+float noise2(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), u.x),
+             mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+
+// Rounded hills: one long swell with a little detail, for the foothills.
+float hills(float x) {
   return noise(x) * 0.68 + noise(x * 2.07 + 11.3) * 0.24 + noise(x * 4.3 + 5.7) * 0.08;
+}
+
+// Six octaves of squared ridged noise: sharp, eroded crests whose detail
+// shrinks with each octave, the way a real ridgeline breaks into smaller spurs.
+float ridged(float x) {
+  float h = 0.0;
+  float a = 0.55;
+  float f = 1.0;
+  for (int o = 0; o < 6; o++) {
+    float n = 1.0 - abs(noise(x * f + float(o) * 7.3) * 2.0 - 1.0);
+    h += a * n * n;
+    a *= 0.48;
+    f *= 2.03;
+  }
+  return h;
+}
+
+// A slow envelope lifts a few summits far above their neighbours, as one
+// massif stands over the rest of a range.
+float massif(float x) {
+  return 0.3 + 0.95 * smoothstep(0.15, 0.95, noise(x * 0.33 + 3.1));
+}
+
+// The same ridge with only its three broadest octaves: the big faces, without
+// the small spurs, for working out which way a slope faces.
+float ridgedBroad(float x) {
+  float h = 0.0;
+  float a = 0.55;
+  float f = 1.0;
+  for (int o = 0; o < 3; o++) {
+    float n = 1.0 - abs(noise(x * f + float(o) * 7.3) * 2.0 - 1.0);
+    h += a * n * n;
+    a *= 0.48;
+    f *= 2.03;
+  }
+  return h;
+}
+
+// The far ranges are jagged peaks; towards the front they soften into hills.
+float profile(float x, float fi) {
+  return mix(ridged(x) * massif(x), hills(x) * 0.7, smoothstep(0.45, 0.85, fi));
+}
+
+float profileBroad(float x, float fi) {
+  return mix(ridgedBroad(x) * massif(x), hills(x) * 0.7, smoothstep(0.45, 0.85, fi));
 }
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
-  // Horizontal distance in units of the dune band's height, so the dunes keep
-  // their proportions on a phone and on an ultra-wide display alike.
+  // Horizontal distance in units of the mountain band's height, so the range
+  // keeps its proportions on a phone and on an ultra-wide display alike.
   float x = gl_FragCoord.x / (uBand * uRes.y);
 
   vec3 col = mix(uSkyMid, uSkyTop, smoothstep(uBand + 0.12, 1.0, uv.y));
   float glow = exp(-pow((uv.y - uBand * 1.05) / 0.17, 2.0));
   col = mix(col, uGlow, glow * 0.9);
 
-  for (int i = 0; i < 6; i++) {
-    float fi = float(i) / 5.0;
-    float base = uBand * mix(0.9, 0.2, fi);
-    float amp = uBand * mix(0.2, 0.42, fi);
-    float freq = mix(1.55, 0.6, fi);
-    float px = x * freq + fi * 37.0 + uTime * mix(0.004, 0.02, fi);
+  for (int i = 0; i < 5; i++) {
+    float fi = float(i) / 4.0;
+    float base = uBand * mix(0.6, 0.08, fi);
+    float amp = uBand * mix(0.9, 0.34, fi);
+    float freq = mix(0.85, 0.55, fi);
+    float px = x * freq + fi * 37.0 + 3.0;
 
-    float crest = base + (ridge(px) - 0.5) * amp;
+    float h = profile(px, fi);
+    float crest = base + h * amp;
     float below = crest - uv.y;
-    float edge = smoothstep(0.0, 2.5 / uRes.y, below);
+    float edge = smoothstep(0.0, 1.5 / uRes.y, below);
 
-    // Warm light comes from the right, so slopes that fall away to the right
-    // catch it and the ones behind them stay in blue shadow.
-    float slope = (ridge(px + 0.04) - ridge(px - 0.04)) / 0.08;
-    float facing = smoothstep(-0.55, 0.75, -slope);
-    float depth = clamp(below / (uBand * 0.3), 0.0, 1.0);
+    // Which way the face under this point looks. A face runs down and out from
+    // its summit, so the deeper the point, the further sideways its ridge is
+    // sampled: light and shadow then fall diagonally from each peak instead of
+    // in vertical columns. Warm light comes from the right.
+    float d = max(below, 0.0) / uBand;
+    float sx = px + d * freq * 1.1;
+    float e = 0.03;
+    float s = (profileBroad(sx + e, fi) - profileBroad(sx - e, fi)) / (2.0 * e) * (amp / uBand) * freq;
+    float facing = smoothstep(-0.7, 0.7, -s);
 
-    vec3 body = mix(uFar, uNear, fi);
-    vec3 dune = mix(body, uRim, facing * (1.0 - depth) * (1.0 - depth) * 0.85);
-    // Mist settles in the hollow between one ridge and the next.
-    dune = mix(dune, uSkyMid, depth * 0.3 * (1.0 - fi * 0.6));
-    // Distant dunes fade into the air in front of them.
-    dune = mix(dune, uGlow, (1.0 - fi) * 0.2);
+    // Gullies: streaks leaning down the faces at the same angle, bent a little
+    // so they wander like real couloirs instead of ruled lines.
+    vec2 q = vec2(px * 7.0 - d * 5.0, d * 2.0);
+    q.x += (noise2(q * vec2(0.5, 1.4)) - 0.5) * 1.4;
+    float gully = pow(1.0 - abs(noise2(vec2(q.x, q.y * 0.7)) * 2.0 - 1.0), 4.0);
 
-    col = mix(col, dune, edge);
+    float light = clamp(facing * 0.8 + (gully - 0.3) * 0.35, 0.0, 1.0);
+
+    // Bare rock: blue-grey on the high ranges, darker on the hills in front.
+    vec3 rockTone = mix(uRock, uNear, smoothstep(0.35, 1.0, fi));
+    vec3 layer = mix(rockTone * 0.78, mix(rockTone, uRim, 0.4), light);
+
+    // Snow lies above an uneven snow line, runs down the gullies, and slides
+    // off the steepest rock; the foothills in front carry none.
+    float alt = (uv.y - base) / amp;
+    float line = 0.62 + fi * 0.3 + (noise2(vec2(px * 3.0, 1.7)) - 0.5) * 0.18;
+    float snow = smoothstep(line - 0.04, line + 0.02, alt + gully * 0.22 - (1.0 - facing) * 0.08);
+    snow *= 1.0 - smoothstep(2.0, 4.0, abs(s)) * 0.75;
+    snow *= 1.0 - smoothstep(0.4, 0.62, fi);
+    vec3 snowTone = mix(uSnowShade, uSnow, smoothstep(0.25, 0.85, light));
+    layer = mix(layer, snowTone, snow);
+
+    // Forest grain on the nearest hills.
+    float grain = 0.86 + 0.14 * noise2(gl_FragCoord.xy * vec2(0.45, 0.8));
+    layer *= mix(1.0, grain, smoothstep(0.6, 1.0, fi));
+
+    // Distant ranges sink into blue air, and mist pools at the foot of each.
+    layer = mix(layer, mix(uSkyMid, uGlow, 0.35), (1.0 - fi) * 0.4);
+    float mist = 1.0 - smoothstep(0.0, amp * 0.4, uv.y - base);
+    layer = mix(layer, uSkyMid, mist * 0.55 * (1.0 - fi * 0.4));
+
+    col = mix(col, layer, edge);
   }
 
   gl_FragColor = vec4(col, 1.0);
 }`;
 
 type RGB = [number, number, number];
-type Palette = Record<'skyTop' | 'skyMid' | 'glow' | 'far' | 'near' | 'rim', RGB>;
+type Palette = Record<'skyTop' | 'skyMid' | 'glow' | 'far' | 'near' | 'rim' | 'rock' | 'snow' | 'snowShade', RGB>;
 
 const hex = (value: string): RGB => [
   parseInt(value.slice(1, 3), 16) / 255,
@@ -102,9 +190,12 @@ const LIGHT: Palette = {
   skyTop: hex('#bcd6ee'),
   skyMid: hex('#edf4fa'),
   glow: hex('#fbe2cf'),
-  far: hex('#a6c6e6'),
-  near: hex('#3d70b0'),
+  far: hex('#a9bdd6'),
+  near: hex('#2c4d6e'),
   rim: hex('#fff1e3'),
+  rock: hex('#7488a3'),
+  snow: hex('#ffffff'),
+  snowShade: hex('#c8d7ea'),
 };
 
 const DARK: Palette = {
@@ -114,9 +205,12 @@ const DARK: Palette = {
   far: hex('#27306a'),
   near: hex('#0b1030'),
   rim: hex('#8d97ff'),
+  rock: hex('#2a3170'),
+  snow: hex('#d6dbff'),
+  snowShade: hex('#5b63a3'),
 };
 
-/** How tall the dune band is, in CSS pixels, before it is capped. */
+/** How tall the mountain band is, in CSS pixels, before it is capped. */
 const BAND_PX = 430;
 /** Soft shapes do not need a retina buffer, and a phone GPU is glad of it. */
 const MAX_DPR = 1.5;
@@ -153,7 +247,6 @@ export function initHeroSky(canvas: HTMLCanvasElement): void {
 
   const uniform = (name: string) => gl.getUniformLocation(program, name);
   const uRes = uniform('uRes');
-  const uTime = uniform('uTime');
   const uBand = uniform('uBand');
   const colours: [keyof Palette, WebGLUniformLocation | null][] = [
     ['skyTop', uniform('uSkyTop')],
@@ -162,6 +255,9 @@ export function initHeroSky(canvas: HTMLCanvasElement): void {
     ['far', uniform('uFar')],
     ['near', uniform('uNear')],
     ['rim', uniform('uRim')],
+    ['rock', uniform('uRock')],
+    ['snow', uniform('uSnow')],
+    ['snowShade', uniform('uSnowShade')],
   ];
 
   const root = document.documentElement;
@@ -174,7 +270,6 @@ export function initHeroSky(canvas: HTMLCanvasElement): void {
   let visible = true;
   let frame = 0;
   let last = performance.now();
-  let clock = 0;
 
   function resize(): void {
     const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
@@ -189,7 +284,6 @@ export function initHeroSky(canvas: HTMLCanvasElement): void {
   function draw(): void {
     resize();
     gl!.uniform2f(uRes, canvas.width, canvas.height);
-    gl!.uniform1f(uTime, clock);
     gl!.uniform1f(uBand, Math.min(0.5, BAND_PX / Math.max(1, canvas.clientHeight)));
     for (const [key, location] of colours) {
       const day = LIGHT[key];
@@ -213,12 +307,11 @@ export function initHeroSky(canvas: HTMLCanvasElement): void {
     const fading = Math.abs(target - night) > 0.001;
     night = fading ? night + (target - night) * Math.min(1, delta * 6) : target;
 
-    if (!reducedMotion.matches) clock += delta;
     draw();
 
-    // With motion reduced the dunes stand still, so the loop only has to run
+    // With motion reduced the mountains stand still, so the loop only has to run
     // for as long as a theme cross-fade is in progress.
-    const keepGoing = visible && !document.hidden && (!reducedMotion.matches || fading);
+    const keepGoing = visible && !document.hidden && fading;
     frame = keepGoing ? requestAnimationFrame(tick) : 0;
   }
 

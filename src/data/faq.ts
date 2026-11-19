@@ -6,10 +6,14 @@
  * Google requires the two to match, so they have to come from one array —
  * an answer edited in the component alone would quietly make the markup a lie.
  */
+import { EXACT_PLANS } from '@/data/pricing';
+
 export interface Faq {
   question: string;
   answer: string;
 }
+
+const price = (id: string) => EXACT_PLANS.find(plan => plan.id === id)!.priceNPR;
 
 export const FAQS: Faq[] = [
   {
@@ -19,7 +23,12 @@ export const FAQS: Faq[] = [
   },
   {
     question: 'How do I pay from Nepal?',
-    answer: 'We support the payment methods businesses in Nepal already use day to day. Since auto-recurring billing isn’t yet reliable here, payments are confirmed manually by our team after each cycle.',
+    answer: 'Pay with eSewa, Khalti or a bank transfer. Each plan is a single payment for 30 days and never renews on its own; our team confirms the payment and your plan starts.',
+  },
+  {
+    question: 'Which Premium do I need?',
+    answer:
+      `EPS-TOPIK & JLPT Premium (NPR ${price('elite_asia')} for 30 days) covers Korean and Japanese: unlimited practice and Help in English on every question. IELTS & PTE Premium (NPR ${price('elite')} for 30 days) covers every exam, with AI gradings for speaking and writing and 12 full mock exams.`,
   },
   {
     question: 'Can I practise both PTE and IELTS?',

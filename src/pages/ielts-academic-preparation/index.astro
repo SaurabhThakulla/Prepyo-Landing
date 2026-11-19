@@ -21,6 +21,7 @@ const url = new URL(Astro.url.pathname, origin);
   schema={examPageGraph(site, url, IELTS_PAGE)}
   ogImage={IELTS_PAGE.ogImage}
   ogImageAlt={IELTS_PAGE.h1}
+  fullWidth
 >
   <ExamArticle page={IELTS_PAGE} />
 </Layout>

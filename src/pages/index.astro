@@ -5,7 +5,6 @@ import MobileSection from '@/components/MobileSection.astro';
 import ProblemSection from '@/components/ProblemSection.astro';
 import FeaturesSection from '@/components/FeaturesSection.astro';
 import SubscriptionSection from '@/components/SubscriptionSection.astro';
-import PriceComparison from '@/components/PriceComparison.astro';
 import HowItWorksSection from '@/components/HowItWorksSection.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import Testimonials from '@/components/Testimonials.astro';
@@ -27,11 +26,11 @@ const site = new URL(BASE_PATH, origin);
 const url = new URL(Astro.url.pathname, origin);
 
 const title = KOREAN_LIVE
-  ? 'Prepyo — PTE, IELTS & EPS-TOPIK Preparation in Nepal'
-  : 'PTE & IELTS Preparation in Nepal — Mock Tests | Prepyo';
+  ? 'Prepyo — PTE, IELTS, EPS-TOPIK & JLPT Preparation in Nepal'
+  : 'Prepyo — PTE, IELTS & JLPT Preparation in Nepal';
 const description = KOREAN_LIVE
-  ? 'Prepare for PTE, IELTS and EPS-TOPIK from Nepal: full mock exams, instant speaking and writing feedback, Korean practice with audio, and rupee pricing.'
-  : 'Prepare for PTE 79+ and IELTS Band 8.0+ from Nepal with full mock exams, instant writing and speaking feedback, and plans priced in rupees via eSewa and Khalti.';
+  ? 'Prepare for PTE, IELTS, EPS-TOPIK and JLPT from Nepal: full mocks, instant speaking and writing feedback, and Korean and Japanese practice with audio.'
+  : 'Prepare for PTE, IELTS and JLPT from Nepal: full mocks, instant speaking and writing feedback, and Japanese practice with audio.';
 
 // Bump when the page's content is reviewed — it is the freshness date search
 // and answer engines read.
@@ -64,7 +63,6 @@ const schema = [
     <FeaturesSection />
     <Testimonials />
     <SubscriptionSection />
-    <PriceComparison />
     <HowItWorksSection />
     <FAQSection />
   </div>

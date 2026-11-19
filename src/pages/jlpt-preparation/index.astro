@@ -1,0 +1,26 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ExamArticle from '@/components/ExamArticle.astro';
+import { JLPT_PAGE } from '@/data/exam-pages';
+import { examPageGraph } from '@/lib/schema';
+import { BASE_PATH } from '@/consts';
+
+/**
+ * The JLPT pillar page, for people in Nepal preparing for the Japanese test,
+ * at N5 — the level the app covers.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+---
+
+<Layout
+  title={JLPT_PAGE.title}
+  description={JLPT_PAGE.metaDescription}
+  schema={examPageGraph(site, url, JLPT_PAGE)}
+  ogImage={JLPT_PAGE.ogImage}
+  ogImageAlt={JLPT_PAGE.h1}
+  fullWidth
+>
+  <ExamArticle page={JLPT_PAGE} />
+</Layout>

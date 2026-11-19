@@ -15,8 +15,8 @@ const W = 1200, H = 630;
 const CARDS = [
   {
     file: 'og-cover.jpg',
-    title: ['PTE 79+ &amp; IELTS 8.0', 'with full mock exams.'],
-    sub: ['Mock exams and practice marked against the published', 'band descriptors. Built for students in Nepal.'],
+    title: ['PTE, IELTS, EPS-TOPIK', '&amp; JLPT, built for Nepal.'],
+    sub: ['Full mock exams, instant AI feedback, and practice', 'for every question type, with native audio.'],
     pill: 'eSewa · Khalti · Fonepay',
   },
   {
@@ -35,6 +35,12 @@ const CARDS = [
     file: 'og-eps-topik.jpg',
     title: ['EPS-TOPIK preparation', 'for work in Korea.'],
     sub: ['Learn Korean from Hangul, then practise every reading', 'and listening question type with Korean audio.'],
+    pill: 'Start free · eSewa · Khalti',
+  },
+  {
+    file: 'og-jlpt.jpg',
+    title: ['JLPT N5 preparation', 'built for Nepal.'],
+    sub: ['All 14 N5 question types, with Japanese audio on', 'listening and help in English.'],
     pill: 'Start free · eSewa · Khalti',
   },
 ];

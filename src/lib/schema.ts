@@ -118,7 +118,7 @@ export function softwareApplication(site: URL): JsonLdNode {
     publisher: { '@id': organizationId(site) },
     offers: EXACT_PLANS.map(plan => ({
       '@type': 'Offer',
-      name: `${plan.name} (${plan.gloss})`,
+      name: `${plan.name} (${plan.exams})`,
       description: plan.subtitle,
       price: String(plan.priceNPR),
       priceCurrency: 'NPR',

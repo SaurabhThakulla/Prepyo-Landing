@@ -4,16 +4,40 @@ import { appUrl, asset } from '@/consts';
 import { EXACT_PLANS } from '@/data/pricing';
 
 /**
- * The landing hero: a dune sky behind the headline, and a laptop showing the
+ * The landing hero: a Himalayan skyline behind the headline, and a laptop showing the
  * dashboard that tips flat as the visitor scrolls towards it.
  *
  * The section is full-bleed, so the page that renders it has to use the
  * `fullWidth` layout and put its remaining sections back in a container.
+ *
+ * The exam pages reuse it: they pass their own H1 in the default slot and
+ * their own text as props. With nothing passed it is the home page's hero.
  */
+interface Props {
+  lead?: string;
+  primaryCta?: { href: string; label: string };
+  secondaryCta?: { href: string; label: string };
+  note?: string;
+  /** The price in "Paid plans start at NPR …": the cheapest plan that covers the page's exam. */
+  fromPrice?: number;
+  /** Base name in /images of the dashboard capture: `<shot>.webp` and `<shot>-960.webp`. */
+  shot?: string;
+  shotAlt?: string;
+}
 
 // Read from the pricing table so the line under the buttons cannot drift away
 // from what the plans section charges.
 const cheapestPaid = Math.min(...EXACT_PLANS.filter(plan => plan.priceNPR > 0).map(plan => plan.priceNPR));
+
+const {
+  lead = 'Full mock exams and instant AI feedback for PTE and IELTS. Every question type for EPS-TOPIK and JLPT, with native audio and help in English.',
+  primaryCta = { href: appUrl('/'), label: 'Get started free' },
+  secondaryCta = { href: '#pricing', label: 'Explore plans' },
+  note = 'Start free on every exam.',
+  fromPrice = cheapestPaid,
+  shot = 'hero-dashboard',
+  shotAlt = 'The Prepyo dashboard on a laptop: questions practised in each skill, the active plan with its limits, and the skill profile.',
+} = Astro.props;
 
 // The real dashboard, captured at 1913x910. The lid takes its proportions from
 // these, so a replacement screenshot only needs the two numbers updated.
@@ -28,30 +52,32 @@ const SHOT = { width: 1913, height: 910 };
 
     <div class="mx-auto flex max-w-[72rem] flex-col items-center px-5 pt-10 text-center sm:px-6 md:pt-16 lg:pt-20">
       <h1 class="hero-display rise font-display text-foreground" style="--i:0">
-        <span class="lg:block">Prepare for <span class="whitespace-nowrap">PTE 79+</span> &amp; <span class="whitespace-nowrap">IELTS 8.0</span>{' '}</span>
-        <span class="text-primary lg:block">with full mock exams.</span>
+        <slot>
+          <span class="lg:block">Prepare for PTE, IELTS,{' '}</span>
+          <span class="text-primary lg:block"><span class="whitespace-nowrap">EPS-TOPIK</span> &amp; JLPT.</span>
+        </slot>
       </h1>
 
       <p class="hero-lead rise mt-6 max-w-[34ch] text-pretty text-foreground/70 sm:mt-7 sm:max-w-[58ch] sm:text-balance" style="--i:1">
-        Full-length mock exams scored by AI against the official marking criteria in seconds. Get instant pronunciation analysis, AI writing rewrites, and an estimated band before test day.
+        {lead}
       </p>
 
       <div class="rise mt-9 flex w-full flex-col items-center sm:mt-10" style="--i:2">
         <div class="flex w-full max-w-sm flex-col items-stretch gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
-          <a href={appUrl('/')} class="hero-btn hero-btn-primary group">
-            Get started free
+          <a href={primaryCta.href} class="hero-btn hero-btn-primary group">
+            {primaryCta.label}
             <Icon name="lucide:arrow-right" class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </a>
-          <a href="#pricing" class="hero-btn hero-btn-quiet">Explore plans</a>
+          <a href={secondaryCta.href} class="hero-btn hero-btn-quiet">{secondaryCta.label}</a>
         </div>
-        <p class="mt-4 text-sm text-foreground/70 sm:text-base">Your first full mock test is free.</p>
+        <p class="mt-4 text-sm text-foreground/70 sm:text-base">{note}</p>
         <p class="mt-1 text-balance text-sm text-foreground/70 sm:text-base">
-          Paid plans start at NPR {cheapestPaid}, paid with eSewa or Khalti.
+          Paid plans start at NPR {fromPrice}, paid with eSewa or Khalti.
         </p>
       </div>
     </div>
 
-    {/* Room for the dunes to show before the laptop rises over them. */}
+    {/* Room for the mountains to show before the laptop rises over them. */}
     <div class="h-32 sm:h-52 lg:h-64" aria-hidden="true"></div>
   </div>
 
@@ -68,10 +94,10 @@ const SHOT = { width: 1913, height: 910 };
         <div class="laptop-lid">
           <div class="laptop-screen" style={`aspect-ratio:${SHOT.width} / ${SHOT.height}`}>
             <img
-              src={asset('/images/hero-dashboard.webp')}
-              srcset={`${asset('/images/hero-dashboard-960.webp')} 960w, ${asset('/images/hero-dashboard.webp')} ${SHOT.width}w`}
+              src={asset(`/images/${shot}.webp`)}
+              srcset={`${asset(`/images/${shot}-960.webp`)} 960w, ${asset(`/images/${shot}.webp`)} ${SHOT.width}w`}
               sizes="(min-width: 1100px) 800px, 80vw"
-              alt="The Prepyo dashboard on a laptop: questions practised in each skill, the active plan with its daily limits, and the latest practice scores."
+              alt={shotAlt}
               width={SHOT.width}
               height={SHOT.height}
               decoding="async"

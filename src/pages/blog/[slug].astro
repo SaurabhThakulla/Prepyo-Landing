@@ -6,6 +6,9 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import FAQSection from '@/components/FAQSection.astro';
 import { blogPosting, breadcrumbs, faqPage, organization, website } from '@/lib/schema';
 import { appUrl, asset, BASE_PATH, FOUNDER_NAME } from '@/consts';
+import { EXACT_PLANS } from '@/data/pricing';
+
+const cheapestPaid = Math.min(...EXACT_PLANS.filter(plan => plan.priceNPR > 0).map(plan => plan.priceNPR));
 
 /**
  * One blog post. The Markdown body renders inside `.article`, styled below,
@@ -78,7 +81,7 @@ const cta =
       <div class="rounded-2xl border border-border bg-card p-6 sm:p-8">
         <h2 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">Practise on Prepyo</h2>
         <p class="text-sm text-muted-foreground mt-2 leading-relaxed">
-          Start free, see where your marks go, and upgrade from NPR 99 when you need more.
+          Start free, see where your marks go, and upgrade from NPR {cheapestPaid} when you need more.
         </p>
         <div class="flex flex-wrap gap-3 mt-6">
           <Button href={cta.href} size="lg" class="rounded-full font-bold text-sm px-7 h-12">{cta.label}</Button>

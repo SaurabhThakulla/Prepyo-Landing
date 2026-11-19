@@ -22,6 +22,7 @@ const url = new URL(Astro.url.pathname, origin);
   schema={examPageGraph(site, url, PTE_PAGE)}
   ogImage={PTE_PAGE.ogImage}
   ogImageAlt={PTE_PAGE.h1}
+  fullWidth
 >
   <ExamArticle page={PTE_PAGE} />
 </Layout>

@@ -57,7 +57,7 @@ const ALL_EXAMS: ExamCard[] = [
     targetLabel: 'Band 8.0',
     scaleLabel: 'Examiner-marked · bands 0–9',
     description: 'The most widely accepted English test for universities and visas worldwide.',
-    moreTasks: '+ 11 more task types',
+    moreTasks: '+ 16 more task types',
     trackLabel: 'INSIDE THIS TRACK',
     skills: [
       'Writing Task 1 & 2',
@@ -89,12 +89,13 @@ const ALL_EXAMS: ExamCard[] = [
   },
   {
     exam: 'JAPANESE',
+    slug: '/jlpt-preparation/',
     name: 'Japanese Language',
-    heading: 'What you’ll master for JLPT N5–N1',
-    targetLabel: 'JLPT N5–N1',
-    scaleLabel: 'JLPT & NAT-TEST · N5–N1',
-    description: 'Essential test preparation for universities and visas in Japan.',
-    moreTasks: '+ 10 more task types',
+    heading: 'What you’ll master for JLPT N5',
+    targetLabel: 'JLPT N5',
+    scaleLabel: 'JLPT & NAT-TEST · N5 / 5Q',
+    description: 'Every JLPT N5 question type, with Japanese audio on listening and help in English.',
+    moreTasks: '14 N5 question types in all',
     trackLabel: 'INSIDE THIS TRACK',
     skills: [
       'Kanji & vocabulary',

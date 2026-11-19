@@ -37,7 +37,7 @@ const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass
   ...(KOREAN_LIVE
     ? [{ exam: 'EPS_TOPIK' as const, label: 'EPS-TOPIK (Korean)', target: 'Korea', targetClass: 'bg-sky-500/10 text-sky-600 dark:text-sky-400', href: asset('/eps-topik-preparation/') }]
     : []),
-  { exam: 'JAPANESE', label: 'Japanese Language', target: 'N5–N1', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: sectionHref('products') },
+  { exam: 'JAPANESE', label: 'JLPT (Japanese)', target: 'N5', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: asset('/jlpt-preparation/') },
 ];
 
 // PTE is the default, so it is rendered pre-selected and the script only has to

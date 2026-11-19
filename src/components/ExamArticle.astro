@@ -2,19 +2,21 @@
 import { Icon } from 'astro-icon/components';
 import Button from '@/components/Button.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import SocialProof from '@/components/SocialProof.astro';
 import FAQSection from '@/components/FAQSection.astro';
+import SubscriptionSection from '@/components/SubscriptionSection.astro';
+import Hero from '@/components/Hero.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { EXACT_PLANS } from '@/data/pricing';
 import ProblemSection from '@/components/ProblemSection.astro';
 import { asset } from '@/consts';
 import type { ExamPage, Skill, TaskType } from '@/data/exam-pages';
 
 /**
- * The shared layout for each exam's own page (PTE, IELTS, EPS-TOPIK).
+ * The shared layout for each exam's own page (PTE, IELTS, EPS-TOPIK, JLPT).
  *
- * The H1 and the "What is …?" section come straight from the page data and
- * carry the exam's name: they are what a search engine reads as the page's
- * topic and what an answer engine quotes, so they stay plain and factual while
- * the hero around them does the selling.
+ * The H1 comes straight from the page data and carries the exam's name, which
+ * is what a search engine reads as the page's topic; the FAQ holds the plain
+ * "What is …?" answer that answer engines quote.
  */
 interface Props {
   page: ExamPage;
@@ -23,11 +25,22 @@ interface Props {
 const { page } = Astro.props;
 const isPte = page.exam === 'PTE';
 const isEps = page.exam === 'EPS_TOPIK';
+const isJlpt = page.exam === 'JAPANESE';
+// EPS-TOPIK and JLPT: multiple choice only, no full mock, and their own cheaper Premium.
+const isAsia = isEps || isJlpt;
 
 // The exam's name is the highlighted half of the H1.
 const h1Rest = page.h1.startsWith(page.name) ? page.h1.slice(page.name.length) : null;
 
-const updatedLabel = new Date(page.updated).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+const heroNote = isEps
+  ? 'Practice questions and the Learn Korean course are free.'
+  : isJlpt
+    ? 'Start free with practice questions every day.'
+    : 'Your first full mock test is free.';
+const fromPrice = EXACT_PLANS.find(plan => plan.id === (isAsia ? 'elite_asia' : 'elite'))!.priceNPR;
+// The dashboard as a learner of this exam sees it; the default capture is IELTS.
+const shot = isPte ? 'hero-dashboard-pte' : isEps ? 'hero-dashboard-eps' : isJlpt ? 'hero-dashboard-jlpt' : 'hero-dashboard';
+const shotAlt = `The Prepyo dashboard for ${page.name} on a laptop: questions practised in each skill and the active plan.`;
 
 const SKILL_TABS: { id: Skill; label: string }[] = [
   { id: 'speaking', label: 'Speaking' },
@@ -36,11 +49,34 @@ const SKILL_TABS: { id: Skill; label: string }[] = [
   { id: 'listening', label: 'Listening' },
 ];
 
+// Each task card's skill colour: the dot by its label and the faint glow in its corner.
+const SKILL_TONE: Record<string, { dot: string; glow: string }> = {
+  speaking: { dot: 'bg-emerald-500', glow: 'bg-emerald-500/15' },
+  writing: { dot: 'bg-amber-500', glow: 'bg-amber-500/15' },
+  reading: { dot: 'bg-sky-500', glow: 'bg-sky-500/15' },
+  listening: { dot: 'bg-purple-500', glow: 'bg-purple-500/15' },
+};
+
+// An icon for each at-a-glance fact, picked by what its label is about.
+function formatIcon(label: string) {
+  const l = label.toLowerCase();
+  const pairs: [string, string][] = [
+    ['full name', 'lucide:id-card'], ['run by', 'lucide:landmark'], ['used for', 'lucide:briefcase'],
+    ['delivery', 'lucide:monitor'], ['structure', 'lucide:layers'], ['levels', 'lucide:layers'],
+    ['sections', 'lucide:layout-list'], ['questions', 'lucide:list-checks'], ['length', 'lucide:clock'],
+    ['listening', 'lucide:headphones'], ['reading', 'lucide:book-open'], ['writing', 'lucide:pen-line'],
+    ['speaking', 'lucide:mic'], ['result', 'lucide:zap'], ['target', 'lucide:target'],
+    ['pass', 'lucide:circle-check'], ['selection', 'lucide:trophy'], ['score', 'lucide:award'],
+  ];
+  return pairs.find(([key]) => l.includes(key))?.[1] ?? 'lucide:info';
+}
+
 function getTaskMeta(task: TaskType) {
   const meta = guessTaskMeta(task.name, task.skill);
-  // EPS-TOPIK is all four-option multiple choice, and the per-task timings
-  // above are PTE and IELTS figures.
-  return isEps ? { ...meta, timing: '', badge: 'Multiple choice' } : meta;
+  // EPS-TOPIK and JLPT are all four-option multiple choice, and the per-task
+  // timings above are PTE and IELTS figures.
+  if (isAsia) return { ...meta, timing: '', badge: 'Multiple choice' };
+  return task.timing === undefined ? meta : { ...meta, timing: task.timing };
 }
 
 function guessTaskMeta(name: string, skill?: Skill) {
@@ -94,460 +130,261 @@ function guessTaskMeta(name: string, skill?: Skill) {
 }
 ---
 
-<article class="w-full space-y-16 sm:space-y-24">
-  {/* Top Breadcrumb Nav */}
-  <div>
+<Hero lead={page.standfirst} primaryCta={page.primaryCta} secondaryCta={{ href: '#blueprint', label: 'See how it works' }} note={heroNote} fromPrice={fromPrice} shot={shot} shotAlt={shotAlt}>
+  {h1Rest !== null ? <><span class="text-primary">{page.name}</span>{h1Rest}</> : page.h1}
+</Hero>
+
+<div class="w-full lg:max-w-[80vw] 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+<article class="mx-auto w-full max-w-6xl">
+  {/* Breadcrumb and the four promises, as one strip under the hero. */}
+  <div class="space-y-5 pt-2">
     <Breadcrumbs
       trail={[
         { name: 'Home', href: asset('/') },
         { name: page.name },
       ]}
     />
+    <ul class="grid grid-cols-2 lg:grid-cols-4 rounded-2xl border border-border bg-card">
+      {
+        page.trust.map(({ icon, label }, i) => (
+          <li class:list={[
+            'flex items-center gap-3 p-4 sm:p-5 border-border',
+            i % 2 === 1 && 'border-l',
+            i >= 2 && 'border-t lg:border-t-0',
+            i === 2 && 'lg:border-l',
+          ]}>
+            <span class="w-9 h-9 shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <Icon name={icon} class="w-4 h-4" />
+            </span>
+            <span class="text-xs sm:text-sm font-semibold text-foreground leading-snug">{label}</span>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 
-  {/* ========================================================================= */}
-  {/* HERO SECTION (Lando Executive Reference)                                  */}
-  {/* ========================================================================= */}
-  <section class="relative w-full">
-    {/* Soft Ambient Background Halos outside the card */}
-    <div class="absolute -top-16 -left-16 w-80 h-80 bg-indigo-300/25 dark:bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
-    <div class="absolute -bottom-16 -right-16 w-80 h-80 bg-purple-300/25 dark:bg-purple-600/15 blur-[120px] rounded-full pointer-events-none" aria-hidden="true"></div>
-
-    {/* The Hero Card Canvas */}
-    <div class="relative z-10 w-full rounded-3xl sm:rounded-[2.5rem] bg-card/90 dark:bg-card/80 shadow-2xl p-6 sm:p-10 lg:p-16 backdrop-blur-md overflow-hidden">
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        {/* Left Column: Eyebrow, Heading, Description & Action Buttons */}
-        <div class="lg:col-span-6 space-y-6">
-          {/* Eyebrow */}
-          <div class="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-muted-foreground uppercase">
-            <span class="w-3 h-0.5 bg-primary rounded-full"></span>
-            <span>{page.eyebrow}</span>
-          </div>
-
-          {/* Main Headline */}
-          <h1 class="font-display text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-5xl font-black tracking-tight text-foreground leading-[1.08] text-balance">
-            {h1Rest !== null ? (
-              <>
-                <span class="bg-gradient-to-r from-primary via-[#5865F2] to-sky-500 bg-clip-text text-transparent">{page.name}</span>{h1Rest}
-              </>
-            ) : (
-              page.h1
-            )}
-          </h1>
-
-          {/* Description */}
-          <p class="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg text-balance">
-            {page.standfirst}
-          </p>
-
-          {/* Dual Action Buttons matching Lando reference */}
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-            <Button
-              href={page.primaryCta.href}
-              size="lg"
-              class="rounded-xl font-bold text-sm px-7 h-12 bg-primary text-primary-foreground hover:brightness-110 shadow-lg shadow-primary/25 transition-all justify-center"
-            >
-              <span>{page.primaryCta.label}</span>
-            </Button>
-
-            <Button
-              href="#blueprint"
-              variant="outline"
-              size="lg"
-              class="rounded-xl font-bold text-sm px-7 h-12 border-border/80 bg-background/80 hover:bg-muted text-foreground transition-all justify-center"
-            >
-              <span>See how it works</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Right Column: Isometric 3D Geometric Podium Showcase (Clean, NO cartoon figures) */}
-        <div class="lg:col-span-6 flex items-center justify-center relative py-6 lg:py-0">
-          <div class="relative w-full max-w-[460px] aspect-[4/3] flex items-center justify-center select-none">
-            
-            {/* SVG Geometric Isometric Blocks Platform */}
-            <svg
-              viewBox="0 0 500 400"
-              class="w-full h-full drop-shadow-2xl"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Soft Ground Shadow */}
-              <ellipse cx="250" cy="340" rx="190" ry="40" fill="currentColor" class="text-black/10 dark:text-black/40 blur-xl" />
-
-              {/* Block 1 (Left Charcoal Block) */}
-              <g class="transition-transform duration-300 hover:-translate-y-1">
-                <polygon points="110,210 170,175 230,210 170,245" fill="#334155" />
-                <polygon points="110,210 170,245 170,295 110,260" fill="#1E293B" />
-                <polygon points="170,245 230,210 230,260 170,295" fill="#0F172A" />
-              </g>
-
-              {/* Block 2 (Right Blue Block) */}
-              <g class="transition-transform duration-300 hover:-translate-y-1">
-                <polygon points="290,230 350,195 410,230 350,265" fill="#3B82F6" />
-                <polygon points="290,230 350,265 350,315 290,280" fill="#2563EB" />
-                <polygon points="350,265 410,230 410,280 350,315" fill="#1D4ED8" />
-              </g>
-
-              {/* Block 3 (Center Top Gold Podium) */}
-              <g class="transition-transform duration-300 hover:-translate-y-1.5">
-                <polygon points="200,140 280,95 360,140 280,185" fill="#FBBF24" />
-                <polygon points="200,140 280,185 280,245 200,200" fill="#F59E0B" />
-                <polygon points="280,185 360,140 360,200 280,245" fill="#D97706" />
-              </g>
-
-              {/* Isometric Toggle Widget */}
-              <g transform="translate(135, 175)">
-                <ellipse cx="30" cy="18" rx="20" ry="12" fill="#2563EB" />
-                <ellipse cx="22" cy="14" rx="10" ry="8" fill="#60A5FA" />
-                <circle cx="22" cy="14" r="5" fill="#EFF6FF" />
-              </g>
-
-              {/* Isometric Speech Bubble Indicator */}
-              <g transform="translate(305, 80)" class="animate-bounce" style="animation-duration: 3s">
-                <rect x="0" y="0" width="36" height="26" rx="8" fill="#F59E0B" />
-                <polygon points="8,26 16,26 10,32" fill="#F59E0B" />
-                <circle cx="10" cy="13" r="2.5" fill="#FFFBEB" />
-                <circle cx="18" cy="13" r="2.5" fill="#FFFBEB" />
-                <circle cx="26" cy="13" r="2.5" fill="#FFFBEB" />
-              </g>
-            </svg>
-
-            {/* Simulated Smartphone on the Podium */}
-            <div
-              class="absolute left-[45%] top-[24%] -translate-x-1/2 -translate-y-1/2 w-48 sm:w-56 rounded-2xl bg-slate-950 p-2.5 shadow-2xl border border-slate-700/80 text-white transform -rotate-[16deg] skew-x-6 hover:scale-105 transition-all duration-300"
-              style="box-shadow: 0 25px 40px -15px rgba(0,0,0,0.6);"
-            >
-              <div class="w-10 h-1 bg-slate-800 rounded-full mx-auto mb-2"></div>
-              
-              <div class="rounded-xl bg-slate-900 border border-slate-800 p-2.5 space-y-2 text-left">
-                <div class="flex items-center justify-between text-[9px] text-slate-400">
-                  <span class="font-bold text-white flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Prepyo AI
-                  </span>
-                  <span class="font-mono text-amber-400 font-bold">{page.mockup.tag}</span>
-                </div>
-
-                <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
-                  <div>
-                    <div class="text-[8px] uppercase tracking-wider text-slate-400">{page.mockup.label}</div>
-                    <div class="text-lg font-black text-emerald-400 leading-tight">
-                      {page.mockup.value}
-                    </div>
-                  </div>
-                  <div class="text-[8px] text-right space-y-0.5 text-slate-300">
-                    <div>{page.mockup.lines[0]}</div>
-                    <div class="text-emerald-400 font-semibold">{page.mockup.lines[1]}</div>
-                  </div>
-                </div>
-
-                <div class="h-5 rounded bg-slate-950 flex items-center justify-center gap-0.5 px-2">
-                  <span class="w-0.5 h-2 bg-emerald-400 rounded-full"></span>
-                  <span class="w-0.5 h-3.5 bg-emerald-400 rounded-full"></span>
-                  <span class="w-0.5 h-2.5 bg-primary rounded-full"></span>
-                  <span class="w-0.5 h-4 bg-emerald-400 rounded-full"></span>
-                  <span class="w-0.5 h-3 bg-amber-400 rounded-full"></span>
-                  <span class="w-0.5 h-1.5 bg-emerald-400 rounded-full"></span>
-                </div>
-
-                <div class="text-[8px] text-center text-slate-400 font-medium">
-                  Instant automated feedback
+  {/* At a glance: one spec sheet, each fact with an icon for what it is. */}
+  <section id="blueprint" class="py-16 sm:py-24 scroll-mt-24">
+    <SectionHeading
+      eyebrow="Test format"
+      eyebrowIcon="lucide:clipboard-list"
+      title={`${page.name} at a glance`}
+      description={`The test format as published by ${page.testOwner}.`}
+    />
+    <div class="rounded-3xl border border-border bg-gradient-to-b from-primary/[0.06] to-transparent p-2 sm:p-3">
+      <dl class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
+        {
+          page.format.map(({ label, value }, i) => {
+            // The last fact stretches over whatever its row has left, so the sheet never ends on a hole.
+            const last = i === page.format.length - 1;
+            const n = page.format.length;
+            return (
+              <div class:list={[
+                'flex items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm',
+                last && n % 2 === 1 && 'sm:col-span-2',
+                last && (n % 3 === 0 ? 'lg:col-span-1' : n % 3 === 1 ? 'lg:col-span-3' : 'lg:col-span-2'),
+              ]}>
+                <span class="w-10 h-10 shrink-0 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <Icon name={formatIcon(label)} class="w-5 h-5" />
+                </span>
+                <div>
+                  <dt class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</dt>
+                  <dd class="mt-1 text-sm sm:text-base font-semibold text-foreground leading-snug">{value}</dd>
                 </div>
               </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Trust Strip */}
-      <div class="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-border/60 text-center">
-        <p class="text-[11px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-6">
-          Built for learners preparing from Kathmandu, Pokhara, Chitwan and across Nepal
-        </p>
-
-        <div class="flex items-center justify-center gap-6 sm:gap-12 flex-wrap text-xs sm:text-sm font-bold text-muted-foreground/80">
-          {
-            page.trust.map(({ icon, label }) => (
-              <span class="flex items-center gap-1.5 hover:text-foreground transition-colors">
-                <Icon name={icon} class="w-4 h-4 text-primary" />
-                <span>{label}</span>
-              </span>
-            ))
-          }
-        </div>
-      </div>
-
+            );
+          })
+        }
+      </dl>
     </div>
   </section>
 
-  {/* What is … — plain, factual, and the passage answer engines quote. */}
-  <section class="max-w-3xl space-y-4" aria-labelledby="what-is">
-    <h2 id="what-is" class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
-      What is {page.name}?
-    </h2>
-    {page.intro.map(paragraph => (
-      <p class="text-sm sm:text-base text-muted-foreground leading-relaxed">{paragraph}</p>
-    ))}
-    <p class="text-xs text-muted-foreground/80">
-      Updated <time datetime={page.updated}>{updatedLabel}</time>
-    </p>
-  </section>
-
-  {/* ========================================================================= */}
-  {/* AT A GLANCE BLUEPRINT                                                     */}
-  {/* ========================================================================= */}
-  <section id="blueprint" class="space-y-6 scroll-mt-24">
-    <div class="max-w-2xl">
-      <span class="text-xs font-bold uppercase tracking-wider text-primary">
-        Test Specifications
-      </span>
-      <h2 class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-foreground mt-1">
-        {page.name} at a glance
-      </h2>
-      <p class="text-sm text-muted-foreground mt-2">
-        The test format as published by {page.testOwner}.
-      </p>
-    </div>
-
-    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {
-        page.format.map(({ label, value }, idx) => {
-          const icons = [
-            'lucide:monitor',
-            'lucide:layers',
-            'lucide:clock',
-            'lucide:award',
-            'lucide:zap',
-            'lucide:target',
-          ];
-          const iconName = icons[idx % icons.length];
-
-          return (
-            <div class="group rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-primary/40 hover:shadow-md transition-all">
-              <div class="flex items-center justify-between">
-                <dt class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">
-                  {label}
-                </dt>
-                <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <Icon name={iconName} class="w-4 h-4" />
-                </div>
-              </div>
-              <dd class="text-base font-bold text-foreground mt-3 leading-snug">
-                {value}
-              </dd>
-            </div>
-          );
-        })
-      }
-    </dl>
-  </section>
-
-  {/* ========================================================================= */}
-  {/* DETAILS CHART (RADAR GRAPH CUSTOMIZED FOR THIS EXAM)                     */}
-  {/* ========================================================================= */}
   {page.chartMode && <ProblemSection mode={page.chartMode} />}
 
-  {/* ========================================================================= */}
-  {/* MASTER EVERY SINGLE TASK TYPE (ELEVATED & CATEGORIZED EXPLORER)           */}
-  {/* ========================================================================= */}
-  <section class="space-y-8" data-task-explorer>
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-      <div class="max-w-2xl space-y-1">
-        <span class="text-xs font-bold uppercase tracking-wider text-primary">
-          Curriculum &amp; Drills
-        </span>
-        <h2 class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
-          Master every single task type
-        </h2>
-        <p class="text-sm text-muted-foreground">
-          Each task type is practised on its own, in the format the real test uses, with feedback the moment you answer.
-        </p>
-      </div>
+  {/* Every task type, filterable by skill. */}
+  <section class="py-16 sm:py-24" data-task-explorer>
+    <SectionHeading
+      eyebrow="Task types"
+      eyebrowIcon="lucide:list-checks"
+      title={`Practise all ${page.taskTypes.length} task types`}
+      description="Each task type is practised on its own, in the format the real test uses, with feedback the moment you answer."
+    />
 
-      {/* Filter Tabs for Skills */}
-      <div class="flex items-center gap-1.5 p-1 rounded-xl bg-muted/80 border border-border text-xs font-semibold overflow-x-auto self-start md:self-auto shrink-0">
-        <button
-          type="button"
-          class="px-3.5 py-1.5 rounded-lg transition-all bg-background text-foreground shadow-sm"
-          data-filter-tab="all"
-        >
-          All Tasks
+    {/* Only the skills this exam actually tests — EPS-TOPIK and JLPT have no speaking or writing. */}
+    <div class="flex justify-center mb-10">
+      <div class="inline-flex items-center gap-1 p-1 rounded-full bg-muted/80 border border-border text-xs sm:text-sm font-semibold overflow-x-auto max-w-full">
+        <button type="button" class="px-4 py-1.5 rounded-full transition-all bg-background text-foreground shadow-sm" data-filter-tab="all">
+          All <span class="ml-1 text-muted-foreground/70">{page.taskTypes.length}</span>
         </button>
-        {/* Only the skills this exam actually tests — EPS-TOPIK has no speaking or writing. */}
         {
-          SKILL_TABS.filter(tab => page.taskTypes.some(task => getTaskMeta(task).category === tab.id)).map(tab => (
-            <button
-              type="button"
-              class="px-3.5 py-1.5 rounded-lg transition-all text-muted-foreground hover:text-foreground"
-              data-filter-tab={tab.id}
-            >
-              {tab.label}
-            </button>
-          ))
+          SKILL_TABS.map(tab => ({ ...tab, count: page.taskTypes.filter(task => getTaskMeta(task).category === tab.id).length }))
+            .filter(tab => tab.count > 0)
+            .map(tab => (
+              <button type="button" class="px-4 py-1.5 rounded-full transition-all text-muted-foreground hover:text-foreground" data-filter-tab={tab.id}>
+                {tab.label} <span class="ml-1 opacity-60">{tab.count}</span>
+              </button>
+            ))
         }
       </div>
     </div>
 
-    {/* Task Cards Grid */}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {
-        page.taskTypes.map((task) => {
-          const meta = getTaskMeta(task);
-
-          return (
-            <div
-              class:list={[
-                "rounded-2xl border border-border bg-card p-6 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group relative overflow-hidden",
-                meta.colorBorder,
-              ]}
-              data-task-card
-              data-task-cat={meta.category}
-            >
-              {/* Subtle top indicator border */}
-              <div class="absolute top-0 inset-x-0 h-1 bg-border group-hover:bg-primary transition-colors"></div>
-
-              <div class="space-y-4">
-                {/* Header: Skill Icon badge + Timing badge */}
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <div class={`w-8 h-8 rounded-lg ${meta.colorBg} ${meta.colorText} flex items-center justify-center shrink-0`}>
-                      <Icon name={meta.icon} class="w-4 h-4" />
-                    </div>
-                    <span class={`text-[11px] font-bold uppercase tracking-wider ${meta.colorText}`}>
-                      {meta.label}
-                    </span>
-                  </div>
-
-                  {meta.timing && (
-                    <span class="px-2.5 py-1 rounded-full bg-muted border border-border/80 text-[10px] font-mono font-semibold text-muted-foreground">
-                      {meta.timing}
-                    </span>
-                  )}
-                </div>
-
-                {/* Task Title & Description */}
-                <div>
-                  <h3 class="font-display font-bold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors">
-                    {task.name}
-                  </h3>
-                  <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-2">
-                    {task.blurb}
-                  </p>
-                </div>
-              </div>
-
-              {/* Footer: Diagnostic CTA */}
-              <div class="pt-5 mt-4 border-t border-border/60 flex items-center justify-between">
-                <span class="text-[11px] font-semibold text-muted-foreground">
-                  {meta.badge}
-                </span>
-
-                <a
-                  href={page.primaryCta.href}
-                  class="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:underline"
+    {/* A carousel that moves left to right. The cards are rendered twice so the
+        track can loop seamlessly; the second copy is hidden from screen readers. */}
+    <div class="task-marquee -mx-4 sm:mx-0" data-marquee tabindex="0" aria-label="Task types">
+      <div class="task-track flex w-max py-3" data-track>
+        {
+          [0, 1].map((copy) =>
+            page.taskTypes.map((task, index) => {
+              const meta = getTaskMeta(task);
+              const tone = SKILL_TONE[meta.category];
+              const total = String(page.taskTypes.length).padStart(2, '0');
+              return (
+                <div
+                  class="shrink-0 pr-4 sm:pr-5 w-[17rem] sm:w-[21rem]"
+                  style="display:flex"
+                  data-task-card
+                  data-task-cat={meta.category}
+                  data-copy={copy}
+                  aria-hidden={copy === 1 ? 'true' : undefined}
                 >
-                  <span>Practice drill</span>
-                  <Icon name="lucide:arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </a>
+                  <article class:list={['group relative w-full overflow-hidden rounded-[1.25rem] border border-border/80 bg-card p-6 flex flex-col transition-colors duration-300', meta.colorBorder]}>
+                    {/* A faint wash of the skill's colour in the corner, brighter on hover. */}
+                    <span class:list={['pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-2xl opacity-60 transition-opacity duration-300 group-hover:opacity-100', tone.glow]} aria-hidden="true"></span>
+
+                    <div class="relative flex items-center justify-between text-xs">
+                      <span class="font-mono tabular-nums text-muted-foreground/70">
+                        <span class="text-foreground font-semibold">{String(index + 1).padStart(2, '0')}</span> / {total}
+                      </span>
+                      <span class="inline-flex items-center gap-1.5 font-medium text-muted-foreground">
+                        <span class:list={['h-1.5 w-1.5 rounded-full', tone.dot]} aria-hidden="true"></span>
+                        {meta.label}
+                      </span>
+                    </div>
+
+                    <h3 class="relative mt-8 font-display text-lg sm:text-xl font-bold leading-snug tracking-tight text-foreground text-balance">{task.name}</h3>
+                    <p class="relative mt-2 text-sm text-muted-foreground leading-relaxed">{task.blurb}</p>
+
+                    {meta.timing && (
+                      <div class="relative mt-auto pt-6">
+                        <div class="flex items-center gap-2 border-t border-border/70 pt-4 text-xs text-muted-foreground">
+                          <Icon name="lucide:timer" class="w-3.5 h-3.5" />
+                          <span>{meta.timing}</span>
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                </div>
+              );
+            })
+          )
+        }
+      </div>
+    </div>
+
+    <div class="mt-10 flex justify-center">
+      <Button href={page.primaryCta.href} size="lg" class="rounded-full font-bold text-sm px-7 h-12 shadow-lg shadow-primary/25">
+        <span>{page.primaryCta.label}</span>
+        <Icon name="lucide:arrow-right" class="w-4 h-4" />
+      </Button>
+    </div>
+  </section>
+
+  {/* What Prepyo adds on top of the practice, on a tinted band. */}
+  <section class="pb-16 sm:pb-24">
+    <div class="relative overflow-hidden rounded-3xl border border-primary/15 bg-gradient-to-br from-sky-500/[0.06] via-card to-primary/[0.08] px-5 py-12 sm:px-10 sm:py-16">
+      <div class="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" aria-hidden="true"></div>
+      <div class="relative">
+        <SectionHeading
+          eyebrow="What you get"
+          eyebrowIcon="lucide:sparkles"
+          title="Built to find your weak spots"
+          description="Everything you need to see where the marks are going, and spend your time there."
+        />
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            page.prepBlocks.map((block, i) => (
+              <div class="group rounded-2xl border border-border bg-card/90 p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                <div class="flex items-center justify-between">
+                  <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-sky-500 text-white flex items-center justify-center shadow-md shadow-primary/25">
+                    <Icon name={block.icon} class="w-6 h-6" />
+                  </span>
+                  <span class="font-display text-2xl font-black text-primary/15 group-hover:text-primary/30 transition-colors">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 class="mt-5 font-display font-bold text-base text-foreground">{block.title}</h3>
+                <p class="mt-2 text-sm text-muted-foreground leading-relaxed">{block.body}</p>
               </div>
-            </div>
-          );
-        })
-      }
-    </div>
-  </section>
-
-  {/* ========================================================================= */}
-  {/* WHAT YOU GET ON PREPYO (FEATURES GRID)                                    */}
-  {/* ========================================================================= */}
-  <section class="space-y-6">
-    <div class="max-w-2xl">
-      <span class="text-xs font-bold uppercase tracking-wider text-primary">
-        Complete Preparation Suite
-      </span>
-      <h2 class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-foreground mt-1">
-        Built for serious test-takers
-      </h2>
-      <p class="text-sm text-muted-foreground mt-2">
-        Everything you need to find your weak spots and spend your time where the marks are.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      {
-        page.prepBlocks.map((block) => (
-          <div class="rounded-2xl border border-border bg-card p-6 flex items-start gap-4 hover:border-primary/40 hover:shadow-md transition-all">
-            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <Icon name={block.icon} class="w-6 h-6" />
-            </div>
-            <div class="space-y-1.5">
-              <h3 class="font-display font-bold text-base text-foreground">
-                {block.title}
-              </h3>
-              <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                {block.body}
-              </p>
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  {/* Scoring Methodology Breakdown & Social Proof */}
-  <section class="rounded-3xl border border-border bg-card p-6 sm:p-10 space-y-6">
-    <div class="max-w-3xl space-y-2">
-      <span class="text-xs font-bold uppercase tracking-wider text-primary">
-        Scoring Science
-      </span>
-      <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-        How {page.name} is scored
-      </h2>
-      <div class="space-y-4 pt-2">
-        {page.scoring.map((paragraph) => (
-          <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            {paragraph}
-          </p>
-        ))}
+            ))
+          }
+        </div>
       </div>
     </div>
-
-    <div class="pt-4 border-t border-border/60">
-      <SocialProof methodologyHref={asset('/how-scoring-works/')} />
-    </div>
   </section>
 
-  {/* FAQ Section */}
-  <FAQSection faqs={page.faqs} title={`${page.name} Frequently Asked Questions`} />
-
-  {/* Cross-Exam Switcher Banner */}
-  <section class="rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-    <div class="flex items-start gap-4">
-      <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-        <Icon name="lucide:arrow-left-right" class="w-6 h-6" />
-      </div>
-      <div>
-        <h3 class="font-display font-bold text-base text-foreground">
-          {page.sibling.label}
-        </h3>
-        <p class="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
-          {page.sibling.blurb}
-        </p>
-      </div>
-    </div>
-
-    <Button
-      href={asset(page.sibling.href)}
-      variant="outline"
-      class="rounded-full font-bold text-xs px-6 h-10 shrink-0 self-end sm:self-center"
-    >
-      <span>{page.sibling.cta}</span>
-    </Button>
-  </section>
 </article>
+</div>
+
+<SubscriptionSection />
+
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+  <FAQSection faqs={page.faqs} title={`${page.name} Frequently Asked Questions`} />
+</div>
+
+<style>
+  /* Task cards drift from left to right. The track holds two identical
+     copies, so sliding it from -50% to 0 loops without a visible seam. */
+  .task-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .task-marquee:focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 4px;
+    border-radius: 1rem;
+  }
+
+  .task-track {
+    animation: task-marquee var(--marquee-duration, 60s) linear infinite;
+  }
+
+  /* Hold still while someone reads or tabs through a card. */
+  .task-marquee:hover .task-track,
+  .task-marquee:focus-within .task-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes task-marquee {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Too few cards to fill the row (one skill picked): no loop, just centred. */
+  .task-marquee.is-static {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .task-marquee.is-static .task-track {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* No motion wanted: the script marks the row static, and this stops it even before the script runs. */
+  @media (prefers-reduced-motion: reduce) {
+    .task-track {
+      animation: none;
+    }
+  }
+</style>
 
 <script>
   function setupTaskExplorer() {
@@ -578,8 +415,35 @@ function guessTaskMeta(name: string, skill?: Skill) {
             (card as HTMLElement).style.display = 'none';
           }
         });
+        fitMarquee(explorer);
       });
     });
+
+    fitMarquee(explorer);
+    window.addEventListener('resize', () => fitMarquee(explorer));
+  }
+
+  // The loop needs one copy of the visible cards to be at least as wide as the
+  // row; with fewer (one skill picked) it stops and centres them instead.
+  // Speed is per card, so a long row does not race and a short one crawl.
+  function fitMarquee(explorer: Element) {
+    const marquee = explorer.querySelector<HTMLElement>('[data-marquee]');
+    const track = explorer.querySelector<HTMLElement>('[data-track]');
+    if (!marquee || !track) return;
+
+    const firsts = [...track.querySelectorAll<HTMLElement>('[data-copy="0"]')].filter((card) => card.style.display !== 'none');
+    const seconds = [...track.querySelectorAll<HTMLElement>('[data-copy="1"]')];
+    const oneCopy = firsts.reduce((width, card) => width + card.offsetWidth, 0);
+    // With motion reduced the cards sit still, wrapped and centred.
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loops = !still && oneCopy > marquee.clientWidth;
+
+    const shownCats = new Set(firsts.map((card) => card.dataset.taskCat));
+    marquee.classList.toggle('is-static', !loops);
+    seconds.forEach((card) => {
+      card.style.display = loops && shownCats.has(card.dataset.taskCat) ? 'flex' : 'none';
+    });
+    track.style.setProperty('--marquee-duration', `${Math.max(20, firsts.length * 6)}s`);
   }
 
   setupTaskExplorer();

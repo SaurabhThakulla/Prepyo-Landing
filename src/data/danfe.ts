@@ -27,7 +27,7 @@ const faq = (question: string) => {
 };
 
 const [freePlan, ...paidPlans] = EXACT_PLANS;
-// A paid plan's subtitle reads "One-time · 7 days"; the duration is the part
+// A paid plan's subtitle reads "One-time · 30 days"; the duration is the part
 // worth saying, since the sentence already says the payment is a single one.
 const priceList = paidPlans
   .map(plan => `${plan.name} is NPR ${plan.priceNPR} for ${plan.subtitle.split('·').pop()!.trim()}`)
