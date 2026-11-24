@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { appUrl, asset } from '@/consts';
 import { EXACT_PLANS } from '@/data/pricing';
+import MilitaryScene from '@/components/MilitaryScene.astro';
 
 /**
  * The landing hero: a Himalayan skyline behind the headline, and a laptop showing the
@@ -23,6 +24,8 @@ interface Props {
   /** Base name in /images of the dashboard capture: `<shot>.webp` and `<shot>-960.webp`. */
   shot?: string;
   shotAlt?: string;
+  /** 'in' (the /in/ page, UPSC CDS and NCC): a battlefield in place of the mountains, prices in rupees. */
+  region?: 'np' | 'in';
 }
 
 // Read from the pricing table so the line under the buttons cannot drift away
@@ -37,6 +40,7 @@ const {
   fromPrice = cheapestPaid,
   shot = 'hero-dashboard',
   shotAlt = 'The Prepyo dashboard on a laptop: questions practised in each skill, the active plan with its limits, and the skill profile.',
+  region = 'np',
 } = Astro.props;
 
 // The real dashboard, captured at 1913x910. The lid takes its proportions from
@@ -46,8 +50,8 @@ const SHOT = { width: 1913, height: 910 };
 
 <section class="hero-ground" data-hero>
   <div class="relative">
-    <div class="hero-sky" aria-hidden="true">
-      <canvas data-hero-sky></canvas>
+    <div class:list={['hero-sky', region === 'in' && 'hero-sky-in']} aria-hidden="true">
+      {region === 'in' ? <MilitaryScene /> : <canvas data-hero-sky></canvas>}
     </div>
 
     <div class="mx-auto flex max-w-[72rem] flex-col items-center px-5 pt-10 text-center sm:px-6 md:pt-16 lg:pt-20">
@@ -72,7 +76,7 @@ const SHOT = { width: 1913, height: 910 };
         </div>
         <p class="mt-4 text-sm text-foreground/70 sm:text-base">{note}</p>
         <p class="mt-1 text-balance text-sm text-foreground/70 sm:text-base">
-          Paid plans start at NPR {fromPrice}, paid with eSewa or Khalti.
+          {region === 'in' ? `Paid plans start at ₹${fromPrice}.` : `Paid plans start at NPR ${fromPrice}, paid with eSewa or Khalti.`}
         </p>
       </div>
     </div>
@@ -138,6 +142,15 @@ const SHOT = { width: 1913, height: 910 };
 
   :global(.dark) .hero-sky {
     background: linear-gradient(180deg, #050818 0%, #0f1738 50%, #3b2f66 66%, #1a2152 80%, #0b1030 100%);
+  }
+
+  /* India: olive and khaki behind the battlefield, lightest where the text is. */
+  .hero-sky-in {
+    background: linear-gradient(180deg, #5d6040 0%, #8f9068 16%, #cbc8a6 36%, #dad7b9 52%, #b2af8b 72%, #6f7150 100%);
+  }
+
+  :global(.dark) .hero-sky-in {
+    background: linear-gradient(180deg, #0f110a 0%, #1b1e12 34%, #2a2d1b 56%, #393c26 76%, #1b1e12 100%);
   }
 
   .hero-sky canvas {

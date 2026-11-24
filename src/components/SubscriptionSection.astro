@@ -1,38 +1,59 @@
 ---
 import { Icon } from "astro-icon/components";
 import { appUrl, asset } from "@/consts";
-import { EXACT_PLANS } from "@/data/pricing";
+import { EXACT_PLANS, type ExactPricingPlan } from "@/data/pricing";
 
+/**
+ * With no props, the Nepal plans in NPR with Nepali payment methods. India
+ * passes its own plans, currency and copy (see index.astro).
+ */
+interface Props {
+  id?: string;
+  plans?: ExactPricingPlan[];
+  currency?: string;
+  heading?: string;
+  lead?: string;
+  class?: string;
+}
+
+const {
+  id = "pricing",
+  plans = EXACT_PLANS,
+  currency = "NPR",
+  heading = "Prepyo plans and prices in Nepali rupees",
+  lead = "Start free. Pay once for 30 days of Premium on the exam you are preparing for. Nothing renews.",
+  class: className,
+} = Astro.props;
+const nepal = plans === EXACT_PLANS;
 ---
 
 <section
-  id="pricing"
-  class="py-16 sm:py-24 border-t border-border bg-background text-foreground relative overflow-hidden transition-colors"
+  id={id}
+  class:list={["py-16 sm:py-24 border-t border-border bg-background text-foreground relative overflow-hidden transition-colors", className]}
 >
-  <div id="subscription" class="sr-only" aria-hidden="true"></div>
+  {nepal && <div id="subscription" class="sr-only" aria-hidden="true"></div>}
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="text-center space-y-2 mb-12 sm:mb-16">
       <h2 class="font-display text-3xl sm:text-4xl font-black text-foreground tracking-tight">
-        Prepyo plans and prices in Nepali rupees
+        {heading}
       </h2>
       <p class="text-sm text-muted-foreground max-w-xl mx-auto">
-        Start free. Pay once for 30 days of Premium on the exam you are
-        preparing for. Nothing renews.
+        {lead}
       </p>
-      <div class="flex flex-col items-center gap-2 pt-4">
+      {nepal && <div class="flex flex-col items-center gap-2 pt-4">
         <span class="text-xs text-muted-foreground font-medium">Payments powered by</span>
         <div class="flex items-center justify-center gap-8 sm:gap-10 flex-wrap">
           <img src={asset("/images/esewa-logo.png")} alt="Pay with eSewa" width="180" height="59" loading="lazy" class="h-7 sm:h-8 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
           <img src={asset("/images/khalti-logo.svg")} alt="Pay with Khalti" width="412" height="206" loading="lazy" class="h-7 sm:h-8 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
           <img src={asset("/images/bank-logo.svg")} alt="Pay by transfer from any major Nepali bank" width="300" height="100" loading="lazy" class="h-9 sm:h-10 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity dark:brightness-125" />
         </div>
-      </div>
+      </div>}
     </div>
 
-    <div class="grid gap-6 md:grid-cols-3 items-stretch">
+    <div class:list={["grid gap-6 items-stretch", plans.length > 3 ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-4" : "md:grid-cols-3"]}>
       {
-        EXACT_PLANS.map((plan) => {
+        plans.map((plan) => {
           const isPop = plan.popular;
           const href = appUrl(plan.id === "free" ? "/" : "/subscription");
 
@@ -62,11 +83,11 @@ import { EXACT_PLANS } from "@/data/pricing";
                     <span class="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">Free</span>
                   ) : (
                     <>
-                      <span class="text-sm font-semibold text-muted-foreground">NPR</span>
+                      <span class="text-sm font-semibold text-muted-foreground">{currency}</span>
                       <span class="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-                        {plan.priceNPR.toLocaleString()}
+                        {plan.priceNPR.toLocaleString("en-IN")}
                       </span>
-                      <span class="whitespace-nowrap text-sm font-semibold text-muted-foreground">/ 30 days</span>
+                      <span class="whitespace-nowrap text-sm font-semibold text-muted-foreground">{plan.period ?? "/ 30 days"}</span>
                     </>
                   )}
                 </div>
@@ -99,11 +120,11 @@ import { EXACT_PLANS } from "@/data/pricing";
       }
     </div>
 
-    <p class="mt-8 text-center text-xs text-muted-foreground max-w-2xl mx-auto">
+    {nepal && <p class="mt-8 text-center text-xs text-muted-foreground max-w-2xl mx-auto">
       One practice task is one task set — a True/False set, a Fill in the
       Blanks task, an essay, or a speaking response — however many questions it
       contains. Mock exams have their own allowance and never use your daily
       tasks.
-    </p>
+    </p>}
   </div>
 </section>
