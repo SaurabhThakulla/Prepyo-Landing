@@ -34,12 +34,14 @@ const isHome = Astro.url.pathname === HOME;
 const sectionHref = (id: string) => (isHome ? `#${id}` : india ? `${HOME}#${id}` : homeSection(id));
 
 // Links to pages rather than to sections, so they are never rewritten as
-// fragments and never claimed by the smooth-scroll handler. The blog is about
-// the Nepal exams, so India does not link it.
-const PAGE_LINKS = [
-  ...(india ? [] : [{ href: asset('/blog/'), label: 'Blog' }]),
-  { href: asset('/careers/'), label: 'Careers' },
-];
+// fragments and never claimed by the smooth-scroll handler. India (CDS and NCC)
+// links neither: the blog is about the Nepal exams, and careers are not offered there.
+const PAGE_LINKS = india
+  ? []
+  : [
+      { href: asset('/blog/'), label: 'Blog' },
+      { href: asset('/careers/'), label: 'Careers' },
+    ];
 
 // India's two exams share one section; without `exam` they are plain scroll
 // links and never touch the stored exam choice.
