@@ -75,7 +75,8 @@ const TEAM_TONE: Record<string, string> = {
                       </li>
                     )}
                     <li class="inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1">
-                      <Icon name="lucide:map-pin" class="w-3.5 h-3.5 text-muted-foreground" />{role.location}
+                      <Icon name="lucide:map-pin" class="w-3.5 h-3.5 text-muted-foreground" />
+                      <span data-remote-location={role.location.startsWith('Remote (') ? '' : undefined}>{role.location}</span>
                     </li>
                   </ul>
                 </div>
@@ -201,4 +202,21 @@ const TEAM_TONE: Record<string, string> = {
 
   setupAccordions();
   document.addEventListener('astro:page-load', setupAccordions);
+
+  // Remote roles read "Remote (<the viewer's country>)". The page is static, so
+  // the country comes from api/country.js; without it (astro dev, an error, an
+  // unknown code) the built-in "Remote (Nepal)" stays.
+  const remoteSpots = document.querySelectorAll<HTMLElement>('[data-remote-location]');
+  if (remoteSpots.length) {
+    fetch('/api/country')
+      .then(response => (response.ok ? response.json() : null))
+      .then((data: { country?: string | null } | null) => {
+        const code = data?.country;
+        if (!code) return;
+        const name = new Intl.DisplayNames(['en'], { type: 'region' }).of(code);
+        if (!name || name === code || /unknown/i.test(name)) return;
+        remoteSpots.forEach(spot => (spot.textContent = `Remote (${name})`));
+      })
+      .catch(() => {});
+  }
 </script>
