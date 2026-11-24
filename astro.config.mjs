@@ -66,6 +66,9 @@ export default defineConfig({
       },
       watch: {
         ignored: [
+          '**/*.tmp*',
+          '**/*.tmp',
+          '**/*~',
           '**/DumpStack.log.tmp',
           '**/hiberfil.sys',
           '**/pagefile.sys',
