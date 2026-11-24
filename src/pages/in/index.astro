@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/Hero.astro';
+import IndiaHome from '@/components/IndiaHome.astro';
+import SubscriptionSection from '@/components/SubscriptionSection.astro';
+import { INDIA_PLANS } from '@/data/pricing';
+import { organization, webPage, website } from '@/lib/schema';
+import { BASE_PATH, homeAlternates } from '@/consts';
+
+/**
+ * The India home page: UPSC CDS and NCC only, prices in rupees. Visitors from
+ * India who open "/" are sent here by middleware.js; the footer's country links
+ * let anyone switch, and remember it.
+ */
+const origin = Astro.site ?? new URL(Astro.url.origin);
+const site = new URL(BASE_PATH, origin);
+const url = new URL(Astro.url.pathname, origin);
+
+const title = 'Prepyo — UPSC CDS & NCC Practice and Mock Tests';
+const description =
+  'Prepare for UPSC CDS and NCC B and C certificate exams: full timed CDS papers in English, GK and Maths with UPSC negative marking, answer keys, and plans from ₹199.';
+
+// Bump when the page's content is reviewed — it is the freshness date search
+// and answer engines read.
+const UPDATED = '2026-11-25';
+
+const schema = [
+  organization(site),
+  website(site),
+  webPage(site, url, { name: title, description, dateModified: UPDATED, hasBreadcrumbs: false }),
+];
+
+const cheapestPaid = Math.min(...INDIA_PLANS.filter(plan => plan.priceNPR > 0).map(plan => plan.priceNPR));
+---
+
+<Layout title={title} description={description} schema={schema} region="in" alternates={homeAlternates(site)} fullWidth>
+  <Hero
+    region="in"
+    lead="Full timed CDS papers in English, General Knowledge and Elementary Maths, marked the UPSC way, plus NCC B and C certificate practice."
+    note="Start free on CDS and NCC."
+    fromPrice={cheapestPaid}
+    shot="hero-dashboard-cds"
+    shotAlt="The Prepyo dashboard for UPSC CDS on a laptop: English, General Knowledge and Maths papers done, the IMA · INA · AFA or OTA route, and the active plan."
+  >
+    <span class="lg:block">Prepare for</span>
+    <span class="text-primary lg:block">UPSC CDS &amp; NCC.</span>
+  </Hero>
+  <IndiaHome />
+  <SubscriptionSection
+    plans={INDIA_PLANS}
+    currency="₹"
+    heading="Prepyo plans and prices in Indian rupees"
+    lead="Start free. Pay once for CDS or NCC practice. Nothing renews."
+  />
+</Layout>

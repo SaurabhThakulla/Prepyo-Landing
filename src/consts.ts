@@ -93,3 +93,18 @@ export const BUSINESS_ADDRESS = {
 export function homeSection(id: string): string {
   return `${BASE_PATH}#${id}`;
 }
+
+/**
+ * The two home pages, Nepal at "/" and India at "/in/", as hreflang alternates:
+ * search engines show each country its own, and anyone else the Nepal one.
+ * `site` is the absolute site root.
+ */
+export function homeAlternates(site: URL): { hreflang: string; href: string }[] {
+  const nepal = site.href;
+  const india = new URL('in/', site).href;
+  return [
+    { hreflang: 'en-NP', href: nepal },
+    { hreflang: 'en-IN', href: india },
+    { hreflang: 'x-default', href: nepal },
+  ];
+}

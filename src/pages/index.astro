@@ -11,7 +11,7 @@ import Testimonials from '@/components/Testimonials.astro';
 import AskDanfe from '@/components/AskDanfe.astro';
 import { FAQS } from '@/data/faq';
 import { faqPage, howTo, organization, softwareApplication, webPage, website } from '@/lib/schema';
-import { BASE_PATH, KOREAN_LIVE } from '@/consts';
+import { BASE_PATH, homeAlternates, KOREAN_LIVE } from '@/consts';
 
 /**
  * The public landing page for Prepyo.
@@ -25,9 +25,7 @@ const origin = Astro.site ?? new URL(Astro.url.origin);
 const site = new URL(BASE_PATH, origin);
 const url = new URL(Astro.url.pathname, origin);
 
-const title = KOREAN_LIVE
-  ? 'Prepyo — PTE, IELTS, EPS-TOPIK & JLPT Preparation in Nepal'
-  : 'Prepyo — PTE, IELTS & JLPT Preparation in Nepal';
+const title = 'Prepyo — All-in-One Exam Practice Platform';
 const description = KOREAN_LIVE
   ? 'Prepare for PTE, IELTS, EPS-TOPIK and JLPT from Nepal: full mocks, instant speaking and writing feedback, and Korean and Japanese practice with audio.'
   : 'Prepare for PTE, IELTS and JLPT from Nepal: full mocks, instant speaking and writing feedback, and Japanese practice with audio.';
@@ -52,6 +50,7 @@ const schema = [
   title={title}
   description={description}
   schema={schema}
+  alternates={homeAlternates(site)}
   fullWidth
 >
   {/* The hero and the phone section run edge to edge; everything after them
