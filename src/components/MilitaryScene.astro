@@ -1,0 +1,160 @@
+---
+/**
+ * The hero background of the India page (/in/, UPSC CDS and NCC), in place of the Himalayan
+ * canvas: an olive, grunge-style battlefield poster. Faint chevrons and paint
+ * splatter behind; helicopters and paratroopers in the sky; soldiers in action
+ * on both flanks (the laptop covers the middle on wide screens).
+ *
+ * Drawn shapes, no photos or anyone's insignia. Silhouettes are `currentColor`,
+ * so the theme sets their shade; the olive sky behind is Hero's `.hero-sky-in`.
+ */
+
+// Deterministic, so every build draws the same splatter.
+let seed = 11;
+const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+// Kept to the flanks, clear of the buttons above the laptop.
+const SPLATS = Array.from({ length: 70 }, () => {
+  const left = rand() < 0.5;
+  return { x: left ? rand() * 470 : 1130 + rand() * 470, y: rand() * 150, r: 1.5 + rand() ** 3 * 22 };
+});
+const CHEVRONS = Array.from({ length: 13 }, (_, i) => 40 + i * 120);
+---
+
+<svg class="mil-scene" viewBox="0 0 1600 430" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+  <defs>
+    {/* Each figure stands on y = 100, facing right. */}
+    <g id="mil-stand">
+      <path d="M-8,9 C-8,1 -4,-2 0,-2 C4,-2 8,1 8,9 L10,10 L-10,10 Z" />
+      <circle cx="0" cy="14" r="5.5" />
+      <path d="M-3,18 L3,18 L3,23 L-3,23 Z" />
+      <path d="M-12,22 L12,22 L13,26 L11,56 L-11,56 L-13,26 Z" />
+      <path d="M-13,24 L-17,27 L-16,54 L-12,54 Z" />
+      <path d="M13,24 L17,27 L18,44 L14,46 Z" />
+      <path d="M-11,56 L-1,56 L-3,96 L-11,96 Z" />
+      <path d="M1,56 L11,56 L11,96 L3,96 Z" />
+      <path d="M-12,95 L-2,95 L-1,100 L-14,100 Z" />
+      <path d="M2,95 L12,95 L14,100 L1,100 Z" />
+      <path d="M8,42 L26,30 L28,33 L12,46 Z" />
+      <path d="M22,26 L40,15 L41.5,17.5 L24,29 Z" />
+    </g>
+    <g id="mil-aim">
+      <path d="M-4,12 C-4,3 2,0 7,0 C13,0 17,4 17,12 L19,13 L-6,13 Z" />
+      <circle cx="9" cy="17" r="5" />
+      <path d="M-15,22 L-3,20 L-3,47 L-16,47 Z" />
+      <path d="M-5,21 L12,20 L15,26 L12,56 L-6,56 Z" />
+      <path d="M6,21 L44,18 L60,17.5 L60,21 L44,22 L40,24 L38,33 L34,33 L35,25 L6,27 Z" />
+      <path d="M8,25 L36,22 L36,26.5 L10,32 Z" />
+      <path d="M-6,54 L10,54 L24,96 L32,96 L32,100 L14,100 L4,74 Z" />
+      <path d="M-6,54 L6,56 L-6,80 L-12,96 L-4,96 L-4,100 L-21,100 L-19,95 L-13,76 Z" />
+    </g>
+    <g id="mil-kneel">
+      <path d="M-2,34 C-2,26 3,23 8,23 C13,23 17,26 17,34 L19,35 L-3,35 Z" />
+      <circle cx="9" cy="39" r="5" />
+      <path d="M-15,46 L-5,44 L-6,67 L-16,67 Z" />
+      <path d="M-6,44 L12,42 L16,48 L12,72 L-8,74 Z" />
+      <path d="M8,46 L36,46 L36,51 L8,54 Z" />
+      <path d="M10,45 L64,42 L64,46.5 L40,48.5 L36,57 L31,57 L33,49.5 L10,51 Z" />
+      <path d="M-4,68 L24,71 L29,100 L38,100 L38,95 L32,95 L28,76 L-2,80 Z" />
+      <path d="M-8,70 L4,74 L1,100 L-27,100 L-27,95 L-6,94 Z" />
+    </g>
+    <g id="mil-run">
+      <path d="M2,10 C2,2 7,-1 12,-1 C18,-1 22,3 22,10 L24,11 L0,11 Z" />
+      <circle cx="13" cy="15" r="5" />
+      <path d="M-4,22 L14,19 L18,25 L10,54 L-8,52 Z" />
+      <path d="M-12,24 L-2,21 L-6,46 L-15,44 Z" />
+      <path d="M8,26 L30,36 L28,40 L6,32 Z" />
+      <path d="M14,40 L46,18 L48,21 L18,44 Z" />
+      <path d="M-6,50 L8,52 L26,74 L22,96 L30,96 L30,100 L14,100 L16,76 L-2,62 Z" />
+      <path d="M-8,50 L4,54 L-10,74 L-30,84 L-34,80 L-30,76 L-16,70 Z" />
+    </g>
+    <g id="mil-gunner">
+      <path d="M2,96 L30,48 L33,49 L8,100 L2,100 Z" />
+      <path d="M30,48 L56,100 L50,100 L28,50 Z" />
+      <rect x="10" y="38" width="76" height="5" rx="2" />
+      <rect x="20" y="32" width="30" height="14" rx="3" />
+      <rect x="80" y="36" width="10" height="9" rx="2" />
+      <path d="M22,46 L18,64 L22,64 L28,46 Z" />
+      <path d="M-24,40 C-24,32 -19,29 -14,29 C-9,29 -5,32 -5,40 L-3,41 L-26,41 Z" />
+      <circle cx="-13" cy="45" r="5" />
+      <path d="M-30,50 L-6,48 L-2,54 L-8,76 L-30,78 Z" />
+      <path d="M-8,50 L22,40 L24,44 L-6,56 Z" />
+      <path d="M-26,74 L-4,76 L2,100 L-8,100 L-10,82 L-26,84 Z" />
+      <path d="M-30,74 L-18,78 L-22,100 L-46,100 L-46,95 L-28,94 Z" />
+    </g>
+    <g id="mil-heli">
+      <path d="M-40,2 C-40,-8 -28,-13 -8,-13 L14,-14 C22,-14 28,-8 30,-2 L86,-4 L90,-16 L94,-16 L92,2 L30,4 C24,11 8,13 -10,13 C-30,13 -40,9 -40,2 Z" />
+      <path d="M-44,4 L-62,8 L-62,11 L-40,8 Z" />
+      <rect x="-70" y="-25" width="140" height="2.5" rx="1" />
+      <rect x="-2" y="-24" width="4" height="11" />
+      <path d="M-20,12 L-24,24 L18,24 L14,12 L10,12 L12,20 L-18,20 L-16,12 Z" />
+      <rect x="-14" y="5" width="34" height="5" rx="2" />
+    </g>
+    <g id="mil-para">
+      <path d="M-34,0 C-30,-24 30,-24 34,0 C26,-6 18,-6 11,0 C4,-6 -4,-6 -11,0 C-18,-6 -26,-6 -34,0 Z" />
+      <path d="M-33,0 L-1,40 L-3,40 L-34,1 Z M33,0 L1,40 L3,40 L34,1 Z M-11,0 L-0.5,40 L-1.5,40 Z M11,0 L0.5,40 L1.5,40 Z" />
+      <circle cx="0" cy="43" r="3.5" />
+      <path d="M-4,46 L4,46 L5,60 L2,72 L-2,72 L-5,60 Z" />
+    </g>
+    <path id="mil-chevron" d="M0,0 L44,0 L96,70 L44,140 L0,140 L52,70 Z" />
+  </defs>
+
+  {/* Backdrop: chevrons across the middle, splatter on the flanks. */}
+  <g class="mil-light" opacity="0.32">
+    {CHEVRONS.map(x => <use href="#mil-chevron" transform={`translate(${x},150)`} />)}
+  </g>
+  <g opacity="0.22">
+    {SPLATS.map(({ x, y, r }) => <circle cx={x} cy={y} r={r} />)}
+  </g>
+
+  {/* Sky: two helicopters to the left, paratroopers to the right. */}
+  <g opacity="0.72">
+    <use href="#mil-heli" transform="translate(260,62) rotate(-5) scale(0.9)" />
+    <use href="#mil-heli" transform="translate(425,110) rotate(-3) scale(0.62)" />
+    <use href="#mil-para" transform="translate(1250,40) scale(0.62)" />
+    <use href="#mil-para" transform="translate(1335,92) scale(0.5)" />
+    <use href="#mil-para" transform="translate(1420,30) scale(0.56)" />
+  </g>
+
+  {/* Middle distance: rubble and a squad advancing (what a phone sees). */}
+  <g opacity="0.45">
+    <path d="M0,430 L0,336 C80,318 150,332 230,320 L260,302 L292,320 C420,306 520,330 640,316 L668,298 L702,316 C820,300 960,326 1080,312 L1110,296 L1144,314 C1260,300 1400,326 1600,310 L1600,430 Z" />
+    <use href="#mil-run" transform="translate(640,236) scale(0.82)" />
+    <use href="#mil-aim" transform="translate(760,240) scale(0.8)" />
+    <use href="#mil-run" transform="translate(890,232) scale(0.85)" />
+  </g>
+
+  {/* Foreground: soldiers on both flanks. */}
+  <g>
+    <path d="M0,430 L0,368 C90,352 170,370 260,358 C330,348 380,366 470,360 C640,350 760,374 900,366 C1040,358 1120,372 1240,360 C1340,350 1460,368 1600,356 L1600,430 Z" />
+    <use href="#mil-stand" transform="translate(185,177) scale(1.9)" />
+    <use href="#mil-aim" transform="translate(285,190) scale(1.75)" />
+    <use href="#mil-kneel" transform="translate(1180,195) scale(1.68)" />
+    <use href="#mil-gunner" transform="translate(1310,193) scale(1.68)" />
+    <use href="#mil-run" transform="translate(1470,186) scale(1.75)" />
+  </g>
+</svg>
+
+<style>
+  .mil-scene {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: min(430px, 55%);
+    fill: currentColor;
+    color: #2a2c1b;
+  }
+
+  .mil-light {
+    fill: #f4f1dc;
+  }
+
+  :global(.dark) .mil-scene {
+    color: #07080a;
+  }
+
+  :global(.dark) .mil-light {
+    fill: #9da07a;
+  }
+</style>
