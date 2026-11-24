@@ -13,22 +13,38 @@ import {
   SOCIAL_LINKS,
 } from "@/consts";
 
+interface Props {
+  /** 'in' on the India pages under /in/: UPSC CDS and NCC only, and home is /in/. */
+  region?: "np" | "in";
+}
+
+const { region = "np" } = Astro.props;
+const india = region === "in";
+const HOME = india ? asset("/in/") : BASE_PATH;
+
 // Bare fragments on the landing page so the smooth-scroll script claims them,
 // full paths everywhere else so they lead back to the right page first.
-const isHome = Astro.url.pathname === BASE_PATH;
-const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
+const isHome = Astro.url.pathname === HOME;
+const sectionHref = (id: string) => (isHome ? `#${id}` : india ? `${HOME}#${id}` : homeSection(id));
 
-const EXPLORE_LINKS = [
-  { href: sectionHref("products"), label: "Exams" },
-  { href: sectionHref("features"), label: "Features" },
-  { href: sectionHref("pricing"), label: "Pricing" },
-  { href: sectionHref("how-it-works"), label: "How it works" },
-  { href: sectionHref("faq"), label: "FAQ" },
-  { href: asset("/careers/"), label: "Careers" },
-];
+const EXPLORE_LINKS = india
+  ? [
+      { href: sectionHref("cds-ncc"), label: "UPSC CDS & NCC" },
+      { href: sectionHref("pricing"), label: "Pricing" },
+      { href: asset("/careers/"), label: "Careers" },
+    ]
+  : [
+      { href: sectionHref("products"), label: "Exams" },
+      { href: sectionHref("features"), label: "Features" },
+      { href: sectionHref("pricing"), label: "Pricing" },
+      { href: sectionHref("how-it-works"), label: "How it works" },
+      { href: sectionHref("faq"), label: "FAQ" },
+      { href: asset("/careers/"), label: "Careers" },
+    ];
 
 // Real pages rather than sections — the ones search results should land on.
-const GUIDE_LINKS = [
+// They are all about the Nepal exams, so India has none yet.
+const GUIDE_LINKS = india ? [] : [
   { href: asset("/pte-academic-preparation/"), label: "PTE Academic prep" },
   { href: asset("/ielts-academic-preparation/"), label: "IELTS Academic prep" },
   ...(KOREAN_LIVE
@@ -76,9 +92,11 @@ const year = new Date().getFullYear();
           />
         </a>
         <p class="text-xs text-muted-foreground leading-relaxed">
-          {KOREAN_LIVE
-            ? "PTE, IELTS, EPS-TOPIK and JLPT practice, built for learners in Nepal."
-            : "PTE, IELTS and JLPT practice, built for learners in Nepal."}
+          {india
+            ? "UPSC CDS and NCC practice for learners in India."
+            : KOREAN_LIVE
+              ? "PTE, IELTS, EPS-TOPIK and JLPT practice, built for learners in Nepal."
+              : "PTE, IELTS and JLPT practice, built for learners in Nepal."}
           Founded by {FOUNDER_NAME}.
         </p>
         <ul class="space-y-1 text-xs text-muted-foreground">
@@ -110,15 +128,17 @@ const year = new Date().getFullYear();
             ))
           }
         </div>
-        <div
-          class="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1"
-        >
-          <span>Made with pride for Nepal</span>
-          <Icon
-            name="lucide:heart"
-            class="w-3 h-3 text-nepal-crimson fill-nepal-crimson"
-          />
-        </div>
+        {!india && (
+          <div
+            class="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-1"
+          >
+            <span>Made with pride for Nepal</span>
+            <Icon
+              name="lucide:heart"
+              class="w-3 h-3 text-nepal-crimson fill-nepal-crimson"
+            />
+          </div>
+        )}
       </div>
 
       {/* Quick landing sections */}
@@ -183,12 +203,14 @@ const year = new Date().getFullYear();
               Create free account
             </a>
           </li>
-          <li>
-            <a
-              href={appUrl("/diagnostic")}
-              class="hover:text-primary transition-colors">Free test</a
-            >
-          </li>
+          {!india && (
+            <li>
+              <a
+                href={appUrl("/diagnostic")}
+                class="hover:text-primary transition-colors">Free test</a
+              >
+            </li>
+          )}
         </ul>
       </div>
     </div>
@@ -198,7 +220,13 @@ const year = new Date().getFullYear();
     >
       <div>© {year} Prepyo Nepal. All rights reserved.</div>
       <div class="flex items-center gap-3">
-        <span>eSewa · Khalti · Fonepay</span>
+        {/* The visitor's own choice; middleware.js reads the cookie and stops redirecting by country. */}
+        <nav aria-label="Country" class="flex items-center gap-1.5">
+          <a href={BASE_PATH} data-region-choice="np" aria-current={india ? undefined : "page"} class:list={["hover:text-primary transition-colors", !india && "font-bold text-foreground"]}>Nepal</a>
+          <span aria-hidden="true">·</span>
+          <a href={asset("/in/")} data-region-choice="in" aria-current={india ? "page" : undefined} class:list={["hover:text-primary transition-colors", india && "font-bold text-foreground"]}>India</a>
+        </nav>
+        {!india && <span>eSewa · Khalti · Fonepay</span>}
       </div>
     </div>
   </div>
@@ -208,4 +236,10 @@ const year = new Date().getFullYear();
   import { bindSectionLinks } from "@/scripts/scroll-to";
 
   bindSectionLinks(document.querySelector("[data-footer]")!);
+
+  document.querySelectorAll<HTMLAnchorElement>("[data-region-choice]").forEach(link => {
+    link.addEventListener("click", () => {
+      document.cookie = `prepyo-region=${link.dataset.regionChoice}; path=/; max-age=31536000; samesite=lax`;
+    });
+  });
 </script>

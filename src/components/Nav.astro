@@ -9,29 +9,48 @@ import { appUrl, asset, BASE_PATH, homeSection, KOREAN_LIVE, type ExamType } fro
  * Every in-page link smooth-scrolls to its section; everything that needs an
  * account (login, sign up) leaves for the Next.js app.
  */
-const NAV_LINKS = [
-  { id: 'features', label: 'Features' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'how-it-works', label: 'How it works' },
-  { id: 'faq', label: 'FAQ' },
-];
+interface Props {
+  /** 'in' on the India pages under /in/: UPSC CDS and NCC only, and home is /in/. */
+  region?: 'np' | 'in';
+}
+
+const { region = 'np' } = Astro.props;
+const india = region === 'in';
+const HOME = india ? asset('/in/') : BASE_PATH;
+
+const NAV_LINKS = india
+  ? [{ id: 'pricing', label: 'Pricing' }]
+  : [
+      { id: 'features', label: 'Features' },
+      { id: 'pricing', label: 'Pricing' },
+      { id: 'how-it-works', label: 'How it works' },
+      { id: 'faq', label: 'FAQ' },
+    ];
 
 // On the landing page these stay bare fragments so the smooth-scroll script can
 // claim them; anywhere else they have to point back at the landing page or they
 // resolve against the current sub-page and scroll nowhere.
-const isHome = Astro.url.pathname === BASE_PATH;
-const sectionHref = (id: string) => (isHome ? `#${id}` : homeSection(id));
+const isHome = Astro.url.pathname === HOME;
+const sectionHref = (id: string) => (isHome ? `#${id}` : india ? `${HOME}#${id}` : homeSection(id));
 
 // Links to pages rather than to sections, so they are never rewritten as
-// fragments and never claimed by the smooth-scroll handler.
+// fragments and never claimed by the smooth-scroll handler. The blog is about
+// the Nepal exams, so India does not link it.
 const PAGE_LINKS = [
-  { href: asset('/blog/'), label: 'Blog' },
+  ...(india ? [] : [{ href: asset('/blog/'), label: 'Blog' }]),
   { href: asset('/careers/'), label: 'Careers' },
+];
+
+// India's two exams share one section; without `exam` they are plain scroll
+// links and never touch the stored exam choice.
+const INDIA_EXAMS: { exam?: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
+  { label: 'UPSC CDS', target: 'IMA · OTA', targetClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', href: sectionHref('cds-ncc') },
+  { label: 'NCC', target: 'B · C', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', href: sectionHref('cds-ncc') },
 ];
 
 // PTE and IELTS have pages of their own now, so the dropdown is a real
 // navigation menu rather than three ways of scrolling to the same section.
-const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
+const NEPAL_EXAMS: { exam?: ExamType; label: string; target: string; targetClass: string; href: string }[] = [
   { exam: 'PTE', label: 'PTE Academic', target: '79+', targetClass: 'bg-primary/10 text-primary', href: asset('/pte-academic-preparation/') },
   { exam: 'IELTS', label: 'IELTS Academic', target: '8.0', targetClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', href: asset('/ielts-academic-preparation/') },
   ...(KOREAN_LIVE
@@ -39,6 +58,7 @@ const EXAM_OPTIONS: { exam: ExamType; label: string; target: string; targetClass
     : []),
   { exam: 'JAPANESE', label: 'JLPT (Japanese)', target: 'N5', targetClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400', href: asset('/jlpt-preparation/') },
 ];
+const EXAM_OPTIONS = india ? INDIA_EXAMS : NEPAL_EXAMS;
 
 // PTE is the default, so it is rendered pre-selected and the script only has to
 // correct it for visitors who previously chose IELTS.
@@ -52,12 +72,13 @@ const DEFAULT_EXAM: ExamType = 'PTE';
   <header
     class="bar-pill w-full mx-auto rounded-[22px] border border-border/80 bg-card/90 backdrop-blur-xl shadow-md"
     data-nav
+    data-solid={india ? '' : undefined}
   >
     <div
       class="bar-row flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 px-3 sm:px-6 py-2.5"
     >
       {/* Logo */}
-      <a href={BASE_PATH} class="flex items-center group lg:justify-self-start" data-logo>
+      <a href={HOME} class="flex items-center group lg:justify-self-start" data-logo>
         {/* The wordmark is navy, so dark mode gets a light-ink copy of the
             same file rather than a filter. */}
         <img
@@ -283,6 +304,19 @@ const DEFAULT_EXAM: ExamType = 'PTE';
 
     :global(html:not([data-scrolled='true'])) .bar-logo {
       height: 2.375rem;
+    }
+  }
+
+  /* India's hero is olive, which the open, see-through bar washes out against:
+     there the bar keeps its pill surface at the top of the page too. */
+  @media (min-width: 768px) {
+    :global(html:not([data-scrolled='true'])) .bar-pill[data-solid]:not([data-menu-open]) {
+      max-width: 72rem;
+      border-color: hsl(var(--border) / 0.8);
+      background-color: hsl(var(--card) / 0.9);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
     }
   }
 
