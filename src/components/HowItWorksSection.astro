@@ -1,19 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { asset } from '@/consts';
 import { STEPS } from '@/data/steps';
 
+// How much higher each step stands than the one before it, on desktop.
+const RISE = 56;
 ---
 
 <section id="how-it-works" class="py-14 sm:py-20 border-t border-border relative overflow-hidden">
-  {/* Ambient background glow */}
-  <div
-    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 dark:bg-primary/10 blur-[100px] pointer-events-none"
-    aria-hidden="true"
-  >
-  </div>
-
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <SectionHeading
       eyebrow="How it works"
@@ -22,100 +16,38 @@ import { STEPS } from '@/data/steps';
       description="One connected path that adapts to your progress, from first baseline to exam day."
     />
 
-    {/* Prepyo sits at the root and the four steps branch off it, two per side.
-        The branch curves are drawn from measured DOM positions by the script
-        below, so they stay attached at every width instead of being stretched
-        to fit a fixed viewBox. */}
-    <div class="relative" data-tree>
+    {/* A staircase: each step stands higher than the last, and a thick path dips
+        between their step blocks. The path is drawn from measured positions by
+        the script below, so it stays attached at every width. On small screens
+        the steps stack and there is no path. */}
+    <div class="relative lg:pb-28" data-steps>
       <svg
         class="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
-        data-tree-svg
+        data-steps-svg
         aria-hidden="true"></svg>
 
-      {/* Root. In normal flow above the steps on small screens, pinned to the
-          centre of the trunk gap on desktop. */}
-      <div
-        class="flex justify-center mb-8 lg:mb-0 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-20"
-        data-tree-hub
-      >
-        <div class="relative flex items-center justify-center">
-          <div
-            class="absolute w-32 h-32 rounded-full bg-primary/10 dark:bg-primary/20 blur-2xl"
-            aria-hidden="true"
-          >
-          </div>
-          <div
-            class="relative w-20 h-20 2xl:w-24 2xl:h-24 rounded-full bg-card border border-border shadow-lg flex items-center justify-center"
-            data-tree-hub-core
-          >
-            <img
-              src={asset('/prepyo-mark.webp')}
-              alt="Prepyo"
-              width="256"
-              height="256"
-              class="w-10 h-10 2xl:w-12 2xl:h-12 object-contain"
-            />
-          </div>
-        </div>
-      </div>
-
-      <ol class="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:gap-x-[240px] lg:gap-y-14 2xl:gap-x-[320px] relative z-10">
+      <ol class="relative z-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6 lg:items-end">
         {
-          STEPS.map(step => (
-            <li
-              class:list={[
-                'group relative rounded-2xl border border-border/70 bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5',
-                step.hoverBorder,
-              ]}
-              data-branch={step.side}
-              data-branch-color={step.hex}
-            >
-              {/* Centred, so both arms of the tree read as mirror images. */}
-              <div class="flex items-center justify-center gap-2.5 mb-3">
-                <div
-                  class:list={[
-                    'shrink-0 w-9 h-9 rounded-full flex items-center justify-center ring-4 bg-card',
-                    step.ring,
-                  ]}
-                  data-branch-anchor
-                >
-                  <span
-                    class:list={[
-                      'w-full h-full rounded-full flex items-center justify-center font-mono text-[11px] font-bold',
-                      step.tint,
-                      step.accent,
-                    ]}
-                  >
-                    {step.step}
-                  </span>
-                </div>
-
-                <span
-                  class:list={[
-                    'inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md',
-                    step.tint,
-                    step.accent,
-                  ]}
-                >
-                  <Icon name={step.icon} class="w-3 h-3" />
-                  <span>{step.badge}</span>
-                </span>
+          STEPS.map((step, i) => (
+            <li class="flex flex-col items-center text-center lg:pb-[var(--rise)]" style={`--rise:${i * RISE}px`}>
+              <div
+                class="w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg ring-8 ring-background"
+                style={`background:${step.hex}; box-shadow:0 10px 24px -8px ${step.hex}`}
+              >
+                <Icon name={step.icon} class="w-7 h-7" />
               </div>
 
-              <div class="text-center">
-                <h3 class="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors">
-                  {step.title}
-                </h3>
-                <p class="text-xs text-muted-foreground leading-relaxed mt-1.5">{step.desc}</p>
+              <h3 class="mt-4 font-display font-medium text-base uppercase tracking-wide text-foreground">{step.title}</h3>
+              <p class="mt-1.5 max-w-[16rem] text-sm text-foreground/75 leading-relaxed">{step.desc}</p>
 
-                <div class="flex flex-wrap justify-center gap-1.5 mt-3.5">
-                  {step.chips.map(chip => (
-                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-foreground/80 bg-muted/60 dark:bg-muted/40 border border-border/60 rounded-md px-2 py-0.5">
-                      <Icon name={chip.icon} class={`w-2.5 h-2.5 ${step.accent}`} />
-                      <span>{chip.label}</span>
-                    </span>
-                  ))}
-                </div>
+              {/* A darker band across the bottom gives the block depth without paling the white label. */}
+              <div
+                class="step-block mt-6 w-full max-w-[13rem] h-14 rounded-md flex items-center justify-center font-display font-black text-lg uppercase tracking-wider text-white shadow-lg"
+                style={`--c:${step.hex}`}
+                data-step-block
+                data-step-color={step.hex}
+              >
+                Step {step.step}
               </div>
             </li>
           ))
@@ -125,66 +57,74 @@ import { STEPS } from '@/data/steps';
   </div>
 </section>
 
+<style>
+  .step-block {
+    background:
+      linear-gradient(165deg, transparent 0 58%, rgb(0 0 0 / 0.12) 58%),
+      var(--c);
+  }
+</style>
+
 <script>
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  const tree = document.querySelector<HTMLElement>('[data-tree]');
+  const wrap = document.querySelector<HTMLElement>('[data-steps]');
 
-  if (tree) {
-    const svg = tree.querySelector<SVGSVGElement>('[data-tree-svg]')!;
-    const core = tree.querySelector<HTMLElement>('[data-tree-hub-core]')!;
-    const leaves = [...tree.querySelectorAll<HTMLElement>('[data-branch]')];
+  if (wrap) {
+    const svg = wrap.querySelector<SVGSVGElement>('[data-steps-svg]')!;
+    const blocks = [...wrap.querySelectorAll<HTMLElement>('[data-step-block]')];
     const desktop = window.matchMedia('(min-width: 1024px)');
 
     function draw() {
       svg.replaceChildren();
-      // Below `lg` the root sits in normal flow and there is no trunk to hang
-      // branches from, so there is nothing to draw.
-      if (!desktop.matches) return;
+      // Below `lg` the steps stack, so there is no staircase to join.
+      if (!desktop.matches || blocks.length < 2) return;
 
-      const wrap = tree!.getBoundingClientRect();
-      const hub = core.getBoundingClientRect();
-      const hubX = hub.left - wrap.left + hub.width / 2;
-      const hubY = hub.top - wrap.top + hub.height / 2;
-      const radius = hub.width / 2;
+      const box = wrap!.getBoundingClientRect();
+      // Centre of each block; the path tucks under the blocks, which sit above it.
+      const points = blocks.map(block => {
+        const r = block.getBoundingClientRect();
+        return { x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2, colour: block.dataset.stepColor! };
+      });
 
-      for (const leaf of leaves) {
-        const onLeft = leaf.dataset.branch === 'left';
-        const colour = leaf.dataset.branchColor!;
-        const box = leaf.getBoundingClientRect();
-        const anchor = leaf
-          .querySelector<HTMLElement>('[data-branch-anchor]')!
-          .getBoundingClientRect();
+      // One gradient along the whole path, through each step's colour.
+      const first = points[0];
+      const last = points[points.length - 1];
+      const gradient = document.createElementNS(SVG_NS, 'linearGradient');
+      gradient.id = 'steps-path';
+      gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+      gradient.setAttribute('x1', String(first.x));
+      gradient.setAttribute('x2', String(last.x));
+      gradient.setAttribute('y1', '0');
+      gradient.setAttribute('y2', '0');
+      points.forEach((point, i) => {
+        const stop = document.createElementNS(SVG_NS, 'stop');
+        stop.setAttribute('offset', String(i / (points.length - 1)));
+        stop.setAttribute('stop-color', point.colour);
+        gradient.append(stop);
+      });
+      const defs = document.createElementNS(SVG_NS, 'defs');
+      defs.append(gradient);
+      svg.append(defs);
 
-        // Leave the root at its edge and arrive at the leaf's inner edge,
-        // level with its numbered marker.
-        const startX = hubX + (onLeft ? -radius : radius);
-        const endX = (onLeft ? box.right : box.left) - wrap.left;
-        const endY = anchor.top - wrap.top + anchor.height / 2;
-        // Horizontal tangents at both ends give the branch its limb-like bend.
-        const bend = (startX + endX) / 2;
-
-        const path = document.createElementNS(SVG_NS, 'path');
-        path.setAttribute('d', `M ${startX} ${hubY} C ${bend} ${hubY}, ${bend} ${endY}, ${endX} ${endY}`);
-        path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', colour);
-        path.setAttribute('stroke-width', '2');
-        path.setAttribute('stroke-linecap', 'round');
-        path.setAttribute('stroke-dasharray', '5 5');
-        path.setAttribute('opacity', '0.5');
-        svg.append(path);
-
-        const bud = document.createElementNS(SVG_NS, 'circle');
-        bud.setAttribute('cx', String(endX));
-        bud.setAttribute('cy', String(endY));
-        bud.setAttribute('r', '3.5');
-        bud.setAttribute('fill', colour);
-        svg.append(bud);
+      // Each leg leaves a block straight down, swings under, and rises into the next.
+      const dip = 150;
+      let d = `M ${first.x} ${first.y}`;
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        d += ` C ${a.x} ${a.y + dip}, ${b.x} ${b.y + dip}, ${b.x} ${b.y}`;
       }
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'url(#steps-path)');
+      path.setAttribute('stroke-width', '12');
+      svg.append(path);
     }
 
-    // Redraw whenever the layout that the curves were measured against moves.
+    // Redraw whenever the layout the path was measured against moves.
     // Coalesced through rAF, which a background tab never fires -- so the first
-    // pass is direct, otherwise the branches are missing until the tab is shown.
+    // pass is direct, otherwise the path is missing until the tab is shown.
     let queued = 0;
     function redraw() {
       cancelAnimationFrame(queued);
@@ -192,9 +132,9 @@ import { STEPS } from '@/data/steps';
     }
 
     draw();
-    new ResizeObserver(redraw).observe(tree);
+    new ResizeObserver(redraw).observe(wrap);
     desktop.addEventListener('change', redraw);
-    // Webfonts land after first paint and reflow the cards under the branches.
+    // Webfonts land after first paint and reflow the steps above the blocks.
     document.fonts?.ready.then(redraw);
   }
 </script>
