@@ -16,6 +16,8 @@ export interface ExactPricingPlan {
   popular: boolean;
   cta: string;
   features: string[];
+  /** After the price; "/ 30 days" when left out. */
+  period?: string;
 }
 
 /**
@@ -72,6 +74,92 @@ export const EXACT_PLANS: ExactPricingPlan[] = [
       "12 full mock exams",
       "Maximum AI tutor",
       "Priority evaluation queue",
+    ],
+  },
+];
+
+/**
+ * UPSC CDS and NCC plans, shown to visitors in India, priced in Indian rupees
+ * (the field, like the backend column, is called priceNPR). The CDS ones must
+ * agree with the `plans` rows of migration 000215. The NCC ones are the user's
+ * prices of 2026-11-24 and have no `plans` row yet. Kept out of EXACT_PLANS so the
+ * Nepal page, its FAQ and its structured data are unchanged.
+ */
+export const INDIA_PLANS: ExactPricingPlan[] = [
+  {
+    id: "free",
+    name: "Basic",
+    exams: "UPSC CDS and NCC",
+    priceNPR: 0,
+    subtitle: "Free forever, nothing to buy",
+    popular: false,
+    cta: "Continue for free",
+    features: [
+      "CDS and NCC practice",
+      "5 practice tasks a day",
+      "1 full mock exam",
+      "UPSC 1/3 negative marking",
+    ],
+  },
+  {
+    id: "cds_monthly",
+    name: "CDS Monthly",
+    exams: "UPSC CDS",
+    priceNPR: 199,
+    subtitle: "One-time · 30 days",
+    popular: false,
+    cta: "Get CDS Monthly",
+    features: [
+      "30 days of UPSC CDS",
+      "Every CDS paper, English, GK and Maths",
+      "Answer keys and explanations",
+      "Mistake Notebook",
+    ],
+  },
+  {
+    id: "cds_annual",
+    name: "CDS 1-Year Pass",
+    exams: "UPSC CDS",
+    priceNPR: 1199,
+    period: "/ year",
+    subtitle: "One-time · 365 days",
+    popular: true,
+    cta: "Get the 1-Year Pass",
+    features: [
+      "365 days of UPSC CDS",
+      "Every CDS paper, English, GK and Maths",
+      "Answer keys and explanations",
+      "Mistake Notebook",
+    ],
+  },
+  {
+    id: "ncc_b",
+    name: "NCC B Certificate",
+    exams: "NCC",
+    priceNPR: 199,
+    subtitle: "One-time · 30 days",
+    popular: false,
+    cta: "Get NCC B",
+    features: [
+      "30 days of NCC B certificate practice",
+      "Full timed practice papers",
+      "Answer keys and explanations",
+      "Mistake Notebook",
+    ],
+  },
+  {
+    id: "ncc_c",
+    name: "NCC C Certificate",
+    exams: "NCC",
+    priceNPR: 299,
+    subtitle: "One-time · 30 days",
+    popular: false,
+    cta: "Get NCC C",
+    features: [
+      "30 days of NCC C certificate practice",
+      "Full timed practice papers",
+      "Answer keys and explanations",
+      "Mistake Notebook",
     ],
   },
 ];
