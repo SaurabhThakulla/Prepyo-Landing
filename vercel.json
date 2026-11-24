@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "in.prepyo.online" }],
+      "destination": "https://www.prepyo.online/in/",
+      "permanent": true
+    }
+  ]
+}
