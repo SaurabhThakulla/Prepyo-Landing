@@ -39,7 +39,7 @@ export interface Role {
 
 /**
  * Open roles currently hiring at Prepyo. Every role is remote, within Nepal.
- * Interns are paid a monthly stipend; junior roles a monthly salary.
+ * Internships are unpaid; full-time roles are paid a monthly salary.
  * Keep each list short: three plain bullets a learner can scan in seconds.
  */
 export const OPEN_ROLES: Role[] = [
@@ -50,7 +50,7 @@ export const OPEN_ROLES: Role[] = [
     location: 'Remote (Nepal)',
     type: 'FULL_TIME',
     typeLabel: 'Full-time',
-    salary: 'NPR 22K / month',
+    salary: 'NPR 10K / month',
     description: 'Build the features students use every day, from practice tasks to results.',
     responsibilities: [
       'Build features in our React web app',
@@ -72,7 +72,7 @@ export const OPEN_ROLES: Role[] = [
     location: 'Remote (Nepal)',
     type: 'INTERN',
     typeLabel: 'Internship',
-    salary: 'NPR 10K / month',
+    salary: 'Unpaid',
     description: 'Learn by shipping small, real changes to the Prepyo app.',
     responsibilities: [
       'Fix layouts and small UI tasks',
@@ -94,7 +94,7 @@ export const OPEN_ROLES: Role[] = [
     location: 'Remote (Nepal)',
     type: 'FULL_TIME',
     typeLabel: 'Full-time',
-    salary: 'NPR 22K / month',
+    salary: 'NPR 15K / month',
     description: 'Find consultancies and institutes that could use Prepyo, and book demos with them.',
     responsibilities: [
       'Build lists of consultancies and institutes',
@@ -116,7 +116,7 @@ export const OPEN_ROLES: Role[] = [
     location: 'Remote (Nepal)',
     type: 'INTERN',
     typeLabel: 'Internship',
-    salary: 'NPR 10K / month',
+    salary: 'Unpaid',
     description: 'Help students find Prepyo when they search for exam preparation.',
     responsibilities: [
       'Research what students search for',
@@ -138,7 +138,7 @@ export const OPEN_ROLES: Role[] = [
     location: 'Remote (Nepal)',
     type: 'INTERN',
     typeLabel: 'Internship',
-    salary: 'NPR 10K / month',
+    salary: 'Unpaid',
     description: 'Share Prepyo with students on social media, with short videos and study tips.',
     responsibilities: [
       'Post videos on Instagram, TikTok and Facebook',

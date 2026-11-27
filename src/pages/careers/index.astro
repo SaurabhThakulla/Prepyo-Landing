@@ -70,7 +70,14 @@ const TEAM_TONE: Record<string, string> = {
                       <Icon name="lucide:briefcase" class="w-3.5 h-3.5 text-muted-foreground" />{role.typeLabel}
                     </li>
                     {role.salary && (
-                      <li class="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/10 px-2.5 py-1 font-semibold text-emerald-700 dark:text-emerald-400">
+                      <li
+                        class:list={[
+                          'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1',
+                          role.salary === 'Unpaid'
+                            ? 'bg-muted font-medium text-muted-foreground'
+                            : 'bg-emerald-500/10 font-semibold text-emerald-700 dark:text-emerald-400',
+                        ]}
+                      >
                         <Icon name="lucide:wallet" class="w-3.5 h-3.5" />{role.salary}
                       </li>
                     )}
